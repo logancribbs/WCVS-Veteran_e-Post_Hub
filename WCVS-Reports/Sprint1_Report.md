@@ -23,13 +23,13 @@ and incorporating accessibility feedback into the Figma prototype.
 
 ## Completed Issues/User Stories
 Here are links to the issues that we completed in this sprint:
-* [US-03 – Event Page Display](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/3)
-* [US-08 – Download Event Flyers](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/8)
+* [US-03 – Event Page Display](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/8)
+* [US-08 – Download Event Flyers](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/9)
 * [US-10 – Admin Create/Edit/Delete Events](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/10)
 
 ## Incomplete Issues/User Stories
 Here are links to issues we worked on but did not complete in this sprint:
-* [US-08 – Download Event Flyers](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/8): Flyer download button included in prototype, but backend logic not yet implemented. Deferred to Sprint 2.
+* [US-08 – Download Event Flyers](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/9): Flyer download button included in prototype, but backend logic not yet implemented. Deferred to Sprint 2.
 * [US-10 – Admin Create/Edit/Delete Events](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/10): Dashboard layout complete in Figma; CRUD functionality pending. Will begin in Sprint 2.
 **Note:** These user stories are in both categories because we have completed them in the prototype, but have not actually implemented them.
 
