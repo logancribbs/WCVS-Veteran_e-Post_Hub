@@ -1,5 +1,5 @@
 # Sprint 1 Report (10/05/2025)
-## YouTube link of Sprint * Video (Make this video unlisted)
+## [YouTube link for Sprint 1 Video](https://youtu.be/a9h1ruoXQAk)
 
 ## What's New (User Facing)
 * Figma Prototype Created
