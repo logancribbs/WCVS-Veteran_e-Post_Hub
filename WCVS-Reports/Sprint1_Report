@@ -1,9 +1,18 @@
 # Sprint 1 Report (10/05/2025)
 ## YouTube link of Sprint * Video (Make this video unlisted)
 ## What's New (User Facing)
-* Feature 1 or Bug Fix 1
-* Feature 2 or Bug Fix 2
-* Feature n or Bug Fix n
+* Feature 1 – Figma Prototype Created
+Developed a complete Figma prototype outlining the core layout of the WCVS Veteran E-Post Hub, including pages for Home, Events, Resources, and Admin Login.
+
+* Feature 2 – User Interface Flow Design
+Created a consistent navigation flow emphasizing accessibility and clarity for community users.
+
+* Feature 3 – Requirements Gathering & Validation
+Held internal discussions and review sessions to define functional requirements (FRs), non-functional requirements (NFRs), and user stories. Early acceptance criteria were drafted in Gherkin format.
+
+* Feature 4 – Project Setup & Documentation
+Established the GitHub repository, Kanban board, and file structure for upcoming development sprints. Team roles, naming conventions, and workflow standards were also defined.
+
 ## Work Summary (Developer Facing)
 Provide a one paragraph synposis of what your team accomplished this sprint. Don't
 repeat the "What's New" list of features. Instead, help the instructor understand
@@ -42,21 +51,17 @@ in this sprint (explain briefly)."
 * "We could not reproduce the bug" (explain briefly).
 * "We did not get to this issue because..." (explain briefly)
 ## Code Files for Review
-Please review the following code files, which were actively developed during this
-sprint, for quality:
-* [Name of code file 1](https://github.com/your_repo/file_extension)
-* [Name of code file 2](https://github.com/your_repo/file_extension)
-* [Name of code file 3](https://github.com/your_repo/file_extension)
+NA - no changes to code files were made during this sprint. Main focus on UI design as it corresponds to most of our client's requirements.
 ## Retrospective Summary
 Here's what went well:
-* Item 1
-* Item 2
-* Item x
+* Built a complete UI/UX prototype that clearly communicates the intended design.
+* Created organized documentation for FRs, NFRs, and user stories.
+* Established GitHub repo structure and Kanban board for future sprints.
 Here's what we'd like to improve:
-* Item 1
-* Item 2
-* Item x
+* Improve time allocation for finalizing design iterations and feedback loops.
+* Add more detail to acceptance criteria before development begins.
+* Increase use of Kanban board, maintaining consistent updates.
 Here are changes we plan to implement in the next sprint:
-* Item 1
-* Item 2
-* Item x
+* Begin implementation of the front-end based on the Figma design.
+* Build basic page layouts (Home, Events, Resources).
+* Start basic form validation and database connection setup.
