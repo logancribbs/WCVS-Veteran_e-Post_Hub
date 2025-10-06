@@ -1,4 +1,4 @@
-## WCVS Resource Page 
+## WCVS Resource Page 📖
 
 This is the place for the learning and supplementary resources that we've gathered as this continue the develop of the Veteran e-Post Hub.
 
