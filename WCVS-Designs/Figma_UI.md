@@ -1,4 +1,4 @@
-# Figma Design & Mockups for Veterans e-Post Hub [Mobile + Desktop UI]
+# Figma Design & Mockups for Veterans e-Post Hub [Mobile + Desktop UI] 🎨
 
 Our goal is to simplify and modernize the look the currently existing webpage, prioritizing accessibility and ease of use.
 
