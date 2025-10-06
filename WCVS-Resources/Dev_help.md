@@ -6,4 +6,4 @@ This is the place for the learning and supplementary resources that we've gather
 - [Useful + Clean UI Color Palettes](https://digitalsynopsis.com/design/color-schemes-palettes-combinations)
 
 # Video Tutorials
-- tbh.
+- tbd.
