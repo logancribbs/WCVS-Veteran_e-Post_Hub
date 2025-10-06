@@ -1,66 +1,52 @@
 # Sprint 1 Report (10/05/2025)
 ## YouTube link of Sprint * Video (Make this video unlisted)
+
 ## What's New (User Facing)
-* Feature 1 – Figma Prototype Created
+* Figma Prototype Created
 Developed a complete Figma prototype outlining the core layout of the WCVS Veteran E-Post Hub, including pages for Home, Events, Resources, and Admin Login.
-
-* Feature 2 – User Interface Flow Design
+* User Interface Flow Design
 Created a consistent navigation flow emphasizing accessibility and clarity for community users.
-
-* Feature 3 – Requirements Gathering & Validation
+* Requirements Gathering & Validation
 Held internal discussions and review sessions to define functional requirements (FRs), non-functional requirements (NFRs), and user stories. Early acceptance criteria were drafted in Gherkin format.
-
-* Feature 4 – Project Setup & Documentation
+* Project Setup & Documentation
 Established the GitHub repository, Kanban board, and file structure for upcoming development sprints. Team roles, naming conventions, and workflow standards were also defined.
 
 ## Work Summary (Developer Facing)
-Provide a one paragraph synposis of what your team accomplished this sprint. Don't
-repeat the "What's New" list of features. Instead, help the instructor understand
-how you went about the work described there, any barriers you overcame, and any
-significant learnings for your team.
+This sprint focused on planning and design rather than implementation. Our team collaborated to create the initial UI/UX prototype using Figma, ensuring that navigation, accessibility, 
+and visual design were aligned with user expectations for the Veteran E-Post Hub. We also refined our project requirements through collaborative documentation, defining clear functional goals and user stories to guide upcoming development sprints. 
+A major takeaway from this sprint was how important early prototyping is for stakeholder alignment — it allowed us to visualize interactions and prioritize key user flows before writing code. 
+We also established the project’s GitHub repository, issue templates, and branching strategy in preparation for Sprint 2 development work.            
+
 ## Unfinished Work
-If applicable, explain the work you did not finish in this sprint. For issues/user
-stories in the current sprint that have not been closed, (a) any progress toward
-completion of the issues has been clearly tracked (by checking the checkboxes of
-acceptance criteria), (b) a comment has been added to the issue to explain why the
-issue could not be completed (e.g., "we ran out of time" or "we did not anticipate
-it would be so much work"), and (c) the issue is added to a subsequent sprint, so
-that it can be addressed later.
+No coding work was planned for Sprint 1. However, a few remaining tasks from the design phase will continue into Sprint 2, including refining component-level interactions (hover effects, mobile views)
+and incorporating accessibility feedback into the Figma prototype.
+
 ## Completed Issues/User Stories
 Here are links to the issues that we completed in this sprint:
-* URL of issue 1
-* URL of issue 2
-* URL of issue n
-Reminders (Remove this section when you save the file):
-* Each issue should be assigned to a milestone
-* Each completed issue should be assigned to a pull request
-* Each completed pull request should include a link to a "Before and After" video
-* All team members who contributed to the issue should be assigned to it on
-GitHub
-* Each issue should be assigned story points using a label
-* Story points contribution of each team member should be indicated in a comment
+* [US-03 – Event Page Display](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/3)
+* [US-08 – Download Event Flyers](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/8)
+* [US-10 – Admin Create/Edit/Delete Events](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/10)
+
 ## Incomplete Issues/User Stories
 Here are links to issues we worked on but did not complete in this sprint:
-* URL of issue 1 <<One sentence explanation of why issue was not completed>>
-* URL of issue 2 <<One sentence explanation of why issue was not completed>>
-* URL of issue n <<One sentence explanation of why issue was not completed>>
-Examples of explanations (Remove this section when you save the file):
-* "We ran into a complication we did not anticipate (explain briefly)."
-* "We decided that the feature did not add sufficient value for us to work on it
-in this sprint (explain briefly)."
-* "We could not reproduce the bug" (explain briefly).
-* "We did not get to this issue because..." (explain briefly)
+* [US-08 – Download Event Flyers](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/8): Flyer download button included in prototype, but backend logic not yet implemented. Deferred to Sprint 2.
+* [US-10 – Admin Create/Edit/Delete Events](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/10): Dashboard layout complete in Figma; CRUD functionality pending. Will begin in Sprint 2.
+**Note:** These user stories are in both categories because we have completed them in the prototype, but have not actually implemented them.
+
 ## Code Files for Review
 NA - no changes to code files were made during this sprint. Main focus on UI design as it corresponds to most of our client's requirements.
+
 ## Retrospective Summary
 Here's what went well:
 * Built a complete UI/UX prototype that clearly communicates the intended design.
 * Created organized documentation for FRs, NFRs, and user stories.
 * Established GitHub repo structure and Kanban board for future sprints.
+
 Here's what we'd like to improve:
 * Improve time allocation for finalizing design iterations and feedback loops.
 * Add more detail to acceptance criteria before development begins.
 * Increase use of Kanban board, maintaining consistent updates.
+
 Here are changes we plan to implement in the next sprint:
 * Begin implementation of the front-end based on the Figma design.
 * Build basic page layouts (Home, Events, Resources).
