@@ -1,15 +1,14 @@
-//Used for base layout for all pages. For instance the self contained navBar
+// Used for base layout for all pages. For instance the self contained layout wrappers
 
 import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "./Components/Providers";
-import TopNav from "./Components/Navbar/TopNav";
 import { EdgeStoreProvider } from "@/lib/edgestore";
 
 export const metadata: Metadata = {
   title: "Veteran e-Post Hub",
   description: "A platform to connect veterans with resources and support.",
-  icons: { icon: "./whitman.png", },
+  icons: { icon: "./whitman.png" },
 };
 
 export default function RootLayout({
@@ -19,16 +18,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="">
+      <body>
         <EdgeStoreProvider>
-        <Providers>
-          <TopNav />
-          <main className="w-full mx-auto ">
-            {children}
-          </main>
-        </Providers>
+          <Providers>
+            {/* Removed TopNav — HeroBanner now handles top visuals */}
+            <main className="w-full mx-auto">
+              {children}
+            </main>
+          </Providers>
         </EdgeStoreProvider>
       </body>
-    </html> 
+    </html>
   );
 }
