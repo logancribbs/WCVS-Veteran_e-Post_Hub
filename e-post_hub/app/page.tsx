@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Card, CardBody } from "@nextui-org/react";
-import Link from "next/link";
 import jwt from "jsonwebtoken";
 import BottomBar from "./Components/BottomBar/BottomBar";
 import PdfViewer from "./Components/PdfViewer/PdfViewer";
@@ -51,11 +50,9 @@ export default function HomePage() {
   }
 
   const [events, setEvents] = useState<Event[]>([]);
-  const [defaultEvents, setDefaultEvents] = useState<Event[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
-  // ------------------------------ FETCH EVENTS --------------------------------
   useEffect(() => {
     async function fetchApprovedEvents() {
       try {
@@ -80,18 +77,7 @@ export default function HomePage() {
           }
         });
 
-        const now = new Date();
-        const upcoming = allEvents.filter((event) => {
-          const endDate = event.endDate ? new Date(event.endDate) : null;
-          const startDate = event.startDate ? new Date(event.startDate) : null;
-          if (endDate && endDate < now) return false;
-          if (!endDate && startDate && startDate < now) return false;
-          return true;
-        });
-
-        setEvents(allEvents);
-        setDefaultEvents(upcoming);
-        setFilteredEvents(upcoming);
+        setFilteredEvents(allEvents);
       } catch (error) {
         console.error("Error fetching approved events:", error);
       }
@@ -100,7 +86,6 @@ export default function HomePage() {
     fetchApprovedEvents();
   }, []);
 
-  // ------------------------- ROLE REDIRECT -------------------------
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -116,17 +101,29 @@ export default function HomePage() {
     }
   }, [router]);
 
-  // -------------------- RENDER --------------------
+  const handleCloseModal = () => setSelectedEvent(null);
+
+  const formatDateRange = (startDate?: string, endDate?: string) => {
+    if (!startDate) return "";
+    const start = new Date(startDate).toLocaleDateString();
+    if (!endDate || startDate === endDate) return start;
+    const end = new Date(endDate).toLocaleDateString();
+    return `${start} - ${end}`;
+  };
+
   return (
-    <div className="min-h-screen w-full bg-blue-100 flex flex-col">
+    <div className="min-h-screen w-full bg-blue-100 flex flex-col relative">
       <HeroBanner />
 
       <div className="flex flex-col md:flex-row w-full">
+        {/* Sidebar */}
         <div className="w-full md:w-1/4 p-4">
           <Sidebar />
         </div>
 
-        <div className="content flex-1 p-6">
+        {/* Event Cards */}
+        {/* ✅ ONLY CHANGE: add lg:pl-10 to prevent overlap on Windows */}
+        <div className="content flex-1 p-6 lg:pl-10">
           {filteredEvents.length === 0 ? (
             <p className="text-center text-lg">No events available.</p>
           ) : (
@@ -139,16 +136,13 @@ export default function HomePage() {
                 md:grid-cols-2
                 lg:grid-cols-3
               "
-              style={{
-                gridAutoRows: "1fr",
-                placeItems: "center",
-              }}
+              style={{ gridAutoRows: "1fr", placeItems: "center" }}
             >
               {filteredEvents.map((event) => (
                 <Card
                   key={event.id}
                   className="
-                    bg-[#FFFDF9]
+                    bg-[#FFF7E6]
                     border border-gray-300
                     rounded-xl
                     shadow-md
@@ -158,59 +152,45 @@ export default function HomePage() {
                     transition-transform
                     hover:scale-[1.02]
                     duration-300
-                    w-full max-w-[380px] h-[500px]
                   "
+                  style={{ width: "380px", height: "520px" }}
                 >
-                  {/* Title Section */}
-                  <div className="text-center p-4 border-b border-gray-200">
-                    <h5 className="text-xl font-semibold text-gray-800">
-                      {event.title}
-                    </h5>
+                  {/* Title */}
+                  <div className="text-center text-xl font-semibold text-gray-800 pt-4 pb-2">
+                    {event.title}
                   </div>
 
-                  {/* Flyer Image */}
-                  {event.flyer ? (
-                    isPdfUrl(event.flyer) ? (
-                      <div
-                        className="cursor-pointer w-full"
-                        onClick={() => setSelectedEvent(event)}
-                      >
-                        <PdfViewer
-                          fileUrl={event.flyer}
-                          containerHeight={300}
+                  {/* Flyer */}
+                  <div
+                    className="flex justify-center items-center cursor-pointer px-3"
+                    onClick={() => setSelectedEvent(event)}
+                  >
+                    {event.flyer ? (
+                      isPdfUrl(event.flyer) ? (
+                        <PdfViewer fileUrl={event.flyer} containerHeight={340} />
+                      ) : (
+                        <img
+                          src={event.flyer}
+                          alt={`${event.title} Flyer`}
+                          className="w-full h-[350px] object-cover rounded-lg border border-gray-300"
                         />
-                      </div>
+                      )
                     ) : (
-                      <img
-                        src={event.flyer}
-                        alt={`${event.title} Flyer`}
-                        onClick={() => setSelectedEvent(event)}
-                        className="w-full h-[300px] object-cover cursor-pointer border-y border-gray-200"
-                      />
-                    )
-                  ) : (
-                    <div className="w-full h-[300px] bg-gray-100 flex items-center justify-center text-gray-400 italic border-y border-gray-200">
-                      No Flyer Available
-                    </div>
-                  )}
-
-                  {/* Footer with Date + Button */}
-                  <CardBody className="flex flex-row justify-between items-center p-4">
-                    {event.startDate && (
-                      <p className="text-gray-700 font-medium text-base">
-                        {event.endDate && event.startDate !== event.endDate
-                          ? `${new Date(
-                              event.startDate
-                            ).toLocaleDateString()} - ${new Date(
-                              event.endDate
-                            ).toLocaleDateString()}`
-                          : new Date(event.startDate).toLocaleDateString()}
-                      </p>
+                      <div className="w-full h-[350px] bg-gray-100 flex items-center justify-center text-gray-400 italic border border-gray-300 rounded-lg">
+                        No Flyer Available
+                      </div>
                     )}
+                  </div>
+
+                  {/* Footer */}
+                  <CardBody className="flex justify-between items-center p-4 text-center">
+                    <div className="text-gray-700 text-lg font-medium">
+                      {formatDateRange(event.startDate, event.endDate)}
+                    </div>
 
                     <Button
                       onClick={() => setSelectedEvent(event)}
-                      className="bg-[#f7960d] text-black font-semibold border border-gray-400 hover:scale-105 transition-transform"
+                      className="bg-[#ff8c00] border border-gray-300 text-black font-semibold px-4 py-2 rounded-md hover:scale-105 transition-transform duration-200"
                     >
                       View Details
                     </Button>
@@ -222,39 +202,37 @@ export default function HomePage() {
         </div>
       </div>
 
-      <BottomBar />
-
-      {/* MODAL VIEWER */}
+      {/* Modal */}
       {selectedEvent && (
         <div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex justify-center items-center z-50">
-          {/* Back Button */}
+          {/* Back button */}
           <button
-            onClick={() => setSelectedEvent(null)}
-            className="fixed top-6 left-6 px-6 py-3 bg-[#e48a24] text-black font-semibold rounded-md shadow hover:scale-105 transition-transform"
+            onClick={handleCloseModal}
+            className="absolute top-6 left-6 bg-[#ff8c00] text-white px-6 py-3 text-lg rounded-md shadow-lg hover:scale-105 transition-transform duration-200"
           >
-            ← Back
+            Back
           </button>
 
-          {/* Modal Content */}
-          <div className="max-w-4xl w-full p-6 bg-white rounded-xl shadow-xl border border-gray-300 flex flex-col items-center">
-            <h2 className="text-2xl font-bold mb-4">{selectedEvent.title}</h2>
-
-            {selectedEvent.flyer &&
-              (isPdfUrl(selectedEvent.flyer) ? (
-                <PdfViewer
-                  fileUrl={selectedEvent.flyer}
-                  containerHeight={600}
-                />
+          {/* Enlarged Flyer */}
+          <div className="relative bg-white rounded-lg shadow-2xl max-w-6xl w-full mx-6 flex justify-center items-center p-6">
+            {selectedEvent.flyer ? (
+              isPdfUrl(selectedEvent.flyer) ? (
+                <PdfViewer fileUrl={selectedEvent.flyer} containerHeight={700} />
               ) : (
                 <img
                   src={selectedEvent.flyer}
-                  alt="Flyer"
-                  className="w-full max-h-[600px] object-contain rounded-md"
+                  alt={`${selectedEvent.title} Flyer`}
+                  className="max-h-[90vh] object-contain rounded-lg"
                 />
-              ))}
+              )
+            ) : (
+              <p className="text-gray-600 italic text-lg">No flyer available</p>
+            )}
           </div>
         </div>
       )}
+
+      <BottomBar />
     </div>
   );
 }
