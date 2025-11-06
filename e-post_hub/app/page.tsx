@@ -49,9 +49,34 @@ export default function HomePage() {
     return url.toLowerCase().endsWith(".pdf");
   }
 
+  // CHANGED: we will actually use `events` as the authoritative list
   const [events, setEvents] = useState<Event[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+
+  // NEW: search query lives here (we'll pass it down to HeroBanner)
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // NEW: small helper to filter by multiple fields
+  function filterEventsByQuery(query: string, items: Event[]) {
+    const q = query.trim().toLowerCase();
+    if (!q) return items;
+
+    return items.filter((e) => {
+      const haystack = [
+        e.title,
+        e.description,
+        e.address,
+        e.type,
+        e.createdBy?.name,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      return haystack.includes(q);
+    });
+  }
 
   useEffect(() => {
     async function fetchApprovedEvents() {
@@ -77,14 +102,21 @@ export default function HomePage() {
           }
         });
 
-        setFilteredEvents(allEvents);
+        // CHANGED: keep the raw list and apply current query once
+        setEvents(allEvents); // source of truth
+        setFilteredEvents(filterEventsByQuery(searchQuery, allEvents)); // respects current query
       } catch (error) {
         console.error("Error fetching approved events:", error);
       }
     }
 
     fetchApprovedEvents();
-  }, []);
+  }, []); // initial load
+
+  // NEW: re-filter whenever query or source list changes
+  useEffect(() => {
+    setFilteredEvents(filterEventsByQuery(searchQuery, events));
+  }, [searchQuery, events]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -113,7 +145,17 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen w-full bg-blue-100 flex flex-col relative">
-      <HeroBanner />
+      {/* CHANGED: make HeroBanner a controlled search input */}
+      {/*    You will update HeroBanner to accept these props:
+            - query: string
+            - onQueryChange: (q: string) => void
+            (If your HeroBanner has a Search button, you can also pass onSubmit)
+      */}
+      <HeroBanner
+        query={searchQuery}                 // NEW
+        onQueryChange={setSearchQuery}      // NEW
+        // onSubmit={() => setFilteredEvents(filterEventsByQuery(searchQuery, events))} // optional
+      />
 
       <div className="flex flex-col md:flex-row w-full">
         {/* Sidebar */}
@@ -122,7 +164,7 @@ export default function HomePage() {
         </div>
 
         {/* Event Cards */}
-        {/* ✅ ONLY CHANGE: add lg:pl-10 to prevent overlap on Windows */}
+        {/* ONLY CHANGE (existing): lg:pl-10 to prevent overlap on Windows */}
         <div className="content flex-1 p-6 lg:pl-10">
           {filteredEvents.length === 0 ? (
             <p className="text-center text-lg">No events available.</p>

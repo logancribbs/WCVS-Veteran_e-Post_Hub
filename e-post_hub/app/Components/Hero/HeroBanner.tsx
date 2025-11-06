@@ -6,7 +6,18 @@ import { Search } from "lucide-react";
 import WhitmanLogo from "@/app/Images/whitman.png";
 import Link from "next/link";
 
-export default function HeroBanner() {
+// NEW: accept props from page.tsx
+//  - query: controlled value from parent
+//  - onQueryChange: callback to update search state
+//  - onSubmit: optional handler (if you want a Search button or Enter key to trigger filtering manually)
+type HeroBannerProps = {
+  query: string;
+  onQueryChange: (q: string) => void;
+  onSubmit?: () => void;
+};
+
+// CHANGED: use props instead of a bare function with no arguments
+export default function HeroBanner({ query, onQueryChange, onSubmit }: HeroBannerProps) {
   return (
     <section className="w-full">
       {/* Top header section */}
@@ -61,6 +72,18 @@ export default function HeroBanner() {
             placeholder="Search Events"
             size="lg"
             startContent={<Search size={18} />}
+
+            // NEW: controlled value
+            value={query}
+
+            // NEW: update parent when user types
+            onChange={(e) => onQueryChange(e.target.value)}
+
+            // OPTIONAL: let Enter key trigger a manual search if provided
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && onSubmit) onSubmit();
+            }}
+
             classNames={{
               input: "text-base px-4",
               inputWrapper:
