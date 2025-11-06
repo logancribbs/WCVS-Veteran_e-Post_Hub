@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Card, CardBody, CardHeader } from "@nextui-org/react";
+import { Button, Card, CardBody } from "@nextui-org/react";
 import Link from "next/link";
 import jwt from "jsonwebtoken";
 import BottomBar from "./Components/BottomBar/BottomBar";
@@ -51,75 +51,52 @@ export default function HomePage() {
   }
 
   const [events, setEvents] = useState<Event[]>([]);
-  const [defaultEvents, setDefaultEvents] = useState<Event[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
 
-  // ------------------------------ FETCH EVENTS --------------------------------
   useEffect(() => {
     async function fetchApprovedEvents() {
       try {
         const response = await fetch("/api/Event/approved");
-        if (!response.ok) {
-          console.error("Failed to fetch approved events:", response.statusText);
-          return;
-        }
+        if (!response.ok) return;
 
         const data = await response.json();
         const allEvents = data.events as Event[];
 
         allEvents.forEach((ev) => {
-          if (ev.occurrences && ev.occurrences.length > 0) {
+          if (ev.occurrences?.length) {
             ev.occurrences.sort(
               (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
             );
-            const earliest = ev.occurrences[0].date;
-            const latest = ev.occurrences[ev.occurrences.length - 1].date;
-            ev.startDate = earliest.split("T")[0];
-            ev.endDate = latest.split("T")[0];
+            ev.startDate = ev.occurrences[0].date.split("T")[0];
+            ev.endDate = ev.occurrences.at(-1)?.date.split("T")[0];
           }
         });
 
-        const now = new Date();
-        const upcoming = allEvents.filter((event) => {
-          const endDate = event.endDate ? new Date(event.endDate) : null;
-          const startDate = event.startDate ? new Date(event.startDate) : null;
-          if (endDate && endDate < now) return false;
-          if (!endDate && startDate && startDate < now) return false;
-          return true;
-        });
-
         setEvents(allEvents);
-        setDefaultEvents(upcoming);
-        setFilteredEvents(upcoming);
+        setFilteredEvents(allEvents);
       } catch (error) {
         console.error("Error fetching approved events:", error);
       }
     }
-
     fetchApprovedEvents();
   }, []);
 
-  // ------------------------- ROLE REDIRECT -------------------------
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const decodedToken = jwt.decode(token) as { role: string };
-        if (decodedToken) {
-          if (decodedToken.role === "ADMIN") router.push("/Admin");
-          else if (decodedToken.role === "MEMBER") router.push("/Member");
-        }
-      } catch (error) {
-        console.error("Error decoding token:", error);
-      }
+    if (!token) return;
+
+    try {
+      const decoded = jwt.decode(token) as { role: string };
+      if (decoded?.role === "ADMIN") router.push("/Admin");
+      if (decoded?.role === "MEMBER") router.push("/Member");
+    } catch (err) {
+      console.error("Token decode failed:", err);
     }
   }, [router]);
 
-  // -------------------- RENDER --------------------
   return (
     <div className="min-h-screen w-full bg-blue-100 flex flex-col">
       <HeroBanner />
-
       <div className="flex flex-col md:flex-row w-full">
         <div className="w-full md:w-1/4 p-4">
           <Sidebar />
@@ -130,86 +107,54 @@ export default function HomePage() {
             <p className="text-center text-lg">No events available.</p>
           ) : (
             <div
-              className="
-                grid
-                gap-10
-                justify-center
-                sm:grid-cols-1
-                md:grid-cols-2
-                lg:grid-cols-3
-              "
-              style={{
-                gridAutoRows: "1fr",
-                placeItems: "center",
-              }}
+              className="grid gap-10 justify-center sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+              style={{ gridAutoRows: "1fr", placeItems: "center" }}
             >
               {filteredEvents.map((event) => (
                 <Card
                   key={event.id}
-                  className="
-                    bg-[#FFFDF9]
-                    border border-gray-300
-                    rounded-xl
-                    shadow-md
-                    hover:shadow-lg
-                    flex flex-col
-                    overflow-hidden
-                    transition-transform
-                    hover:scale-[1.02]
-                    duration-300
-                  "
-                  style={{ width: "380px", height: "500px" }}
+                  className="bg-[#FFF6EF] border border-gray-300 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] flex flex-col overflow-hidden"
+                  style={{ width: "360px", height: "500px" }}
                 >
-                  {/* Event flyer image */}
-                  {event.flyer ? (
-                    isPdfUrl(event.flyer) ? (
-                      <a
-                        href={event.flyer}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1"
-                      >
-                        <PdfViewer fileUrl={event.flyer} containerHeight={300} />
-                      </a>
-                    ) : (
-                      <a
-                        href={event.flyer}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
+                  <h3 className="text-xl font-semibold text-center text-gray-800 mt-4">
+                    {event.title}
+                  </h3>
+
+                  <div className="flex justify-center items-center p-4">
+                    {event.flyer ? (
+                      isPdfUrl(event.flyer) ? (
+                        <PdfViewer
+                          fileUrl={event.flyer}
+                          containerHeight={300}
+                        />
+                      ) : (
                         <img
                           src={event.flyer}
                           alt={`${event.title} Flyer`}
-                          className="w-full h-[300px] object-cover rounded-t-xl border-b border-gray-200"
+                          className="w-full h-[300px] object-cover rounded-xl border border-gray-300 shadow-sm"
                         />
-                      </a>
-                    )
-                  ) : (
-                    <div className="w-full h-[300px] bg-gray-100 flex items-center justify-center text-gray-400 italic border-b border-gray-200 rounded-t-xl">
-                      No Flyer Available
-                    </div>
-                  )}
+                      )
+                    ) : (
+                      <div className="w-full h-[300px] bg-gray-100 flex items-center justify-center text-gray-400 italic border border-gray-200 rounded-xl">
+                        No Flyer Available
+                      </div>
+                    )}
+                  </div>
 
-                  {/* Event Info */}
-                  <CardBody className="flex flex-col justify-between items-center p-4 text-center">
-                    <div>
-                      <h5 className="text-xl font-semibold text-gray-800 mb-2">
-                        {event.title}
-                      </h5>
-
-                      {/* Show date range */}
-                      {event.startDate && event.endDate && (
-                        <p className="text-gray-600 mb-4">
-                          {new Date(event.startDate).toLocaleDateString()} –{" "}
-                          {new Date(event.endDate).toLocaleDateString()}
-                        </p>
-                      )}
-                    </div>
+                  <CardBody className="flex justify-between items-center px-5 pb-5">
+                    <p className="text-lg font-semibold text-gray-700 ml-2">
+                      {event.startDate
+                        ? new Date(event.startDate).toLocaleDateString()
+                        : "TBD"}
+                      {event.endDate &&
+                        event.startDate !== event.endDate &&
+                        ` – ${new Date(event.endDate).toLocaleDateString()}`}
+                    </p>
 
                     <Button
                       as={Link}
                       href={`/Event/${event.id}`}
-                      className="mt-2 bg-gradient-to-r from-[#f7960d] to-[#f95d09] border border-gray-300 text-black font-medium hover:scale-105 transition-transform duration-200"
+                      className="bg-[#f97b0d] text-white font-semibold px-5 py-2 rounded-lg shadow-md hover:scale-105 hover:shadow-lg transition-transform duration-200"
                     >
                       View Details
                     </Button>
@@ -220,9 +165,7 @@ export default function HomePage() {
           )}
         </div>
       </div>
-
       <BottomBar />
     </div>
   );
 }
-
