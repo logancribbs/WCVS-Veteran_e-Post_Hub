@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Card, CardBody } from "@nextui-org/react";
-import Link from "next/link";
 import jwt from "jsonwebtoken";
 import BottomBar from "./Components/BottomBar/BottomBar";
 import PdfViewer from "./Components/PdfViewer/PdfViewer";
@@ -52,109 +51,145 @@ export default function HomePage() {
 
   const [events, setEvents] = useState<Event[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
   useEffect(() => {
     async function fetchApprovedEvents() {
       try {
         const response = await fetch("/api/Event/approved");
-        if (!response.ok) return;
+        if (!response.ok) {
+          console.error("Failed to fetch approved events:", response.statusText);
+          return;
+        }
 
         const data = await response.json();
         const allEvents = data.events as Event[];
 
         allEvents.forEach((ev) => {
-          if (ev.occurrences?.length) {
+          if (ev.occurrences && ev.occurrences.length > 0) {
             ev.occurrences.sort(
               (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
             );
-            ev.startDate = ev.occurrences[0].date.split("T")[0];
-            ev.endDate = ev.occurrences.at(-1)?.date.split("T")[0];
+            const earliest = ev.occurrences[0].date;
+            const latest = ev.occurrences[ev.occurrences.length - 1].date;
+            ev.startDate = earliest.split("T")[0];
+            ev.endDate = latest.split("T")[0];
           }
         });
 
-        setEvents(allEvents);
         setFilteredEvents(allEvents);
       } catch (error) {
         console.error("Error fetching approved events:", error);
       }
     }
+
     fetchApprovedEvents();
   }, []);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) return;
-
-    try {
-      const decoded = jwt.decode(token) as { role: string };
-      if (decoded?.role === "ADMIN") router.push("/Admin");
-      if (decoded?.role === "MEMBER") router.push("/Member");
-    } catch (err) {
-      console.error("Token decode failed:", err);
+    if (token) {
+      try {
+        const decodedToken = jwt.decode(token) as { role: string };
+        if (decodedToken) {
+          if (decodedToken.role === "ADMIN") router.push("/Admin");
+          else if (decodedToken.role === "MEMBER") router.push("/Member");
+        }
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
     }
   }, [router]);
 
+  const handleCloseModal = () => setSelectedEvent(null);
+
+  const formatDateRange = (startDate?: string, endDate?: string) => {
+    if (!startDate) return "";
+    const start = new Date(startDate).toLocaleDateString();
+    if (!endDate || startDate === endDate) return start;
+    const end = new Date(endDate).toLocaleDateString();
+    return `${start} - ${end}`;
+  };
+
   return (
-    <div className="min-h-screen w-full bg-blue-100 flex flex-col">
+    <div className="min-h-screen w-full bg-blue-100 flex flex-col relative">
       <HeroBanner />
+
       <div className="flex flex-col md:flex-row w-full">
+        {/* Sidebar */}
         <div className="w-full md:w-1/4 p-4">
           <Sidebar />
         </div>
 
+        {/* Event Cards */}
         <div className="content flex-1 p-6">
           {filteredEvents.length === 0 ? (
             <p className="text-center text-lg">No events available.</p>
           ) : (
             <div
-              className="grid gap-10 justify-center sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+              className="
+                grid
+                gap-10
+                justify-center
+                sm:grid-cols-1
+                md:grid-cols-2
+                lg:grid-cols-3
+              "
               style={{ gridAutoRows: "1fr", placeItems: "center" }}
             >
               {filteredEvents.map((event) => (
                 <Card
                   key={event.id}
-                  className="bg-[#FFF6EF] border border-gray-300 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] flex flex-col overflow-hidden"
-                  style={{ width: "360px", height: "500px" }}
+                  className="
+                    bg-[#FFF7E6]
+                    border border-gray-300
+                    rounded-xl
+                    shadow-md
+                    hover:shadow-lg
+                    flex flex-col
+                    overflow-hidden
+                    transition-transform
+                    hover:scale-[1.02]
+                    duration-300
+                  "
+                  style={{ width: "380px", height: "520px" }}
                 >
-                  <h3 className="text-xl font-semibold text-center text-gray-800 mt-4">
+                  {/* Title */}
+                  <div className="text-center text-xl font-semibold text-gray-800 pt-4 pb-2">
                     {event.title}
-                  </h3>
+                  </div>
 
-                  <div className="flex justify-center items-center p-4">
+                  {/* Flyer */}
+                  <div
+                    className="flex justify-center items-center cursor-pointer px-3"
+                    onClick={() => setSelectedEvent(event)}
+                  >
                     {event.flyer ? (
                       isPdfUrl(event.flyer) ? (
-                        <PdfViewer
-                          fileUrl={event.flyer}
-                          containerHeight={300}
-                        />
+                        <PdfViewer fileUrl={event.flyer} containerHeight={340} />
                       ) : (
                         <img
                           src={event.flyer}
                           alt={`${event.title} Flyer`}
-                          className="w-full h-[300px] object-cover rounded-xl border border-gray-300 shadow-sm"
+                          className="w-full h-[350px] object-cover rounded-lg border border-gray-300"
                         />
                       )
                     ) : (
-                      <div className="w-full h-[300px] bg-gray-100 flex items-center justify-center text-gray-400 italic border border-gray-200 rounded-xl">
+                      <div className="w-full h-[350px] bg-gray-100 flex items-center justify-center text-gray-400 italic border border-gray-300 rounded-lg">
                         No Flyer Available
                       </div>
                     )}
                   </div>
 
-                  <CardBody className="flex justify-between items-center px-5 pb-5">
-                    <p className="text-lg font-semibold text-gray-700 ml-2">
-                      {event.startDate
-                        ? new Date(event.startDate).toLocaleDateString()
-                        : "TBD"}
-                      {event.endDate &&
-                        event.startDate !== event.endDate &&
-                        ` – ${new Date(event.endDate).toLocaleDateString()}`}
-                    </p>
+                  {/* Footer */}
+                  <CardBody className="flex justify-between items-center p-4 text-center">
+                    <div className="text-gray-700 text-lg font-medium">
+                      {formatDateRange(event.startDate, event.endDate)}
+                    </div>
 
                     <Button
-                      as={Link}
-                      href={`/Event/${event.id}`}
-                      className="bg-[#f97b0d] text-white font-semibold px-5 py-2 rounded-lg shadow-md hover:scale-105 hover:shadow-lg transition-transform duration-200"
+                      onClick={() => setSelectedEvent(event)}
+                      className="bg-[#ff8c00] border border-gray-300 text-black font-semibold px-4 py-2 rounded-md hover:scale-105 transition-transform duration-200"
                     >
                       View Details
                     </Button>
@@ -165,6 +200,37 @@ export default function HomePage() {
           )}
         </div>
       </div>
+
+      {/* Modal */}
+      {selectedEvent && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex justify-center items-center z-50">
+          {/* Back button */}
+          <button
+            onClick={handleCloseModal}
+            className="absolute top-6 left-6 bg-[#ff8c00] text-white px-6 py-3 text-lg rounded-md shadow-lg hover:scale-105 transition-transform duration-200"
+          >
+            Back
+          </button>
+
+          {/* Enlarged Flyer */}
+          <div className="relative bg-white rounded-lg shadow-2xl max-w-6xl w-full mx-6 flex justify-center items-center p-6">
+            {selectedEvent.flyer ? (
+              isPdfUrl(selectedEvent.flyer) ? (
+                <PdfViewer fileUrl={selectedEvent.flyer} containerHeight={700} />
+              ) : (
+                <img
+                  src={selectedEvent.flyer}
+                  alt={`${selectedEvent.title} Flyer`}
+                  className="max-h-[90vh] object-contain rounded-lg"
+                />
+              )
+            ) : (
+              <p className="text-gray-600 italic text-lg">No flyer available</p>
+            )}
+          </div>
+        </div>
+      )}
+
       <BottomBar />
     </div>
   );
