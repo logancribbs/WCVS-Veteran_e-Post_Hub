@@ -6,10 +6,16 @@ import { Search } from "lucide-react";
 import WhitmanLogo from "@/app/Images/whitman.png";
 import Link from "next/link";
 
-export default function HeroBanner() {
+type HeroBannerProps = {
+  query: string;
+  onQueryChange: (q: string) => void;
+  onSubmit?: () => void;
+};
+
+export default function HeroBanner({ query, onQueryChange, onSubmit }: HeroBannerProps) {
   return (
     <section className="w-full">
-      {/* Top header section */}
+      {/* Top Header */}
       <div
         className="flex flex-col md:flex-row items-center justify-between px-6 md:px-16 py-6"
         style={{
@@ -18,11 +24,11 @@ export default function HeroBanner() {
           boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
         }}
       >
-        {/* Logo on the left */}
+        {/* Logo */}
         <div className="flex items-center justify-center md:justify-start mb-4 md:mb-0">
           <Image
             src={WhitmanLogo}
-            alt="Whitman County Veterans Services Logo"
+            alt="Logo"
             width={120}
             height={120}
             className="rounded-md drop-shadow-md"
@@ -30,12 +36,12 @@ export default function HeroBanner() {
           />
         </div>
 
-        {/* Center title */}
+        {/* Title */}
         <h1 className="text-4xl md:text-5xl font-extrabold text-center text-gray-900 drop-shadow-[2px_2px_3px_rgba(0,0,0,0.2)]">
           Veterans e-Post Hub
         </h1>
 
-        {/* Create Event button on the right */}
+        {/* Create Event Button */}
         <div className="flex items-center justify-center md:justify-end mt-4 md:mt-0">
           <Link href="/Event/create">
             <Button
@@ -47,7 +53,7 @@ export default function HeroBanner() {
         </div>
       </div>
 
-      {/* Lower section (search bar) */}
+      {/* Search Bar */}
       <div
         className="flex justify-center py-5"
         style={{
@@ -61,6 +67,11 @@ export default function HeroBanner() {
             placeholder="Search Events"
             size="lg"
             startContent={<Search size={18} />}
+            value={query}
+            onChange={(e) => onQueryChange(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && onSubmit) onSubmit();
+            }}
             classNames={{
               input: "text-base px-4",
               inputWrapper:
