@@ -49,26 +49,15 @@ export default function HomePage() {
     return url.toLowerCase().endsWith(".pdf");
   }
 
-<<<<<<< HEAD
   // ✅ Source list and filtered list
-=======
-  // CHANGED: we will actually use `events` as the authoritative list
->>>>>>> 20aed4ee0db8ca3dc89d39744ebe4ad7d4d16fc4
   const [events, setEvents] = useState<Event[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
-<<<<<<< HEAD
   // ✅ NEW: Live search query
   const [searchQuery, setSearchQuery] = useState("");
 
   // ✅ NEW: Multi-field search filter
-=======
-  // NEW: search query lives here (we'll pass it down to HeroBanner)
-  const [searchQuery, setSearchQuery] = useState("");
-
-  // NEW: small helper to filter by multiple fields
->>>>>>> 20aed4ee0db8ca3dc89d39744ebe4ad7d4d16fc4
   function filterEventsByQuery(query: string, items: Event[]) {
     const q = query.trim().toLowerCase();
     if (!q) return items;
@@ -115,29 +104,18 @@ export default function HomePage() {
           }
         });
 
-<<<<<<< HEAD
         // ✅ Store original list
         setEvents(allEvents);
 
         // ✅ Initial filtered list based on current query (empty initially)
         setFilteredEvents(filterEventsByQuery(searchQuery, allEvents));
-=======
-        // CHANGED: keep the raw list and apply current query once
-        setEvents(allEvents); // source of truth
-        setFilteredEvents(filterEventsByQuery(searchQuery, allEvents)); // respects current query
->>>>>>> 20aed4ee0db8ca3dc89d39744ebe4ad7d4d16fc4
       } catch (error) {
         console.error("Error fetching approved events:", error);
       }
     }
 
     fetchApprovedEvents();
-  }, []); // initial load
-
-  // NEW: re-filter whenever query or source list changes
-  useEffect(() => {
-    setFilteredEvents(filterEventsByQuery(searchQuery, events));
-  }, [searchQuery, events]);
+  }, []);
 
   // ✅ Live filtering (Option A you selected)
   useEffect(() => {
@@ -172,22 +150,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen w-full bg-blue-100 flex flex-col relative">
-<<<<<<< HEAD
       {/* ✅ updated HeroBanner with search props */}
       <HeroBanner query={searchQuery} onQueryChange={setSearchQuery} />
-=======
-      {/* CHANGED: make HeroBanner a controlled search input */}
-      {/*    You will update HeroBanner to accept these props:
-            - query: string
-            - onQueryChange: (q: string) => void
-            (If your HeroBanner has a Search button, you can also pass onSubmit)
-      */}
-      <HeroBanner
-        query={searchQuery}                 // NEW
-        onQueryChange={setSearchQuery}      // NEW
-        // onSubmit={() => setFilteredEvents(filterEventsByQuery(searchQuery, events))} // optional
-      />
->>>>>>> 20aed4ee0db8ca3dc89d39744ebe4ad7d4d16fc4
 
       <div className="flex flex-col md:flex-row w-full pt-6">
         {/* Sidebar (KEEP OUR FIXED WIDTH) */}
@@ -195,14 +159,8 @@ export default function HomePage() {
           <Sidebar />
         </div>
 
-<<<<<<< HEAD
         {/* EVENT GRID */}
         <div className="content flex-1 p-6 pl-8 md:pl-12 lg:pl-16">
-=======
-        {/* Event Cards */}
-        {/* ONLY CHANGE (existing): lg:pl-10 to prevent overlap on Windows */}
-        <div className="content flex-1 p-6 lg:pl-10">
->>>>>>> 20aed4ee0db8ca3dc89d39744ebe4ad7d4d16fc4
           {filteredEvents.length === 0 ? (
             <p className="text-center text-lg">No events available.</p>
           ) : (

@@ -6,23 +6,12 @@ import { Search } from "lucide-react";
 import WhitmanLogo from "@/app/Images/whitman.png";
 import Link from "next/link";
 
-<<<<<<< HEAD
-=======
-// NEW: accept props from page.tsx
-//  - query: controlled value from parent
-//  - onQueryChange: callback to update search state
-//  - onSubmit: optional handler (if you want a Search button or Enter key to trigger filtering manually)
->>>>>>> 20aed4ee0db8ca3dc89d39744ebe4ad7d4d16fc4
 type HeroBannerProps = {
   query: string;
   onQueryChange: (q: string) => void;
   onSubmit?: () => void;
 };
 
-<<<<<<< HEAD
-=======
-// CHANGED: use props instead of a bare function with no arguments
->>>>>>> 20aed4ee0db8ca3dc89d39744ebe4ad7d4d16fc4
 export default function HeroBanner({ query, onQueryChange, onSubmit }: HeroBannerProps) {
   return (
     <section className="w-full">
@@ -78,26 +67,11 @@ export default function HeroBanner({ query, onQueryChange, onSubmit }: HeroBanne
             placeholder="Search Events"
             size="lg"
             startContent={<Search size={18} />}
-<<<<<<< HEAD
             value={query}
             onChange={(e) => onQueryChange(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter" && onSubmit) onSubmit();
             }}
-=======
-
-            // NEW: controlled value
-            value={query}
-
-            // NEW: update parent when user types
-            onChange={(e) => onQueryChange(e.target.value)}
-
-            // OPTIONAL: let Enter key trigger a manual search if provided
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && onSubmit) onSubmit();
-            }}
-
->>>>>>> 20aed4ee0db8ca3dc89d39744ebe4ad7d4d16fc4
             classNames={{
               input: "text-base px-4",
               inputWrapper:
