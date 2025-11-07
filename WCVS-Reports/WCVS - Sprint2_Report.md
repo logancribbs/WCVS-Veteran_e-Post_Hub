@@ -2,10 +2,12 @@
 ## [Youtube link for Sprint 2 Video](https://youtu.be/qwaXFh73cuc)
 
 ## What's New (User Facing)
-
+The webpage now features a significantly more refined and responsive interface. Event tiles were redesigned for clarity and better visual hierarchy, making event information easier to digest. The navigation bar and menu guide were updated for smoother accessibility across both desktop and mobile views. A responsive search bar has been implemented, allowing users to dynamically filter and find events based on keywords, improving the browsing experience. The desktop UI banner and color palette were also adjusted to better align with the site’s theme and client feedback. Overall, the frontend now feels more cohesive, modern, and functional, providing users with a clearer sense of structure and purpose when visiting the Veteran e-Post Hub.
 
 ## Work Summary (Developer Facing)
+This sprint primarily focused on stabilizing the frontend layout and finalizing the responsive UI design. We have worked on refining the landing page structure (app/page.tsx) and global layout (app/layout.tsx) to ensure consistency across all components. We have experimented but not yetintegrated Tailwind CSS configurations to support custom responsiveness and theme consistency, while also improving maintainability of global styles. A new search component was added to the main page, featuring live query handling and responsive adaptation for smaller screens.
 
+In parallel, updates were made to key project documents including the Requirements & Specifications and Solution Approach, ensuring technical alignment with client expectations. We have also prepared a working prototype presentation and video demonstration to summarize progress for stakeholders. The backend implementation for admin and event management was deferred, as the team prioritized ensuring the UI’s stability before integrating database and CRUD operations in the next sprint.
 
 ## Unfinished Work
 * [Meeting with former developers](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/6): Life happens, we were able to relay information but unsuccessful follow-up (not our biggest priority but input would be nice).
