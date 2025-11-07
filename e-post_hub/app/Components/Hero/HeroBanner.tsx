@@ -20,7 +20,7 @@ export default function HeroBanner({ query, onQueryChange, onSubmit }: HeroBanne
         className="flex flex-col md:flex-row items-center justify-between px-6 md:px-16 py-6"
         style={{
           background:
-            "linear-gradient(135deg, #ff9900 0%, #ff7b00 50%, #ff5500 100%)",
+            "linear-gradient(135deg, #ffb547ff 0%, #ff9838ff 50%, #ff5500 100%)",
           boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
         }}
       >
@@ -29,8 +29,8 @@ export default function HeroBanner({ query, onQueryChange, onSubmit }: HeroBanne
           <Image
             src={WhitmanLogo}
             alt="Logo"
-            width={120}
-            height={120}
+            width={150}
+            height={150}
             className="rounded-md drop-shadow-md"
             priority
           />
