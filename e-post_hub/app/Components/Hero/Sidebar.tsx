@@ -42,31 +42,34 @@ export default function Sidebar() {
         </p>
       </div>
 
-      <nav className="w-full flex flex-col gap-3 text-left font-semibold">
-        <a
-          href="https://www.va.gov/spokane-health-care/locations/mann-grandstaff-department-of-veterans-affairs-medical-center/"
-          target="_blank"
-          className="hover:underline"
-        >
-          - Veteran Health Care
-        </a>
+   <nav className="w-full flex flex-col gap-3 text-left font-semibold text-white text-base">
+  <a
+    href="https://www.va.gov/spokane-health-care/locations/mann-grandstaff-department-of-veterans-affairs-medical-center/"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="hover:underline"
+  >
+    - Veteran Health Care
+  </a>
 
-        <a
-          href="https://www.whitmancounty.gov/628/Veteran-Services-Officer"
-          target="_blank"
-          className="hover:underline text-[1.05rem]"
-        >
-          - Whitman County Veteran Services
-        </a>
+  <a
+    href="https://www.whitmancounty.gov/628/Veteran-Services-Officer"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="hover:underline"
+  >
+    - Whitman County Veteran Services
+  </a>
 
-        <a
-          href="https://palouseresources.org/"
-          target="_blank"
-          className="hover:underline"
-        >
-          - Palouse Resource Guide
-        </a>
-      </nav>
+  <a
+    href="https://palouseresources.org/"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="hover:underline"
+  >
+    - Palouse Resource Guide
+  </a>
+</nav>
     </aside>
   );
 }

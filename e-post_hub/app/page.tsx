@@ -49,15 +49,15 @@ export default function HomePage() {
     return url.toLowerCase().endsWith(".pdf");
   }
 
-  // ✅ Source list and filtered list
+  // Source list and filtered list
   const [events, setEvents] = useState<Event[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
-  // ✅ NEW: Live search query
+  // Live search query
   const [searchQuery, setSearchQuery] = useState("");
 
-  // ✅ NEW: Multi-field search filter
+  // Multi-field search filter
   function filterEventsByQuery(query: string, items: Event[]) {
     const q = query.trim().toLowerCase();
     if (!q) return items;
@@ -90,7 +90,7 @@ export default function HomePage() {
         const data = await response.json();
         const allEvents = data.events as Event[];
 
-        // ✅ Apply date sorting & start/end range extraction
+        // Apply date sorting & start/end range extraction
         allEvents.forEach((ev) => {
           if (ev.occurrences && ev.occurrences.length > 0) {
             ev.occurrences.sort(
@@ -104,10 +104,10 @@ export default function HomePage() {
           }
         });
 
-        // ✅ Store original list
+        // Store original list
         setEvents(allEvents);
 
-        // ✅ Initial filtered list based on current query (empty initially)
+        // Initial filtered list based on current query
         setFilteredEvents(filterEventsByQuery(searchQuery, allEvents));
       } catch (error) {
         console.error("Error fetching approved events:", error);
@@ -117,7 +117,7 @@ export default function HomePage() {
     fetchApprovedEvents();
   }, []);
 
-  // ✅ Live filtering (Option A you selected)
+  // Live filtering
   useEffect(() => {
     setFilteredEvents(filterEventsByQuery(searchQuery, events));
   }, [searchQuery, events]);
@@ -150,16 +150,16 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen w-full bg-blue-100 flex flex-col relative">
-      {/* ✅ updated HeroBanner with search props */}
+      {/* Updated HeroBanner with search props */}
       <HeroBanner query={searchQuery} onQueryChange={setSearchQuery} />
 
       <div className="flex flex-col md:flex-row w-full pt-6">
-        {/* Sidebar (KEEP OUR FIXED WIDTH) */}
+        {/* Sidebar */}
         <div className="w-full md:w-80 p-4">
           <Sidebar />
         </div>
 
-        {/* EVENT GRID */}
+        {/* Event Grid */}
         <div className="content flex-1 p-6 pl-8 md:pl-12 lg:pl-16">
           {filteredEvents.length === 0 ? (
             <p className="text-center text-lg">No events available.</p>
@@ -239,7 +239,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* MODAL */}
+      {/* Modal */}
       {selectedEvent && (
         <div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex justify-center items-center z-50">
           <button
