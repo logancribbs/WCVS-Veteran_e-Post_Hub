@@ -23,6 +23,8 @@ and incorporating accessibility feedback into the Figma prototype.
 
 ## Completed Issues/User Stories
 Here are links to the issues that we completed in this sprint:
+* [Create Mobile UI Design](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/1)
+* [Create New Webpage UI Mockup](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/2)
 * [US-03 – Event Page Display](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/8)
 
 ## Incomplete Issues/User Stories
