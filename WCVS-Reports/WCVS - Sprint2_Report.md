@@ -34,11 +34,11 @@ Here are links to issues we worked on but did not complete in this sprint:
 **Note:** Last three issues - all of which are mainly backend, will be tackled once the interface and reformatting of new Webpage is approved by Client meeting taking place (11/7).
 
 ## Code Files for Review
-* [Landing Page - e-post_hub/app/page.tsx](e-post_hub/app/page.tsx)
-* [Layout file - e-post_hub/app/layout.tsx](e-post_hub/app/layout.tsx)
-* [Webpage Components - e-post_hub/app/Components](e-post_hub/app/Components)
-* [Global CSS file - e-post_hub/app/globals.css](e-post_hub/app/globals.css)
-* [Tailwind Config file - e-post_hub/tailwind.config.ts](e-post_hub/tailwind.config.ts)
+* [Landing Page - e-post_hub/app/page.tsx](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/blob/15-WCVS-branch/e-post_hub/app/page.tsx)
+* [Layout file - e-post_hub/app/layout.tsx](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/blob/15-WCVS-branch/e-post_hub/app/layout.tsx)
+* [Webpage Components - e-post_hub/app/Components](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/tree/15-WCVS-branch/e-post_hub/app/Components)
+* [Global CSS file - e-post_hub/app/globals.css](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/blob/15-WCVS-branch/e-post_hub/app/globals.css)
+* [Tailwind Config file - e-post_hub/tailwind.config.ts](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/blob/15-WCVS-branch/e-post_hub/tailwind.config.ts)
 
 ## Retrospective Summary
 Here's what went well:
