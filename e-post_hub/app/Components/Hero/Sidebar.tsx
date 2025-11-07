@@ -7,23 +7,28 @@ export default function Sidebar() {
     <aside
       className="
         w-full
-        md:w-[260px]
+        // md:w-[260px]
+        md:min-w-[300px]
+        lg:min-w-[320px]
         bg-[#8C1F1F]
         border border-black
         rounded-lg
-        p-5
+        p-5 md:p-6
         flex flex-col
         items-center
         text-white
         shadow-md
+        md:sticky md:top-6
+        gap-4
       "
     >
       <Image
         src="/buri_photo.jpeg"
         alt="Becky Buri"
-        width={240}
-        height={240}
-        className="rounded-lg border border-gray-300 object-cover mb-6"
+        width={0}
+        height={0}
+        sizes="100vw"
+        className="w-full max-w-[260px] h-auto rounded-lg border border-gray-300 object-contain mb-6"
         unoptimized
       />
 

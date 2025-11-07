@@ -155,12 +155,12 @@ export default function HomePage() {
 
       <div className="flex flex-col md:flex-row w-full pt-6">
         {/* Sidebar */}
-        <div className="w-full md:w-80 p-4">
+        <div className="w-full md:w-[30%] lg:w-[28%] xl:w-[25%] p-4 md:p-6">
           <Sidebar />
         </div>
 
         {/* Event Grid */}
-        <div className="content flex-1 p-6 pl-8 md:pl-12 lg:pl-16">
+        <div className="content flex-1 p-6 md:pl-8 lg:pl-12">
           {filteredEvents.length === 0 ? (
             <p className="text-center text-lg">No events available.</p>
           ) : (
