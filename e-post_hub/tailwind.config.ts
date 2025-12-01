@@ -10,6 +10,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        zs: {max: "1200px"}, // kicks in around 150-175% zoom
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
