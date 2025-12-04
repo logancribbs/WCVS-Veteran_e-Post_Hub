@@ -7,17 +7,16 @@ export default function Sidebar() {
     <aside
       className="
         w-full
-        // md:w-[260px]
         md:min-w-[300px]
         lg:min-w-[320px]
-        bg-[#8C1F1F]
-        border border-black
-        rounded-lg
+        bg-gradient-to-b from-[#8C1F1F] via-[#A32626] to-[#ff8c00]
+        border-2 border-black/70
+        rounded-2xl
         p-5 md:p-6
         flex flex-col
         items-center
         text-white
-        shadow-md
+        shadow-[0_6px_16px_rgba(0,0,0,0.35)]   
         md:sticky md:top-6
         gap-4
       "
