@@ -6,9 +6,22 @@ import Providers from "./Components/Providers";
 import { EdgeStoreProvider } from "@/lib/edgestore";
 
 // Webpage Font Style
-import { Roboto, Inter } from "next/font/google";
-const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
-const inter = Inter({ subsets: ["latin"], weight: ["400", "500"] });
+import { Montserrat, Source_Sans_3 } from "next/font/google";
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
+  variable: "--font-heading",
+  display: "swap",
+});
+
+const sourceSans = Source_Sans_3({
+  subsets: ["latin"],
+  weight: ["400", "600"],
+  variable: "--font-body",
+  display: "swap",
+});
+
 
 export const metadata: Metadata = {
   title: "Veteran e-Post Hub",
@@ -22,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.className}>
+    <html lang="en" className={`${montserrat.variable} ${sourceSans.variable}`}>
       <body>
         <EdgeStoreProvider>
           <Providers>

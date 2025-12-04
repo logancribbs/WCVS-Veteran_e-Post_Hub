@@ -10,6 +10,25 @@ const config: Config = {
   ],
   theme: {
     extend: {
+       /* NEW: connect Tailwind font utilities to your CSS variables
+         (set in layout.tsx via Montserrat + Source Sans Pro) */
+      fontFamily: {
+        // used by `font-sans`
+        sans: [
+          "var(--font-body)",
+          "Source Sans Pro",
+          "ui-sans-serif",
+          "system-ui",
+        ],
+        
+        heading: [
+          "var(--font-heading)",
+          "Montserrat",
+          "ui-sans-serif",
+          "system-ui",
+        ],
+      },
+
       screens: {
         zs: {max: "1200px"}, // kicks in around 150-175% zoom
       },
