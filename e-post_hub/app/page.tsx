@@ -222,7 +222,7 @@ export default function HomePage() {
 
                   {/* Footer */}
                   <CardBody className="flex justify-between items-center p-4 text-center">
-                    <div className="text-gray-700 text-lg font-medium">
+                    <div className="text-gray-800 text-lg font-medium">
                       {formatDateRange(event.startDate, event.endDate)}
                     </div>
 
