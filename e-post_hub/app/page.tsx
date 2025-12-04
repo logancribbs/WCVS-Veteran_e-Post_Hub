@@ -179,14 +179,15 @@ export default function HomePage() {
                   key={event.id}
                   className="
                     bg-[#FFF7E6]
-                    border border-gray-300
-                    rounded-xl
+                    border-2 border-gray-500
+                    rounded-2xl
                     shadow-md
-                    hover:shadow-lg
+                    hover:shadow-xl
                     flex flex-col
                     overflow-hidden
                     transition-transform
-                    hover:scale-[1.02]
+                    hover:scale-[1.03]
+                    hover:ring-4
                     duration-300
                     w-full max-w-[380px]
                     h-[520px]
