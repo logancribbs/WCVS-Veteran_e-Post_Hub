@@ -8,6 +8,7 @@ import BottomBar from "./Components/BottomBar/BottomBar";
 import PdfViewer from "./Components/PdfViewer/PdfViewer";
 import HeroBanner from "./Components/Hero/HeroBanner";
 import Sidebar from "./Components/Hero/Sidebar";
+import { ArrowRight } from "lucide-react";
 
 type EventOccurrence = {
   id: string;
@@ -194,7 +195,7 @@ export default function HomePage() {
                   "
                 >
                   {/* Title */}
-                  <div className="text-center text-xl font-semibold text-gray-800 pt-4 pb-2">
+                  <div className="text-center text-xl font-semibold text-gray-900 pt-4 pb-2">
                     {event.title}
                   </div>
 
@@ -228,9 +229,33 @@ export default function HomePage() {
 
                     <Button
                       onClick={() => setSelectedEvent(event)}
-                      className="bg-[#ff8c00] border border-gray-300 text-black font-semibold px-4 py-2 rounded-md hover:scale-105 transition-transform duration-200"
+                      aria-label={`View details for ${event.title}`}
+                      className="
+                        group
+                        inline-flex items-center gap-2
+                        px-5 py-2
+                        rounded-full                       /* pill shape */
+                        bg-[#ff8c00]
+                        border border-black/40
+                        text-black font-semibold
+                        shadow-sm
+                        transition-all duration-200
+                        hover:shadow-md
+                        hover:-translate-y-0.5             /* slight lift */
+                        focus-visible:outline-none
+                        focus-visible:ring-2
+                        focus-visible:ring-offset-2
+                        focus-visible:ring-[#ff8c00]
+                      "
                     >
-                      View Details
+                      <span className="text-sm tracking-wide">View Details</span>
+                      <ArrowRight
+                        className="
+                          w-4 h-4
+                          transition-transform duration-200
+                          group-hover:translate-x-0.5      /* arrow nudges forward on hover */
+                        "
+                      />
                     </Button>
                   </CardBody>
                 </Card>
