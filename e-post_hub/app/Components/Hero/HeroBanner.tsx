@@ -68,7 +68,7 @@ export default function HeroBanner({ query, onQueryChange, onSubmit }: HeroBanne
 
       {/* Search Bar */}
       <div
-        className="flex justify-center py-5"
+        className="flex justify-center py-3"
         style={{
           background:
             "linear-gradient(90deg, #fae6c8 0%, #f8e1b6 50%, #f5dca3 100%)",
@@ -78,8 +78,8 @@ export default function HeroBanner({ query, onQueryChange, onSubmit }: HeroBanne
           <Input
             aria-label="Search Events"
             placeholder="Search Events"
-            size="lg"
-            startContent={<Search size={18} />}
+            size="md"
+            startContent={<Search size={16} />}
             value={query}
             onChange={(e) => onQueryChange(e.target.value)}
             onKeyDown={(e) => {
