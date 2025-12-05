@@ -5,6 +5,7 @@ import { Input, Button } from "@nextui-org/react";
 import { Search } from "lucide-react";
 import WhitmanLogo from "@/app/Images/whitman.png";
 import Link from "next/link";
+import { Plus } from "lucide-react";
 
 type HeroBannerProps = {
   query: string;
@@ -45,8 +46,20 @@ export default function HeroBanner({ query, onQueryChange, onSubmit }: HeroBanne
         <div className="flex items-center justify-center md:justify-end mt-4 md:mt-0">
           <Link href="/Event/create">
             <Button
-              className="bg-[#ff8c00] border-2 border-black text-black font-semibold px-6 py-2 rounded-md shadow-md hover:shadow-lg hover:bg-[#ff7b00] transition-all duration-200"
+              className="
+                group inline-flex items-center gap-2
+                px-6 py-2.5 rounded-full
+                bg-[#ff8c00]
+                text-black font-heading font-semibold
+                border border-black/40
+                shadow-sm
+                hover:bg-[#ffa733]
+                hover:shadow-md
+                hover:-translate-y-0.5
+                transition-all duration-200
+              "
             >
+            <Plus className="w-4 h-4" />
               Create Event
             </Button>
           </Link>
