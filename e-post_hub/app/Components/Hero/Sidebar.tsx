@@ -1,8 +1,45 @@
 "use client";
 
 import Image from "next/image";
+// state + effect for slideshow
+import { useEffect, useState } from "react";
 
 export default function Sidebar() {
+
+  // list of images to use in the slideshow
+  // replace these paths with whatever images you want to show.
+  const slideshowImages = [
+    "/Helmet_w_Flag.jpg",
+    "/Landscape_1.jpg",
+    "/Landscape_2.jpg",
+    "/US_Flags_Veterans.jpg",
+    "/Landscape_3.jpg"
+  ];
+
+  const [currentIndex, setCurrentIndex] = useState(0); 
+
+  // auto-advance the slideshow every 5 seconds
+  useEffect(() => {
+    if (slideshowImages.length <= 1) return; // no need to rotate a single image
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % slideshowImages.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [slideshowImages.length]);
+
+  // manual controls
+  const showPrev = () => {
+    setCurrentIndex((prev) =>
+      prev === 0 ? slideshowImages.length - 1 : prev - 1
+    );
+  };
+
+  const showNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % slideshowImages.length);
+  };
+
   return (
     <aside
       className="
@@ -21,15 +58,85 @@ export default function Sidebar() {
         gap-4
       "
     >
-      <Image
-        src="/buri_photo.jpeg"
-        alt="Becky Buri"
-        width={0}
-        height={0}
-        sizes="100vw"
-        className="w-full max-w-[260px] h-auto rounded-lg border border-gray-300 object-contain mb-6"
-        unoptimized
-      />
+      <div
+        className="
+          w-full max-w-[260px]
+          rounded-lg
+          border border-gray-300
+          overflow-hidden
+          relative
+          shadow-md
+        "
+      >
+        <Image
+          src={slideshowImages[currentIndex]} // use current slide
+          alt="Veteran Services photos"
+          width={0}
+          height={0}
+          sizes="100vw"
+          className="w-full h-auto object-contain"
+          unoptimized
+        />
+
+        {/* show controls only if there is more than one image */}
+        {slideshowImages.length > 1 && (
+          <>
+            {/* Prev/Next buttons */}
+            <button
+              type="button"
+              onClick={showPrev}
+              className="
+                absolute left-2 top-1/2 -translate-y-1/2
+                bg-black/40 hover:bg-black/60
+                text-white
+                rounded-full
+                w-7 h-7
+                flex items-center justify-center
+                text-xs
+                transition-colors
+              "
+              aria-label="Previous image"
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              onClick={showNext}
+              className="
+                absolute right-2 top-1/2 -translate-y-1/2
+                bg-black/40 hover:bg-black/60
+                text-white
+                rounded-full
+                w-7 h-7
+                flex items-center justify-center
+                text-xs
+                transition-colors
+              "
+              aria-label="Next image"
+            >
+              ›
+            </button>
+
+            {/* Dots indicator */}
+            <div
+              className="
+                absolute bottom-2 left-1/2 -translate-x-1/2
+                flex gap-1.5
+              "
+            >
+              {slideshowImages.map((_, idx) => (
+                <span
+                  key={idx}
+                  className={`
+                    h-2 w-2 rounded-full
+                    ${idx === currentIndex ? "bg-white" : "bg-white/50"}
+                  `}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
 
       <div className="text-center mb-6">
         <h3 className="text-xl font-semibold mb-2">Contact Info</h3>
