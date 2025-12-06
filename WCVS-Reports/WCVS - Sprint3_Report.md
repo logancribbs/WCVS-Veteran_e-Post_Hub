@@ -38,6 +38,8 @@
 * [Responsive UI to changing seasons](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/26)
 * [Meeting with former developers](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/6)
 * [Downloading Event Flyers](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/9)
+* [Old event removal automation](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/21)
+* [Event Priority/Boost feature](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/20)
 
 
 ## Code Files for Review
