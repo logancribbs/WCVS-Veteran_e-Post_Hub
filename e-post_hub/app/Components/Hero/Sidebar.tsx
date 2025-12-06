@@ -44,8 +44,8 @@ export default function Sidebar() {
     <aside
       className="
         w-full
-        md:min-w-[300px]
-        lg:min-w-[320px]
+        md:min-w-[340px]
+        lg:min-w-[360px]
         bg-gradient-to-b from-[#8C1F1F] via-[#A32626] to-[#ff8c00]
         border-2 border-black/70
         rounded-2xl
@@ -60,7 +60,7 @@ export default function Sidebar() {
     >
       <div
         className="
-          w-full max-w-[260px]
+          w-full max-w-[320px]
           rounded-lg
           border border-gray-300
           overflow-hidden
