@@ -1,6 +1,7 @@
 "use client";
 
-import { type EdgeStoreRouter } from "@/app/api/edgestore/[...edgestore]/route";
 import { createEdgeStoreProvider } from "@edgestore/react";
 
-export const { EdgeStoreProvider, useEdgeStore} = createEdgeStoreProvider<EdgeStoreRouter>();
+// Local provider + hook for client-side uploads.
+// No global layout change required if you wrap the page locally.
+export const { EdgeStoreProvider, useEdgeStore } = createEdgeStoreProvider();

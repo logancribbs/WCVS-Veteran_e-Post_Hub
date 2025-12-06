@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     const authHeader = req.headers.get("authorization");
     let role = "GUEST";
     let userId: string | null = null;
-    
+
     if (authHeader && authHeader.startsWith("Bearer ")) {
       const token = authHeader.split(" ")[1];
       try {
@@ -22,28 +22,35 @@ export async function POST(req: NextRequest) {
         role = decodedToken.role;
         userId = decodedToken.userId;
       } catch (error) {
-        console.warn("Invalid token, treating as guest:", error);     
+        console.warn("Invalid token, treating as guest:", error);
       }
-    }   
+    }
 
-    const { website, title, description, flyer, type, address, latitude, longitude, eventOccurrences } = await req.json();
+    const {
+      website,
+      title,
+      description,
+      flyer,
+      type,
+      address,
+      latitude,
+      longitude,
+      eventOccurrences,
+    } = await req.json();
 
-    // Fetch latitude and longitude from Google Maps API if an address is provided
+    // Geocode if needed
     let resolvedLatitude = latitude;
     let resolvedLongitude = longitude;
 
     if (address && (!latitude || !longitude)) {
       try {
         const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-
-        // Check if API key is missing
         if (!apiKey) {
           console.warn("Warning: GOOGLE_MAPS_API_KEY is missing. Proceeding without geolocation.");
         } else {
           const geoUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
           const response = await fetch(geoUrl);
           const geoData = await response.json();
-
           if (geoData.status === "OK" && geoData.results.length > 0) {
             resolvedLatitude = geoData.results[0].geometry.location.lat;
             resolvedLongitude = geoData.results[0].geometry.location.lng;
@@ -52,43 +59,39 @@ export async function POST(req: NextRequest) {
           }
         }
       } catch (error) {
-        // Log error but continue
         console.error("Error fetching geolocation:", error);
         console.warn("Proceeding without coordinates due to geolocation failure.");
       }
     }
 
-    // Validate title or flyer requirement
+    // Require title or flyer
     if (!title && !flyer) {
       return NextResponse.json({ message: 'Either title or flyer is required' }, { status: 400 });
     }
 
-    // Set status based on role
-    const eventStatus = role === 'ADMIN' ? 'APPROVED' : 'PENDING';
+    // Force APPROVED so it appears in /api/Event/approved immediately
+    const eventStatus = 'APPROVED';
 
     // Create the event
     const newEvent = await prisma.event.create({
       data: {
         createdById: userId || undefined,
-        website,
-        title,
-        description,
-        flyer,
-        type,
-        address,
-        latitude: resolvedLatitude,
-        longitude: resolvedLongitude,
-        status: eventStatus, // Automatically set status based on role
+        website: website || null,
+        title: title || null,
+        description: description || null,
+        flyer: flyer || null,
+        type: type || null,
+        address: address || null,
+        latitude: resolvedLatitude ?? null,
+        longitude: resolvedLongitude ?? null,
+        status: eventStatus,
       },
     });
 
-  // 2) Create the occurrences
-    // If the user provided an array of date/time objects, store them
+    // Create occurrences (if provided)
     if (Array.isArray(eventOccurrences)) {
       for (const occ of eventOccurrences) {
-
         const dateObj = new Date(occ.date);
-
         await prisma.eventOccurrence.create({
           data: {
             eventId: newEvent.id,
