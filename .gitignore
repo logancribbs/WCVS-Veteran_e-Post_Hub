@@ -6,3 +6,10 @@ node_modules
 
 # macOS
 .DS_Store
+
+# OS junk
+.DS_Store
+
+# Local artifacts
+ e-post_hub/prisma/dev.db
+e-post_hub.zip

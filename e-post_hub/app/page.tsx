@@ -1,7 +1,7 @@
+// e-post_hub/app/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button, Card, CardBody } from "@nextui-org/react";
 import jwt from "jsonwebtoken";
 import BottomBar from "./Components/BottomBar/BottomBar";
@@ -22,10 +22,7 @@ type Event = {
   id: string;
   title: string;
   description?: string;
-  createdBy: {
-    name: string;
-    email: string;
-  };
+  createdBy: { name: string; email: string };
   status: string;
   startDate?: string;
   endDate?: string;
@@ -43,38 +40,48 @@ type Event = {
 };
 
 export default function HomePage() {
-  const router = useRouter();
-
   function isPdfUrl(url?: string | null) {
     if (!url) return false;
     return url.toLowerCase().endsWith(".pdf");
   }
 
-  // Source list and filtered list
   const [events, setEvents] = useState<Event[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-
-  // Live search query
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Multi-field search filter
+  // 👇 controls Create Event vs WAVA in HeroBanner
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Read role (prefer saved role, fallback to JWT)
+  useEffect(() => {
+    const role = typeof window !== "undefined" ? localStorage.getItem("role") : null;
+    if (role) {
+      setIsAdmin(role === "ADMIN");
+      return;
+    }
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    if (token) {
+      try {
+        const decoded = jwt.decode(token) as { role?: string } | null;
+        setIsAdmin(decoded?.role === "ADMIN");
+      } catch {
+        setIsAdmin(false);
+      }
+    } else {
+      setIsAdmin(false);
+    }
+  }, []);
+
   function filterEventsByQuery(query: string, items: Event[]) {
     const q = query.trim().toLowerCase();
     if (!q) return items;
 
     return items.filter((e) => {
-      const haystack = [
-        e.title,
-        e.description,
-        e.address,
-        e.type,
-        e.createdBy?.name,
-      ]
+      const haystack = [e.title, e.description, e.address, e.type, e.createdBy?.name]
         .filter(Boolean)
         .join(" ")
         .toLowerCase();
-
       return haystack.includes(q);
     });
   }
@@ -89,26 +96,22 @@ export default function HomePage() {
         }
 
         const data = await response.json();
-        const allEvents = data.events as Event[];
+        const allEvents = (data.events as Event[]) || [];
 
-        // Apply date sorting & start/end range extraction
+        // sort occurrences and compute start/end display dates
         allEvents.forEach((ev) => {
-          if (ev.occurrences && ev.occurrences.length > 0) {
+          if (ev.occurrences?.length) {
             ev.occurrences.sort(
               (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
             );
             const earliest = ev.occurrences[0].date;
             const latest = ev.occurrences[ev.occurrences.length - 1].date;
-
             ev.startDate = earliest.split("T")[0];
             ev.endDate = latest.split("T")[0];
           }
         });
 
-        // Store original list
         setEvents(allEvents);
-
-        // Initial filtered list based on current query
         setFilteredEvents(filterEventsByQuery(searchQuery, allEvents));
       } catch (error) {
         console.error("Error fetching approved events:", error);
@@ -118,26 +121,9 @@ export default function HomePage() {
     fetchApprovedEvents();
   }, []);
 
-  // Live filtering
   useEffect(() => {
     setFilteredEvents(filterEventsByQuery(searchQuery, events));
   }, [searchQuery, events]);
-
-  // Redirect based on role
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const decoded = jwt.decode(token) as { role: string };
-        if (decoded) {
-          if (decoded.role === "ADMIN") router.push("/Admin");
-          if (decoded.role === "MEMBER") router.push("/Member");
-        }
-      } catch (error) {
-        console.error("Token decode error:", error);
-      }
-    }
-  }, [router]);
 
   const handleCloseModal = () => setSelectedEvent(null);
 
@@ -151,8 +137,13 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen w-full bg-blue-100 flex flex-col relative">
-      {/* Updated HeroBanner with search props */}
-      <HeroBanner query={searchQuery} onQueryChange={setSearchQuery} />
+      {/* Pass isAdmin so the banner shows Create Event (admin) or WAVA (others) */}
+      <HeroBanner
+        query={searchQuery}
+        onQueryChange={setSearchQuery}
+        onSubmit={() => {}}
+        isAdmin={isAdmin}
+      />
 
       <div className="flex flex-col md:flex-row w-full pt-6">
         {/* Sidebar */}
@@ -234,14 +225,14 @@ export default function HomePage() {
                         group
                         inline-flex items-center gap-2
                         px-5 py-2
-                        rounded-full                       /* pill shape */
+                        rounded-full
                         bg-[#ff8c00]
                         border border-black/40
                         text-black font-semibold
                         shadow-sm
                         transition-all duration-200
                         hover:shadow-md
-                        hover:-translate-y-0.5             /* slight lift */
+                        hover:-translate-y-0.5
                         focus-visible:outline-none
                         focus-visible:ring-2
                         focus-visible:ring-offset-2
@@ -250,11 +241,7 @@ export default function HomePage() {
                     >
                       <span className="text-sm tracking-wide">View Details</span>
                       <ArrowRight
-                        className="
-                          w-4 h-4
-                          transition-transform duration-200
-                          group-hover:translate-x-0.5      /* arrow nudges forward on hover */
-                        "
+                        className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5"
                       />
                     </Button>
                   </CardBody>

@@ -1,4 +1,4 @@
-// Form used when loggin in
+// e-post_hub/app/(auth)/Login/LoginForm.tsx
 "use client";
 
 import { loginSchema, LoginSchema } from "../../../lib/schemas/loginSchema";
@@ -9,7 +9,8 @@ import { useForm } from "react-hook-form";
 import { GiPadlock } from "react-icons/gi";
 
 export default function LoginForm() {
-  const [errorMessage, setErrorMessage] = useState<string | null>(null); // State to store error messages
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -23,35 +24,30 @@ export default function LoginForm() {
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
       if (response.ok) {
         const result = await response.json();
-        localStorage.setItem("token", result.token);
 
-        const userRole = result.role;
-        // Redirect based on role
-        if (userRole === "ADMIN") {
-          window.location.href = "/Admin";
-        } else if (userRole === "MEMBER") {
-          window.location.href = "/Member";
-        } else {
-          setErrorMessage("Unauthorized user role. Please contact support.");
-        }
-      } else {
-        const errorResponse = await response.json();
-        setErrorMessage(`Login failed: ${errorResponse.message}`);
-        console.log("Error response:", errorResponse.message);
+        // Save token + role for the homepage to read
+        if (result?.token) localStorage.setItem("token", result.token);
+        if (result?.role) localStorage.setItem("role", result.role);
+
+        // ✅ Always go to the homepage so the new banner renders
+        window.location.href = "/";
+        return;
       }
+
+      const errorResponse = await response.json().catch(() => null);
+      setErrorMessage(
+        `Login failed${errorResponse?.message ? `: ${errorResponse.message}` : ""}`
+      );
+      console.log("Error response:", errorResponse?.message);
     } catch (error) {
       console.error("An error occurred during login:", error);
-      setErrorMessage(
-        "An error occurred during login. Please try again later."
-      );
+      setErrorMessage("An error occurred during login. Please try again later.");
     }
   };
 
