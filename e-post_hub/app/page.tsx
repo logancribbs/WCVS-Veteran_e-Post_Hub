@@ -1,4 +1,4 @@
-// app/page.tsx
+// e-post_hub/app/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -13,7 +13,7 @@ import { ArrowRight } from "lucide-react";
 type EventOccurrence = {
   id: string;
   eventId: string;
-  date: string;
+  date: string;        // ISO string
   startTime?: string;
   endTime?: string;
 };
@@ -24,12 +24,12 @@ type Event = {
   description?: string;
   createdBy: { name: string; email: string };
   status: string;
-  startDate?: string;
-  endDate?: string;
+  startDate?: string;   // derived for display
+  endDate?: string;     // derived for display
   startTime?: string;
   endTime?: string;
   website?: string;
-  flyer?: string;
+  flyer?: string;       // can be http(s) URL or data: URL
   type?: string;
   interested: number;
   latitude: number;
@@ -38,7 +38,8 @@ type Event = {
   address?: string;
   occurrences?: EventOccurrence[];
 
-  _nextDate?: string;
+  // local derived props for sorting/positioning
+  _nextDate?: string;   // YYYY-MM-DD of the next relevant occurrence
   _isUpcoming?: boolean;
 };
 
@@ -46,10 +47,7 @@ export default function HomePage() {
   function isPdfUrl(url?: string | null) {
     if (!url) return false;
     const lower = url.toLowerCase();
-    return (
-      lower.endsWith(".pdf") ||
-      lower.startsWith("data:application/pdf") // <-- handle data URLs
-    );
+    return lower.endsWith(".pdf") || lower.startsWith("data:application/pdf");
   }
 
   const [events, setEvents] = useState<Event[]>([]);
@@ -57,8 +55,10 @@ export default function HomePage() {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
+  // controls Create Event vs WAVA in HeroBanner
   const [isAdmin, setIsAdmin] = useState(false);
 
+  // Read role (prefer saved role, fallback to JWT)
   useEffect(() => {
     const role = typeof window !== "undefined" ? localStorage.getItem("role") : null;
     if (role) {
@@ -81,6 +81,7 @@ export default function HomePage() {
   function filterEventsByQuery(query: string, items: Event[]) {
     const q = query.trim().toLowerCase();
     if (!q) return items;
+
     return items.filter((e) => {
       const haystack = [e.title, e.description, e.address, e.type, e.createdBy?.name]
         .filter(Boolean)
@@ -90,6 +91,7 @@ export default function HomePage() {
     });
   }
 
+  // Compute anchor date (the first upcoming occurrence; if none upcoming, use last)
   function computeNextAnchor(ev: Event): { nextDate?: string; isUpcoming: boolean } {
     const occ = ev.occurrences ?? [];
     if (occ.length === 0) return { nextDate: undefined, isUpcoming: false };
@@ -116,6 +118,7 @@ export default function HomePage() {
     return { nextDate: lastDate.toISOString().slice(0, 10), isUpcoming: false };
   }
 
+  // Sort logic: upcoming first, then nearest date; past items by most recent last date
   function sortByClosestToToday(a: Event, b: Event): number {
     const aDate = a._nextDate ? new Date(a._nextDate).getTime() : Infinity;
     const bDate = b._nextDate ? new Date(b._nextDate).getTime() : Infinity;
@@ -128,6 +131,7 @@ export default function HomePage() {
 
     if (aUpcoming && bUpcoming) return aDate - bDate;
 
+    // both past: show more recent past first (descending)
     return bDate - aDate;
   }
 
@@ -143,6 +147,7 @@ export default function HomePage() {
         const data = await response.json();
         const allEvents = (data.events as Event[]) || [];
 
+        // Normalize occurrences, compute display date range and sorting anchors
         allEvents.forEach((ev) => {
           if (ev.occurrences?.length) {
             ev.occurrences.sort(
@@ -204,12 +209,8 @@ export default function HomePage() {
   }
 
   return (
-<<<<<<< HEAD
-    <div className="min-h-screen w-full bg-[#FFF8E7] flex flex-col relative">
-      {/* Pass isAdmin so the banner shows Create Event (admin) or WAVA (others) */}
-=======
     <div className="min-h-screen w-full bg-blue-100 flex flex-col relative">
->>>>>>> 93fc8eb (Create event/delete event functionality implemented. Date ranges and reoccuring event added to event form. Images upload (need to fix sizing tomorrow).)
+      {/* Pass isAdmin so the banner shows Create Event (admin) or WAVA (others) */}
       <HeroBanner
         query={searchQuery}
         onQueryChange={setSearchQuery}
@@ -218,10 +219,12 @@ export default function HomePage() {
       />
 
       <div className="flex flex-col md:flex-row w-full pt-6">
+        {/* Sidebar */}
         <div className="w-full md:w-[30%] lg:w-[28%] xl:w-[25%] p-4 md:p-6">
           <Sidebar />
         </div>
 
+        {/* Event Grid */}
         <div className="content flex-1 p-6 md:pl-8 lg:pl-12">
           {filteredEvents.length === 0 ? (
             <p className="text-center text-lg">No events available.</p>
@@ -240,7 +243,7 @@ export default function HomePage() {
                 <Card
                   key={event.id}
                   className="
-                    bg-[#FFEBC4]
+                    bg-[#FFF7E6]
                     border-2 border-gray-500
                     rounded-2xl
                     shadow-md
@@ -248,18 +251,19 @@ export default function HomePage() {
                     flex flex-col
                     overflow-hidden
                     transition-transform
-                    
                     hover:scale-[1.03]
-                    hover:ring-4 hover:ring-orange-300
+                    hover:ring-4
                     duration-300
                     w-full max-w-[380px]
                     h-[520px]
                   "
                 >
+                  {/* Title */}
                   <div className="text-center text-xl font-semibold text-gray-900 pt-4 pb-2">
                     {event.title}
                   </div>
 
+                  {/* Flyer */}
                   <div
                     className="flex justify-center items-center cursor-pointer px-3"
                     onClick={() => setSelectedEvent(event)}
@@ -281,18 +285,13 @@ export default function HomePage() {
                     )}
                   </div>
 
+                  {/* Footer */}
                   <CardBody className="flex justify-between items-center p-4 text-center">
                     <div className="text-gray-800 text-lg font-medium">
                       {formatDateRange(event.startDate, event.endDate)}
                     </div>
 
-<<<<<<< HEAD
                     <Button
-                      onClick={() => setSelectedEvent(event)}
-                      aria-label={`View details for ${event.title}`}
-                      className="
-=======
-                    <button
                       onClick={() =>
                         isAdmin ? deleteEventById(event.id) : setSelectedEvent(event)
                       }
@@ -301,43 +300,34 @@ export default function HomePage() {
                           ? `Delete ${event.title}`
                           : `View details for ${event.title}`
                       }
-                      className={`
->>>>>>> 93fc8eb (Create event/delete event functionality implemented. Date ranges and reoccuring event added to event form. Images upload (need to fix sizing tomorrow).)
+                      className={
+                        `
                         group
-                        w-full
-                        px-4 py-2
-                        rounded-lg
-                        bg-[#FFECD1] 
-                        border border-black/20
-                        text-sm font-semibold
-                        text-gray-900
-                        text-center
+                        inline-flex items-center gap-2
+                        px-5 py-2
+                        rounded-full
+                        border border-black/40
+                        text-black font-semibold
+                        shadow-sm
                         transition-all duration-200
-                        hover:bg-[#FFE3BC] 
-                        hover:border-orange-300
                         hover:shadow-md
+                        hover:-translate-y-0.5
                         focus-visible:outline-none
                         focus-visible:ring-2
-                        focus-visible:ring-orange-300
                         focus-visible:ring-offset-2
-<<<<<<< HEAD
-                        focus-visible:ring-offset-[#FFF7E6]
-                      "
-                    >
-                      <span className="truncate">View Details</span>
-                    </Button>
-=======
-                        ${isAdmin
+                        ` +
+                        (isAdmin
                           ? " bg-red-600 text-white focus-visible:ring-red-600"
-                          : " bg-[#ff8c00] focus-visible:ring-[#ff8c00]"}
-                      `}
+                          : " bg-[#ff8c00] focus-visible:ring-[#ff8c00]")
+                      }
                     >
                       <span className="text-sm tracking-wide">
                         {isAdmin ? "Delete" : "View Details"}
                       </span>
-                      {/* keep ArrowRight if you had it imported; omitted here if not using NextUI Button */}
-                    </button>
->>>>>>> 93fc8eb (Create event/delete event functionality implemented. Date ranges and reoccuring event added to event form. Images upload (need to fix sizing tomorrow).)
+                      <ArrowRight
+                        className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5"
+                      />
+                    </Button>
                   </CardBody>
                 </Card>
               ))}
@@ -345,6 +335,34 @@ export default function HomePage() {
           )}
         </div>
       </div>
+
+      {/* Modal */}
+      {selectedEvent && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex justify-center items-center z-50">
+          <button
+            onClick={handleCloseModal}
+            className="absolute top-6 left-6 bg-[#ff8c00] text-white px-6 py-3 text-lg rounded-md shadow-lg hover:scale-105 transition-transform duration-200"
+          >
+            Back
+          </button>
+
+          <div className="relative bg-white rounded-lg shadow-2xl max-w-6xl w-full mx-6 flex justify-center items-center p-6">
+            {selectedEvent.flyer ? (
+              isPdfUrl(selectedEvent.flyer) ? (
+                <PdfViewer fileUrl={selectedEvent.flyer} containerHeight={700} />
+              ) : (
+                <img
+                  src={selectedEvent.flyer}
+                  alt="Flyer"
+                  className="max-h-[90vh] object-contain rounded-lg"
+                />
+              )
+            ) : (
+              <p className="text-gray-600 italic text-lg">No flyer available</p>
+            )}
+          </div>
+        </div>
+      )}
 
       <BottomBar />
     </div>
