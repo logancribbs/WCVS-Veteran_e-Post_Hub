@@ -25,7 +25,7 @@
 * [Cleaning/removing unwanted text + clutter](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/33)
 * [Login setup with mock admin login](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/34)
 * [Side bar quicklinks appearance enhancement](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/35)
-* [New creature feature](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/22)
+* [New create feature](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/22)
 * [Create/Delete function tested + added](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/36)
 * [Admin create, edit, delete](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/10)
 * [Date ranges + reoccurring features allowed](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/37)
