@@ -94,7 +94,7 @@ export default function HeroBanner({
         className="flex justify-center py-3"
         style={{
           background:
-            "linear-gradient(90deg, #fae6c8 0%, #f8e1b6 50%, #f5dca3 100%)",
+            "linear-gradient(10deg, #B22234 20%, #FFFFFF 35%, #3C3B6E 100%)",
         }}
       >
         <div className="w-full max-w-md px-4">
