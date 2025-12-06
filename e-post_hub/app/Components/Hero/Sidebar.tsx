@@ -276,7 +276,7 @@ export default function Sidebar() {
 
       <div className="text-center mb-6">
         <h3 className="text-xl font-semibold mb-2">Contact Info</h3>
-        <p className="text-sm leading-relaxed">
+        <p className="text-md leading-relaxed">
           <strong>Email:</strong>{" "}
           <a href="mailto:BeckyBuri@whitmancounty.gov" className="text-blue-300 hover:underline">
             BeckyBuri@whitmancounty.gov

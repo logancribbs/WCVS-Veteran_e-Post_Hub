@@ -2,6 +2,12 @@
 
 export default function BottomBar() {
   return (
-    <footer className="w-full h-[40px] bg-[#b31b1b] shadow-md" />
+    <footer className="
+      w-full py-3
+      bg-[#243560]     /* deep navy */
+      text-white text-center font-semibold
+      tracking-wide
+    "
+    />
   );
 }
