@@ -43,6 +43,16 @@
 
 
 ## Code Files for Review
+* [Landing Page - e-post_hub/app/page.tsx](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/blob/15-WCVS-branch/e-post_hub/app/page.tsx)
+* [Layout file - e-post_hub/app/layout.tsx](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/blob/15-WCVS-branch/e-post_hub/app/layout.tsx)
+* [Top Banner Config - e-post_hub/app/Components/Hero](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/blob/15-WCVS-branch/e-post_hub/app/Components/Hero/HeroBanner.tsx)
+* [Side bar Config - e-post_hub/app/Components/Hero](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/blob/15-WCVS-branch/e-post_hub/app/Components/Hero/Sidebar.tsx)
+* [Bottom bar Config - e-post_hub/app/Components/BottomBar](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/blob/15-WCVS-branch/e-post_hub/app/Components/BottomBar/BottomBar.tsx)
+* [Website API Events handling - e-post_hub/app/api/Event](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/tree/15-WCVS-branch/e-post_hub/app/api/Event/%5Bid%5D)
+* [Website API Admin - e-post_hub/app/api/admins](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/tree/15-WCVS-branch/e-post_hub/app/api/admins)
+* [Website API Authorization - e-post_hub/api/auth/login](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/tree/15-WCVS-branch/e-post_hub/app/api/auth/login)
+* [Global CSS file - e-post_hub/app/globals.css](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/blob/15-WCVS-branch/e-post_hub/app/globals.css)
+* [Tailwind Config file - e-post_hub/tailwind.config.ts](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/blob/15-WCVS-branch/e-post_hub/tailwind.config.ts)
 
 
   
