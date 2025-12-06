@@ -15,7 +15,27 @@ export default function Sidebar() {
     "/Landscape_3.jpg",
   ];
 
-  const [currentIndex, setCurrentIndex] = useState(0);
+  // resource list for dynamic highlight
+  const resources = [
+    {
+      label: "Veteran Health Care",
+      href: "https://www.va.gov/spokane-health-care/locations/mann-grandstaff-department-of-veterans-affairs-medical-center/",
+    },
+    {
+      label: "Whitman County Veteran Services",
+      href: "https://www.whitmancounty.gov/628/Veteran-Services-Officer",
+    },
+    {
+      label: "Palouse Resource Guide",
+      href: "https://palouseresources.org/",
+    },
+    {
+      label: "More Resources",
+      // to add permanent link
+    },
+  ];
+
+  const [currentIndex, setCurrentIndex] = useState(0); // for slideshow
 
   // hover-to-reveal action (Login or Logout)
   const [showAction, setShowAction] = useState(false);
@@ -55,7 +75,7 @@ export default function Sidebar() {
     return () => window.removeEventListener("storage", onStorage);
   }, []);
 
-  // auto-advance every 5 sec
+  // auto-advance every 5 sec - sidebar slideshow
   useEffect(() => {
     if (slideshowImages.length <= 1) return;
     const interval = setInterval(() => {
@@ -269,34 +289,49 @@ export default function Sidebar() {
         </p>
       </div>
 
-      <nav className="w-full flex flex-col gap-3 text-left font-semibold text-white text-base">
-        <a
-          href="https://www.va.gov/spokane-health-care/locations/mann-grandstaff-department-of-veterans-affairs-medical-center/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:underline"
-        >
-          - Veteran Health Care
-        </a>
+            <nav className="w-full flex flex-col gap-3 text-left font-semibold text-white text-base">
+        {resources.map((resource, index) => (
+          <a
+            key={resource.href}
+            href={resource.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="
+              group
+              flex items-center gap-3
+              rounded-lg
+              px-3 py-2
+              border border-white/20
+              bg-white/5
+              transition-all duration-200
+              hover:bg-white/20 hover:border-orange-300 hover:shadow-md
+            "
+          >
+            {/* highlight cursor dot */}
+            <span className="relative flex h-3 w-3">
+              {/* ping animation only on hover */}
+              <span
+                className="
+                  absolute inline-flex h-full w-full rounded-full opacity-75
+                  bg-orange-200
+                  group-hover:bg-orange-300
+                  group-hover:animate-ping
+                "
+              />
+              <span
+                className="
+                  relative inline-flex h-3 w-3 rounded-full
+                  bg-orange-200
+                  group-hover:bg-orange-400
+                "
+              />
+            </span>
 
-        <a
-          href="https://www.whitmancounty.gov/628/Veteran-Services-Officer"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:underline"
-        >
-          - Whitman County Veteran Services
-        </a>
-
-        <a
-          href="https://palouseresources.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:underline"
-        >
-          - Palouse Resource Guide
-        </a>
+            <span className="truncate">{resource.label}</span>
+          </a>
+        ))}
       </nav>
+
     </aside>
   );
 }
