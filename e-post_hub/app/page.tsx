@@ -192,8 +192,9 @@ export default function HomePage() {
                     flex flex-col
                     overflow-hidden
                     transition-transform
+                    
                     hover:scale-[1.03]
-                    hover:ring-4
+                    hover:ring-4 hover:ring-orange-300
                     duration-300
                     w-full max-w-[380px]
                     h-[520px]
@@ -233,41 +234,30 @@ export default function HomePage() {
                     </div>
 
                     <Button
-                      onClick={() =>
-                        isAdmin ? deleteEventById(event.id) : setSelectedEvent(event)
-                      }
-                      aria-label={
-                        isAdmin
-                          ? `Delete ${event.title}`
-                          : `View details for ${event.title}`
-                      }
-                      className={
-                        `
+                      onClick={() => setSelectedEvent(event)}
+                      aria-label={`View details for ${event.title}`}
+                      className="
                         group
-                        inline-flex items-center gap-2
-                        px-5 py-2
-                        rounded-full
-                        border border-black/40
-                        text-black font-semibold
-                        shadow-sm
+                        w-full
+                        px-4 py-2
+                        rounded-lg
+                        bg-[#FFECD1] 
+                        border border-black/20
+                        text-sm font-semibold
+                        text-gray-900
+                        text-center
                         transition-all duration-200
+                        hover:bg-[#FFE3BC] 
+                        hover:border-orange-300
                         hover:shadow-md
-                        hover:-translate-y-0.5
                         focus-visible:outline-none
                         focus-visible:ring-2
+                        focus-visible:ring-orange-300
                         focus-visible:ring-offset-2
-                        ` +
-                        (isAdmin
-                          ? " bg-red-600 text-white focus-visible:ring-red-600"
-                          : " bg-[#ff8c00] focus-visible:ring-[#ff8c00]")
-                      }
+                        focus-visible:ring-offset-[#FFF7E6]
+                      "
                     >
-                      <span className="text-sm tracking-wide">
-                        {isAdmin ? "Delete" : "View Details"}
-                      </span>
-                      <ArrowRight
-                        className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5"
-                      />
+                      <span className="truncate">View Details</span>
                     </Button>
                   </CardBody>
                 </Card>
