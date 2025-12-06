@@ -10,7 +10,7 @@ type HeroBannerProps = {
   query: string;
   onQueryChange: (q: string) => void;
   onSubmit?: () => void;
-  isAdmin?: boolean; // 🔸 key: used to toggle Create Event vs WAVA
+  isAdmin?: boolean; //  used to toggle Create Event vs WAVA
 };
 
 export default function HeroBanner({

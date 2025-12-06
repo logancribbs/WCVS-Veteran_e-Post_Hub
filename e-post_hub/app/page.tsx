@@ -1,4 +1,3 @@
-// e-post_hub/app/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -135,6 +134,21 @@ export default function HomePage() {
     return `${start} - ${end}`;
   };
 
+  async function deleteEventById(eventId: string) {
+    try {
+      const res = await fetch(`/api/Event/${eventId}`, { method: "DELETE" });
+      if (!res.ok) {
+        console.error("Delete failed:", res.status);
+        return;
+      }
+      setEvents((prev) => prev.filter((e) => e.id !== eventId));
+      setFilteredEvents((prev) => prev.filter((e) => e.id !== eventId));
+      if (selectedEvent?.id === eventId) setSelectedEvent(null);
+    } catch (err) {
+      console.error("Delete error:", err);
+    }
+  }
+
   return (
     <div className="min-h-screen w-full bg-blue-100 flex flex-col relative">
       {/* Pass isAdmin so the banner shows Create Event (admin) or WAVA (others) */}
@@ -219,14 +233,20 @@ export default function HomePage() {
                     </div>
 
                     <Button
-                      onClick={() => setSelectedEvent(event)}
-                      aria-label={`View details for ${event.title}`}
-                      className="
+                      onClick={() =>
+                        isAdmin ? deleteEventById(event.id) : setSelectedEvent(event)
+                      }
+                      aria-label={
+                        isAdmin
+                          ? `Delete ${event.title}`
+                          : `View details for ${event.title}`
+                      }
+                      className={
+                        `
                         group
                         inline-flex items-center gap-2
                         px-5 py-2
                         rounded-full
-                        bg-[#ff8c00]
                         border border-black/40
                         text-black font-semibold
                         shadow-sm
@@ -236,10 +256,15 @@ export default function HomePage() {
                         focus-visible:outline-none
                         focus-visible:ring-2
                         focus-visible:ring-offset-2
-                        focus-visible:ring-[#ff8c00]
-                      "
+                        ` +
+                        (isAdmin
+                          ? " bg-red-600 text-white focus-visible:ring-red-600"
+                          : " bg-[#ff8c00] focus-visible:ring-[#ff8c00]")
+                      }
                     >
-                      <span className="text-sm tracking-wide">View Details</span>
+                      <span className="text-sm tracking-wide">
+                        {isAdmin ? "Delete" : "View Details"}
+                      </span>
                       <ArrowRight
                         className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5"
                       />

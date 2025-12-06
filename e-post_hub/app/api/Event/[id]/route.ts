@@ -22,7 +22,7 @@ export async function GET(
             email: true,
           },
         },
-        occurrences: true, 
+        occurrences: true,
       },
     });
 
@@ -130,12 +130,43 @@ export async function PATCH(
     return NextResponse.json(finalEvent, { status: 200 });
   } catch (error) {
     console.error("Error updating event:", error);
-    return NextResponse.json({ message: "Failed to update event." }, { status: 500 });
+    return NextResponse.json(
+      { message: "Failed to update event." },
+      { status: 500 }
+    );
   } finally {
     await prisma.$disconnect();
   }
 }
 
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
+
+  try {
+    // Delete child occurrences first (if cascade isn't set), then the event
+    await prisma.$transaction([
+      prisma.eventOccurrence.deleteMany({ where: { eventId: id } }),
+      prisma.event.delete({ where: { id } }),
+    ]);
+
+    return NextResponse.json({ message: "Event deleted" }, { status: 200 });
+  } catch (error: any) {
+    // Prisma 'record not found'
+    if (error?.code === "P2025") {
+      return NextResponse.json({ message: "Event not found" }, { status: 404 });
+    }
+    console.error("Error deleting event:", error);
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
+  } finally {
+    await prisma.$disconnect();
+  }
+}
 
 // Helper function to send the email after update
 async function sendUpdateEmail(existingEvent: any, updatedEvent: any) {
