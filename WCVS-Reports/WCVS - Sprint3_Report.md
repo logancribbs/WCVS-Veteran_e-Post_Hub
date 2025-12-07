@@ -42,10 +42,15 @@ From a development perspective, Sprint 3 focused on implementing new features wh
 
 ## Incomplete & In-Progress Issues/User Stories ⚠️
 * [Responsive UI to changing seasons](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/26)
+  - This feature is still in progress and focuses on dynamically updating the website's visual theme based on the current season. Development and planning is ongoing as design assets and implementation details are being refined on the current default webpage.
 * [Meeting with former developers](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/6)
+  - This task remains incomplete due to scheduling constraints. This meeting is intended to gather historical context, technical insights, and recommendations to better guide continued development of the platform.
 * [Downloading Event Flyers](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/9)
+  - Work is underway to allow users to download event flyers directly from the site. The backend logic is partially  implemented, but full integration and user testing are still pending.
 * [Old event removal automation](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/21)
+  - This automation feature is in progress and aims to automatically remove expired events to keep the platform up to date. Additional testing and deployment setup are required before it can go live.
 * [Event Priority/Boost feature](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/20)
+  - This feature is currently under development and will allow administrators to prioritize or "boost" certain events for higher visibility on the webpage. The core concept is defined, but the interface and ranking logic is under discussion.
 
 
 ## Code Files for Review 📝📈
