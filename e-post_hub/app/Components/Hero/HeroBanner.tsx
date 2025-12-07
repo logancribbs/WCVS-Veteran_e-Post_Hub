@@ -41,8 +41,8 @@ export default function HeroBanner({
             <Image
               src={WhitmanLogo}
               alt="Whitman County Logo"
-              width={150}
-              height={150}
+              width={170}
+              height={170}
               className="rounded-md drop-shadow-md"
               priority
             />
@@ -79,8 +79,8 @@ export default function HeroBanner({
               <Image
                 src="/WAVA.jpeg"   // 🔸 ensure the extension matches your file in /public
                 alt="Washington State Department of Veterans Affairs"
-                width={150}
-                height={48}
+                width={170}
+                height={68}
                 className="rounded-md drop-shadow-md object-contain"
                 priority
               />
@@ -91,10 +91,14 @@ export default function HeroBanner({
 
       {/* Search Bar */}
       <div
-        className="flex justify-center py-3"
+        className="
+          flex justify-center py-3
+          border-y-2 border-black/40
+          shadow-sm
+        "
         style={{
           background:
-            "linear-gradient(10deg, #B22234 20%, #FFFFFF 35%, #3C3B6E 100%)",
+            "linear-gradient(10deg, #B22234 20%, #FFFFFF 40%, #3C3B6E 100%)",
         }}
       >
         <div className="w-full max-w-md px-4">

@@ -209,7 +209,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-[#FFF8E7] flex flex-col relative">
+    <div className="min-h-screen w-full bg-[#FAF7F2] flex flex-col relative">
       {/* Pass isAdmin so the banner shows Create Event (admin) or WAVA (others) */}
       <HeroBanner
         query={searchQuery}
