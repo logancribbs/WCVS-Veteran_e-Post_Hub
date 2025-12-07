@@ -1,6 +1,5 @@
 # Sprint 3 Report (12/07/2025)
-## [Youtube link for Sprint 3 Video]
-* To Be Added...
+## [Youtube link for Sprint 3 Video](https://youtu.be/vq3R6OFLmhc)
 
 ## What's New (User Facing) 👶🆕
 This sprint introduced a substantial number of visible improvements aimed at enhancing usability, clarity, and the overall experience for both regular users and administrators. The landing page received a refreshed title and visual polish that better aligns with the client’s requested branding changes following Sprint 2. Event cards were redesigned to improve readability and information layout, while the search bar was updated with new sizing and spacing adjustments that make it more intuitive to use. The sidebar now includes a dynamic slideshow feature, updated quicklinks derived from the client’s resource spreadsheet, and improved styling that creates a more organized and coherent layout. Administrators will notice major functional upgrades, including the fully implemented create, edit, and delete workflows for event management, along with support for recurring events and date ranges. Users can now upload images for events, enriching the visual presentation of information. Global font adjustments and other stylistic refinements round out the polished look and feel introduced in Sprint 3.
