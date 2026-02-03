@@ -209,7 +209,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-blue-100 flex flex-col relative">
+    <div className="min-h-screen w-full bg-[#FAF7F2] flex flex-col relative">
       {/* Pass isAdmin so the banner shows Create Event (admin) or WAVA (others) */}
       <HeroBanner
         query={searchQuery}
@@ -243,7 +243,7 @@ export default function HomePage() {
                 <Card
                   key={event.id}
                   className="
-                    bg-[#FFF7E6]
+                    bg-[#FFEBC4]
                     border-2 border-gray-500
                     rounded-2xl
                     shadow-md
@@ -252,7 +252,7 @@ export default function HomePage() {
                     overflow-hidden
                     transition-transform
                     hover:scale-[1.03]
-                    hover:ring-4
+                    hover:ring-4 hover:ring-orange-300
                     duration-300
                     w-full max-w-[380px]
                     h-[520px]
@@ -300,34 +300,52 @@ export default function HomePage() {
                           ? `Delete ${event.title}`
                           : `View details for ${event.title}`
                       }
-                      className={
-                        `
+                      className={`
                         group
-                        inline-flex items-center gap-2
-                        px-5 py-2
-                        rounded-full
-                        border border-black/40
-                        text-black font-semibold
-                        shadow-sm
+                        inline-flex items-center justify-center gap-2
+                        px-16 py-2.5
+                        rounded-xl
+                        
+                        text-sm font-semibold tracking-wide
                         transition-all duration-200
-                        hover:shadow-md
-                        hover:-translate-y-0.5
+                        shadow-sm hover:shadow-md
                         focus-visible:outline-none
                         focus-visible:ring-2
                         focus-visible:ring-offset-2
-                        ` +
-                        (isAdmin
-                          ? " bg-red-600 text-white focus-visible:ring-red-600"
-                          : " bg-[#ff8c00] focus-visible:ring-[#ff8c00]")
-                      }
+
+                        ${isAdmin
+                          ? `
+                            bg-red-600 text-white
+                            border border-red-700
+                            hover:bg-red-700
+                            focus-visible:ring-red-600
+                          `
+                          : `
+                            bg-[#FFECD1]
+                            border border-orange-300/70
+                            text-gray-900
+                            hover:bg-[#FFE3BC]
+                            hover:border-orange-400
+                            focus-visible:ring-orange-300
+                          `
+                        }
+                      `}
                     >
-                      <span className="text-sm tracking-wide">
-                        {isAdmin ? "Delete" : "View Details"}
-                      </span>
+                      <span>
+                      {isAdmin ? "Delete" : "View Details"}
+                    </span>
+
+                    {/* Icon animates only for non-admin mode */}
+                    {!isAdmin && (
                       <ArrowRight
-                        className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5"
+                        className="
+                          w-4 h-4 text-gray-800
+                          transition-transform duration-200
+                          group-hover:translate-x-1
+                        "
                       />
-                    </Button>
+                    )}
+                  </Button>
                   </CardBody>
                 </Card>
               ))}
