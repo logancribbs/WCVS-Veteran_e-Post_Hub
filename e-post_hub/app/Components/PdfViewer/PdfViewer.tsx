@@ -3,11 +3,9 @@
 import React, { useEffect, useState } from "react";
 import { pdfjs } from "react-pdf";
 
-// ✅ Use the legacy worker to avoid Terser choking on .mjs during Next/Vercel prod builds
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/legacy/build/pdf.worker.min.js",
-  import.meta.url
-).toString();
+// Use a worker served from /public to avoid Webpack/Terser issues on Vercel.
+// This file will be created at build/install time by scripts/copy-pdf-worker.mjs
+pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.js";
 
 interface PdfViewerProps {
   fileUrl: string;
@@ -26,15 +24,14 @@ export default function PdfPreview({ fileUrl, containerHeight }: PdfViewerProps)
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
 
-    if (context) {
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
+    if (!context) return;
 
-      await page.render({ canvasContext: context, viewport }).promise;
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
 
-      const imageUrl = canvas.toDataURL();
-      setThumbnail(imageUrl);
-    }
+    await page.render({ canvasContext: context, viewport }).promise;
+
+    setThumbnail(canvas.toDataURL());
   };
 
   useEffect(() => {
