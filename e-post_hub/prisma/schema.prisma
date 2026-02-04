@@ -1,17 +1,15 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// This is your Prisma schema file
+// https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 generator client {
   provider = "prisma-client-js"
 }
+
 model Account { 
   id                 String  @id @default(cuid())
   userId             String  @map("user_id")
@@ -27,12 +25,11 @@ model Account {
   session_state      String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@unique([provider, providerAccountId])
   @@map("accounts")
 }
 
-//table for dynamic storage of creator code
 model Settings {
   id    Int    @id @default(autoincrement())
   key   String @unique
@@ -43,108 +40,100 @@ model User {
   id            String    @id @default(cuid())
   name          String
   email         String   @unique
-  //emailVerified DateTime? @map("email_verified")
-  passwordHash  String //Hashed password for security
+  passwordHash  String
   accounts      Account[]
   role          String      @default("MEMBER")
   member        Member?
   admin         Admin?
-  events        Event[] // Relation: One user can have many events
+  events        Event[]
   questions     Question[]
   comments      Comment[]
 }
-//one-to-one relationship
-//? means optional
+
 model Member {
   id     String @id @default(cuid())
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
-  
-  // Any additional fields specific to members
 }
 
 model Admin {
   id     String @id @default(cuid())
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
-  
-  // Admin-specific fields
-  officeNumber      String?
-  officeHours       String?
-  officeLocation    String?
-  creatorCode       String @default("wc_create_admin")
+
+  officeNumber   String?
+  officeHours    String?
+  officeLocation String?
+  creatorCode    String @default("wc_create_admin")
 }
 
 model Event {
-  id                String @id @default(cuid())
-  createdById       String? // Now optional to allow guest event creation
-  createdBy         User?   @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  id            String @id @default(cuid())
+  createdById   String?
+  createdBy     User?   @relation(fields: [createdById], references: [id], onDelete: Cascade)
 
-  website      String?
-  title        String
-  type         String?
-  description  String?
-  flyer        String?  // Flyer file (URL or storage path)
-  address      String? // Address used for proximity filtering
-  longitude    Float? // longitude used for proximity filtering
-  latitude     Float? // latitude used for proxmity filtering
-  status       String   @default("PENDING") // Status of event: APPROVED, DENIED, PENDING
-  interested   Int     @default(0) // New field for storing interest count
-  occurrences EventOccurrence[]
-  comments     Comment[]
+  website       String?
+  title         String
+  type          String?
+  description   String?
+  flyer         String?
+  address       String?
+  longitude     Float?
+  latitude      Float?
+  status        String   @default("PENDING")
+  interested    Int      @default(0)
+
+  occurrences   EventOccurrence[]
+  comments      Comment[]
 }
 
 model Question {
-  id          String   @id @default(cuid())
-  text        String
-  username    String   // Required name for the user who posted the question
-  userEmail   String   // Required email for all questions, even for private
-  isPrivate   Boolean  @default(false)
-  datePosted  DateTime @default(now())
-  userId      String?  // If posted by logged-in user
-  createdBy   User?    @relation(fields: [userId], references: [id])
-  comments    Comment[]
+  id         String   @id @default(cuid())
+  text       String
+  username   String
+  userEmail  String
+  isPrivate  Boolean  @default(false)
+  datePosted DateTime @default(now())
+  userId     String?
+  createdBy  User?    @relation(fields: [userId], references: [id])
+  comments   Comment[]
 }
 
 model Comment {
-  id          String   @id @default(cuid())
-  content     String   // The comment text
-  createdAt   DateTime @default(now()) // When the comment was created
-  updatedAt   DateTime @updatedAt // When the comment was last updated
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  eventId     String?   
-  questionId   String? 
-  userId      String   
-  parentId    String?  
+  eventId    String?
+  questionId String?
+  userId     String
+  parentId   String?
 
-  createdBy   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  question     Question? @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  event       Event?    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  parent      Comment? @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
-  replies     Comment[] @relation("CommentReplies")
+  createdBy User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question  Question? @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  event     Event?    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[] @relation("CommentReplies")
 }
 
-// Links for resources page
 model Link {
-  id          String     @id @default(cuid())
+  id          String   @id @default(cuid())
   title       String
   description String
   url         String
-  location    String     // "Moscow" or "Pullman"
-  category    String?     // Category as a plain string (e.g., "Volunteer", "Financial Assistance")
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  location    String
+  category    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model EventOccurrence {
-  id              String @id @default(cuid())
-  eventId         String
-  event           Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  id        String @id @default(cuid())
+  eventId   String
+  event     Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   date      DateTime
   startTime String?
   endTime   String?
 }
-
-
-//dont forget npx prisma migrate dev --name ...
