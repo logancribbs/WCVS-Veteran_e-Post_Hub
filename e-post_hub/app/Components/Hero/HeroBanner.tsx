@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { Input, Button } from "@nextui-org/react";
-import { Search, Plus } from "lucide-react";
+import { useRef, useState } from "react";
+import { Input } from "@nextui-org/react";
+import { Search } from "lucide-react";
 import WhitmanLogo from "@/app/Images/whitman.png";
 import Link from "next/link";
 
@@ -10,18 +11,34 @@ type HeroBannerProps = {
   query: string;
   onQueryChange: (q: string) => void;
   onSubmit?: () => void;
-  isAdmin?: boolean; //  used to toggle Create Event vs WAVA
 };
 
 export default function HeroBanner({
   query,
   onQueryChange,
   onSubmit,
-  isAdmin = false,
 }: HeroBannerProps) {
+  const [showRegister, setShowRegister] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const startTimer = () => {
+    if (timerRef.current) return;
+    timerRef.current = setTimeout(() => {
+      setShowRegister(true);
+      timerRef.current = null;
+    }, 3000);
+  };
+
+  const clearTimer = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+    setShowRegister(false);
+  };
+
   return (
     <section className="w-full">
-      {/* Top Header */}
       <div
         className="relative flex flex-col md:flex-row items-center justify-between px-6 md:px-16 py-6 overflow-hidden"
         style={{
@@ -31,71 +48,71 @@ export default function HeroBanner({
           backgroundPosition: "center",
         }}
       >
-        {/* Overlay for readability */}
         <div className="absolute inset-0 bg-black/25" />
 
-        {/* Content Layer */}
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between w-full gap-4">
-          {/* Left: County logo */}
-          <div className="flex items-center justify-center md:justify-start">
-            <Image
-              src={WhitmanLogo}
-              alt="Whitman County Logo"
-              width={170}
-              height={170}
-              className="rounded-md drop-shadow-md"
-              priority
-            />
-          </div>
+          {/* Left */}
+          <Image
+            src={WhitmanLogo}
+            alt="Whitman County Logo"
+            width={170}
+            height={170}
+            className="rounded-md drop-shadow-md"
+            priority
+          />
 
-          {/* Center: Title */}
+          {/* Center */}
           <h1 className="text-4xl md:text-5xl font-extrabold text-center text-white drop-shadow-[2px_2px_3px_rgba(0,0,0,0.6)]">
             Veterans e-Post Hub
           </h1>
 
-          {/* Right: Create Event (admin) OR WAVA logo (non-admin) */}
-          <div className="flex items-center justify-center md:justify-end min-h-[48px]">
-            {isAdmin ? (
-              <Link href="/Event/create">
-                <Button
-                  className="
-                    group inline-flex items-center gap-2
-                    px-6 py-2.5 rounded-full
-                    bg-[#ff8c00]
-                    text-black font-heading font-semibold
-                    border border-black/40
-                    shadow-sm
-                    hover:bg-[#ffa733]
-                    hover:shadow-md
-                    hover:-translate-y-0.5
-                    transition-all duration-200
-                  "
-                >
-                  <Plus className="w-4 h-4" />
-                  Create Event
-                </Button>
+          {/* Right – ALWAYS WAVA */}
+          <div
+            className="relative flex items-center justify-center rounded-md overflow-hidden"
+            onMouseEnter={startTimer}
+            onMouseLeave={clearTimer}
+            tabIndex={0}
+          >
+            <Image
+              src="/WAVA.jpeg"
+              alt="Washington State Department of Veterans Affairs"
+              width={170}
+              height={68}
+              className="rounded-md drop-shadow-md object-contain"
+              priority
+            />
+
+            <div
+              className={`
+                absolute inset-x-0 bottom-0 z-50 flex justify-center
+                transition-all duration-300
+                ${
+                  showRegister
+                    ? "translate-y-0 opacity-100"
+                    : "translate-y-full opacity-0"
+                }
+              `}
+            >
+              <Link
+                href="/Registeradmin"
+                className="
+                  mb-1 px-4 py-2 rounded-full
+                  bg-white text-black font-semibold
+                  border border-black/50
+                  shadow-sm hover:shadow-md hover:-translate-y-0.5
+                  transition-all
+                "
+              >
+                Register
               </Link>
-            ) : (
-              <Image
-                src="/WAVA.jpeg"   // 🔸 ensure the extension matches your file in /public
-                alt="Washington State Department of Veterans Affairs"
-                width={170}
-                height={68}
-                className="rounded-md drop-shadow-md object-contain"
-                priority
-              />
-            )}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Search Bar */}
+      {/* Search bar */}
       <div
-        className="
-          flex justify-center py-3
-          border-y-2 border-black/40
-          shadow-sm
-        "
+        className="flex justify-center py-3 border-y-2 border-black/40 shadow-sm"
         style={{
           background:
             "linear-gradient(10deg, #B22234 20%, #FFFFFF 40%, #3C3B6E 100%)",
@@ -103,9 +120,7 @@ export default function HeroBanner({
       >
         <div className="w-full max-w-md px-4">
           <Input
-            aria-label="Search Events"
             placeholder="Search Events"
-            size="md"
             startContent={<Search size={16} />}
             value={query}
             onChange={(e) => onQueryChange(e.target.value)}
@@ -113,9 +128,8 @@ export default function HeroBanner({
               if (e.key === "Enter" && onSubmit) onSubmit();
             }}
             classNames={{
-              input: "text-base px-4",
               inputWrapper:
-                "rounded-full border-2 border-black bg-white/80 hover:border-black focus-within:border-black transition-all duration-200 shadow-sm",
+                "rounded-full border-2 border-black bg-white/80",
             }}
           />
         </div>

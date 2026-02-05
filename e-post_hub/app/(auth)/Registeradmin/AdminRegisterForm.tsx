@@ -14,7 +14,8 @@ import { useRouter } from "next/navigation";
 export default function AdminRegisterForm() {
   const router = useRouter();
 
-  const [errorMessage, setErrorMessage] = useState<string | null>(null); // State to store error messages
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -30,7 +31,10 @@ export default function AdminRegisterForm() {
 
   const onSubmit = async (data: AdminRegisterSchema) => {
     try {
-      const response = await fetch("/api/admins", {
+      setErrorMessage(null);
+
+      // ✅ Correct endpoint for ADMIN REGISTER
+      const response = await fetch("/api/admins/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -38,14 +42,24 @@ export default function AdminRegisterForm() {
         body: JSON.stringify(data),
       });
 
-      if (response.ok) {
-        const { token } = await response.json();
-        localStorage.setItem("token", token);
+      const payload = await response.json().catch(() => ({}));
 
-        // Redirect to the admin page
+      if (response.ok) {
+        const { token } = payload as { token: string };
+        if (token) {
+          localStorage.setItem("token", token);
+        }
+
+        // Redirect to login after successful admin creation
         router.replace("/Login");
-      } else {
-        throw new Error("An error occurred while registering the admin.");      }
+        return;
+      }
+
+      // Show server-provided message if available
+      const msg =
+        (payload && (payload.message || payload.error)) ||
+        "An error occurred while registering the admin.";
+      setErrorMessage(String(msg));
     } catch (error) {
       setErrorMessage("An error occurred. Please try again later.");
     }
@@ -73,6 +87,7 @@ export default function AdminRegisterForm() {
                   {errorMessage}
                 </p>
               )}
+
               <Input
                 isRequired
                 defaultValue=""
@@ -83,6 +98,7 @@ export default function AdminRegisterForm() {
                 errorMessage={errors.name?.message}
                 autoComplete="name"
               />
+
               <Input
                 defaultValue=""
                 label="Office Number"
@@ -91,6 +107,7 @@ export default function AdminRegisterForm() {
                 isInvalid={!!errors.officeNumber}
                 errorMessage={errors.officeNumber?.message}
               />
+
               <Input
                 defaultValue=""
                 label="Office Hours"
@@ -99,6 +116,7 @@ export default function AdminRegisterForm() {
                 isInvalid={!!errors.officeHours}
                 errorMessage={errors.officeHours?.message}
               />
+
               <Input
                 defaultValue=""
                 label="Office Location"
@@ -107,6 +125,7 @@ export default function AdminRegisterForm() {
                 isInvalid={!!errors.officeLocation}
                 errorMessage={errors.officeLocation?.message}
               />
+
               <Input
                 isRequired
                 defaultValue=""
@@ -117,6 +136,7 @@ export default function AdminRegisterForm() {
                 errorMessage={errors.email?.message}
                 autoComplete="email"
               />
+
               <Input
                 isRequired
                 defaultValue=""
@@ -127,6 +147,7 @@ export default function AdminRegisterForm() {
                 isInvalid={!!errors.password}
                 errorMessage={errors.password?.message}
               />
+
               <Input
                 isRequired
                 defaultValue=""
@@ -136,6 +157,7 @@ export default function AdminRegisterForm() {
                 isInvalid={!!errors.creatorCode}
                 errorMessage={errors.creatorCode?.message}
               />
+
               <Button
                 isDisabled={!isValid || !creatorCode?.trim()}
                 fullWidth
