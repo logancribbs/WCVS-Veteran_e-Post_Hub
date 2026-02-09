@@ -85,7 +85,13 @@ export default function HomePage() {
     if (!q) return items;
 
     return items.filter((e) => {
-      const haystack = [e.title, e.description, e.address, e.type, e.createdBy?.name]
+      const haystack = [
+        e.title,
+        e.description,
+        e.address,
+        e.type,
+        e.createdBy?.name,
+      ]
         .filter(Boolean)
         .join(" ")
         .toLowerCase();
@@ -172,7 +178,9 @@ export default function HomePage() {
         const sorted = [...allEvents].sort(sortByClosestToToday);
 
         setEvents(sorted);
-        setFilteredEvents(filterEventsByQuery(searchQuery, sorted).sort(sortByClosestToToday));
+        setFilteredEvents(
+          filterEventsByQuery(searchQuery, sorted).sort(sortByClosestToToday)
+        );
       } catch (error) {
         console.error("Error fetching approved events:", error);
       }
@@ -182,7 +190,9 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    setFilteredEvents(filterEventsByQuery(searchQuery, events).sort(sortByClosestToToday));
+    setFilteredEvents(
+      filterEventsByQuery(searchQuery, events).sort(sortByClosestToToday)
+    );
   }, [searchQuery, events]);
 
   const handleCloseModal = () => setSelectedEvent(null);
@@ -214,15 +224,16 @@ export default function HomePage() {
     <div
       className="min-h-screen w-full flex flex-col relative"
       style={{
-        // Subtle "wallpaper" background that matches the site's warm palette
+        // Floral wallpaper background with a soft tint overlay so it stays readable.
+        // If you want it darker/more visible later, reduce the overlay alpha from 0.55 to ~0.40.
         backgroundColor: "#FAF7F2",
         backgroundImage:
-          "radial-gradient(rgba(249, 93, 9, 0.07) 1px, transparent 1px), radial-gradient(rgba(247, 150, 13, 0.05) 1px, transparent 1px)",
-        backgroundSize: "24px 24px",
-        backgroundPosition: "0 0, 12px 12px",
+          "linear-gradient(rgba(250, 247, 242, 0.50), rgba(250, 247, 242, 0.50)), url('/bg-floral.png')",
+        backgroundRepeat: "repeat",
+        backgroundSize: "220px 220px",
+        backgroundPosition: "top left",
       }}
     >
-      {/* Pass isAdmin so the banner shows Create Event (admin) or WAVA (others) */}
       <HeroBanner
         query={searchQuery}
         onQueryChange={setSearchQuery}
@@ -231,51 +242,24 @@ export default function HomePage() {
       />
 
       <div className="flex flex-col md:flex-row w-full pt-6">
-        {/* Sidebar */}
         <div className="w-full md:w-[30%] lg:w-[28%] xl:w-[25%] p-4 md:p-6">
           <Sidebar />
         </div>
 
-        {/* Event Grid */}
         <div className="content flex-1 p-6 md:pl-8 lg:pl-12">
           {filteredEvents.length === 0 ? (
             <p className="text-center text-lg">No events available.</p>
           ) : (
-            <div
-              className="
-                grid
-                gap-10
-                sm:grid-cols-1
-                md:grid-cols-2
-                lg:grid-cols-3
-                2xl:grid-cols-4
-              "
-            >
+            <div className="grid gap-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
               {filteredEvents.map((event) => (
                 <Card
                   key={event.id}
-                  className="
-                    bg-[#FFEBC4]
-                    border-2 border-gray-500
-                    rounded-2xl
-                    shadow-md
-                    hover:shadow-xl
-                    flex flex-col
-                    overflow-hidden
-                    transition-transform
-                    hover:scale-[1.03]
-                    hover:ring-4 hover:ring-orange-300
-                    duration-300
-                    w-full max-w-[380px]
-                    h-[520px]
-                  "
+                  className="bg-[#FFEBC4] border-2 border-gray-500 rounded-2xl shadow-md hover:shadow-xl flex flex-col overflow-hidden transition-transform hover:scale-[1.03] hover:ring-4 hover:ring-orange-300 duration-300 w-full max-w-[380px] h-[520px]"
                 >
-                  {/* Title */}
                   <div className="text-center text-xl font-semibold text-gray-900 pt-4 pb-2">
                     {event.title}
                   </div>
 
-                  {/* Flyer */}
                   <div
                     className="flex justify-center items-center cursor-pointer px-3"
                     onClick={() => setSelectedEvent(event)}
@@ -297,7 +281,6 @@ export default function HomePage() {
                     )}
                   </div>
 
-                  {/* Footer */}
                   <CardBody className="flex justify-between items-center p-4 text-center">
                     <div className="text-gray-800 text-lg font-medium">
                       {formatDateRange(event.startDate, event.endDate)}
@@ -313,47 +296,37 @@ export default function HomePage() {
                           : `View details for ${event.title}`
                       }
                       className={`
-                        group
-                        inline-flex items-center justify-center gap-2
-                        px-16 py-2.5
-                        rounded-xl
-                        
+                        group inline-flex items-center justify-center gap-2
+                        px-16 py-2.5 rounded-xl
                         text-sm font-semibold tracking-wide
                         transition-all duration-200
                         shadow-sm hover:shadow-md
                         focus-visible:outline-none
                         focus-visible:ring-2
                         focus-visible:ring-offset-2
-
-                        ${isAdmin
-                          ? `
-                            bg-red-600 text-white
-                            border border-red-700
-                            hover:bg-red-700
-                            focus-visible:ring-red-600
-                          `
-                          : `
-                            bg-[#FFECD1]
-                            border border-orange-300/70
-                            text-gray-900
-                            hover:bg-[#FFE3BC]
-                            hover:border-orange-400
-                            focus-visible:ring-orange-300
-                          `
+                        ${
+                          isAdmin
+                            ? `
+                              bg-red-600 text-white
+                              border border-red-700
+                              hover:bg-red-700
+                              focus-visible:ring-red-600
+                            `
+                            : `
+                              bg-[#FFECD1]
+                              border border-orange-300/70
+                              text-gray-900
+                              hover:bg-[#FFE3BC]
+                              hover:border-orange-400
+                              focus-visible:ring-orange-300
+                            `
                         }
                       `}
                     >
                       <span>{isAdmin ? "Delete" : "View Details"}</span>
 
-                      {/* Icon animates only for non-admin mode */}
                       {!isAdmin && (
-                        <ArrowRight
-                          className="
-                          w-4 h-4 text-gray-800
-                          transition-transform duration-200
-                          group-hover:translate-x-1
-                        "
-                        />
+                        <ArrowRight className="w-4 h-4 text-gray-800 transition-transform duration-200 group-hover:translate-x-1" />
                       )}
                     </Button>
                   </CardBody>
@@ -364,7 +337,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Modal */}
       {selectedEvent && (
         <div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex justify-center items-center z-50">
           <button
