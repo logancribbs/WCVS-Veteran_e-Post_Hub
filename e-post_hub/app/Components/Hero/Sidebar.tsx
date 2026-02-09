@@ -116,133 +116,138 @@ export default function Sidebar() {
   };
 
   return (
+    // Sticky wrapper (NO gradient here — fixes Safari/WebKit compositing bleed)
     <aside
       className="
         w-full
         md:min-w-[340px]
         lg:min-w-[360px]
-        bg-gradient-to-b from-[#8C1F1F] via-[#A32626] to-[#ff8c00]
-        border-2 border-black/70
-        rounded-2xl
-        p-5 md:p-6
-        flex flex-col
-        items-center
-        text-white
-        shadow-[0_6px_16px_rgba(0,0,0,0.35)]
         md:sticky md:top-6
-        gap-4
-        transform-gpu
-        isolate
-        will-change-transform
       "
     >
-      {/* Slideshow */}
+      {/* Visual container (gradient lives here, not on sticky element) */}
       <div
         className="
-          w-full max-w-[320px]
-          rounded-lg
-          border border-gray-300
-          overflow-hidden
-          relative
-          shadow-md
+          w-full
+          bg-gradient-to-b from-[#8C1F1F] via-[#A32626] to-[#ff8c00]
+          border-2 border-black/70
+          rounded-2xl
+          p-5 md:p-6
+          flex flex-col
+          items-center
+          text-white
+          shadow-[0_6px_16px_rgba(0,0,0,0.35)]
+          gap-4
         "
-        onMouseEnter={startHoverTimer}
-        onMouseLeave={clearHoverTimerAndHide}
-        tabIndex={0}
       >
-        <Image
-          src={slideshowImages[currentIndex]}
-          alt="Veteran Services photos"
-          width={0}
-          height={0}
-          sizes="100vw"
-          className="w-full h-auto object-contain"
-          unoptimized
-        />
-
-        {slideshowImages.length > 1 && (
-          <>
-            <button
-              type="button"
-              onClick={showPrev}
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 rounded-full w-7 h-7"
-            >
-              ‹
-            </button>
-            <button
-              type="button"
-              onClick={showNext}
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 rounded-full w-7 h-7"
-            >
-              ›
-            </button>
-          </>
-        )}
-
+        {/* Slideshow */}
         <div
-          className={`
-            pointer-events-none absolute inset-x-0 bottom-0 flex justify-center
-            transition-all duration-300
-            ${showAction ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}
-          `}
+          className="
+            w-full max-w-[320px]
+            rounded-lg
+            border border-gray-300
+            overflow-hidden
+            relative
+            shadow-md
+          "
+          onMouseEnter={startHoverTimer}
+          onMouseLeave={clearHoverTimerAndHide}
+          tabIndex={0}
         >
-          {isAdmin ? (
-            <button
-              onClick={handleLogout}
-              className="pointer-events-auto mb-2 px-4 py-2 rounded-full bg-white text-black font-semibold border border-black/50"
-            >
-              Logout
-            </button>
-          ) : (
-            <Link
-              href="/Login"
-              className="pointer-events-auto mb-2 px-4 py-2 rounded-full bg-white text-black font-semibold border border-black/50"
-            >
-              Login
-            </Link>
+          <Image
+            src={slideshowImages[currentIndex]}
+            alt="Veteran Services photos"
+            width={0}
+            height={0}
+            sizes="100vw"
+            className="w-full h-auto object-contain"
+            unoptimized
+          />
+
+          {slideshowImages.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={showPrev}
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 rounded-full w-7 h-7"
+              >
+                ‹
+              </button>
+              <button
+                type="button"
+                onClick={showNext}
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 rounded-full w-7 h-7"
+              >
+                ›
+              </button>
+            </>
           )}
-        </div>
-      </div>
 
-      {/* Contact */}
-      <div className="text-center mb-6">
-        <h3 className="text-xl font-semibold mb-2">Contact Info</h3>
-        <p className="text-md leading-relaxed">
-          <strong>Email:</strong>{" "}
-          <a href="mailto:BeckyBuri@whitmancounty.gov" className="text-blue-300 hover:underline">
-            BeckyBuri@whitmancounty.gov
-          </a>
-          <br />
-          <strong>Phone:</strong>{" "}
-          <a href="tel:+15093975246" className="text-blue-300 hover:underline">
-            +1 (509)-397-5246
-          </a>
-        </p>
-      </div>
-
-      {/* NAV — ONLY THIS PART SWAPS */}
-      <nav className="w-full flex flex-col gap-3 text-left font-semibold text-white text-base">
-        {(isAdmin ? adminControls : resources).map((item) => (
-          <Link
-            key={item.label}
-            href={item.href}
-            target={isAdmin ? undefined : "_blank"}
-            rel={isAdmin ? undefined : "noopener noreferrer"}
-            className="
-              group flex items-center gap-3 rounded-lg px-3 py-2
-              border border-white/20 bg-white/5
-              transition-all duration-200
-              hover:bg-white/20 hover:border-orange-300 hover:shadow-md
-            "
+          <div
+            className={`
+              pointer-events-none absolute inset-x-0 bottom-0 flex justify-center
+              transition-all duration-300
+              ${showAction ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}
+            `}
           >
-            <span className="relative flex h-3 w-3">
-              <span className="absolute inline-flex h-full w-full rounded-full bg-orange-200 opacity-75 group-hover:animate-ping" />
-              <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-200" />
-            </span>
-            <span className="truncate">{item.label}</span>
-          </Link>
-        ))}
-      </nav>
+            {isAdmin ? (
+              <button
+                onClick={handleLogout}
+                className="pointer-events-auto mb-2 px-4 py-2 rounded-full bg-white text-black font-semibold border border-black/50"
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                href="/Login"
+                className="pointer-events-auto mb-2 px-4 py-2 rounded-full bg-white text-black font-semibold border border-black/50"
+              >
+                Login
+              </Link>
+            )}
+          </div>
+        </div>
+
+        {/* Contact */}
+        <div className="text-center mb-6">
+          <h3 className="text-xl font-semibold mb-2">Contact Info</h3>
+          <p className="text-md leading-relaxed">
+            <strong>Email:</strong>{" "}
+            <a href="mailto:BeckyBuri@whitmancounty.gov" className="text-blue-300 hover:underline">
+              BeckyBuri@whitmancounty.gov
+            </a>
+            <br />
+            <strong>Phone:</strong>{" "}
+            <a href="tel:+15093975246" className="text-blue-300 hover:underline">
+              +1 (509)-397-5246
+            </a>
+          </p>
+        </div>
+
+        {/* NAV — ONLY THIS PART SWAPS */}
+        <nav className="w-full flex flex-col gap-3 text-left font-semibold text-white text-base">
+          {(isAdmin ? adminControls : resources).map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              target={isAdmin ? undefined : "_blank"}
+              rel={isAdmin ? undefined : "noopener noreferrer"}
+              className="
+                group flex items-center gap-3 rounded-lg px-3 py-2
+                border border-white/20 bg-white/5
+                transition-all duration-200
+                hover:bg-white/20 hover:border-orange-300 hover:shadow-md
+              "
+            >
+              <span className="relative flex h-3 w-3">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-orange-200 opacity-75 group-hover:animate-ping" />
+                <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-200" />
+              </span>
+              <span className="truncate">{item.label}</span>
+            </Link>
+          ))}
+        </nav>
+      </div>
     </aside>
   );
 }
