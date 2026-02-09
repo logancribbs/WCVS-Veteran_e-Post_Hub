@@ -13,7 +13,7 @@ import { ArrowRight } from "lucide-react";
 type EventOccurrence = {
   id: string;
   eventId: string;
-  date: string;        // ISO string
+  date: string; // ISO string
   startTime?: string;
   endTime?: string;
 };
@@ -24,12 +24,12 @@ type Event = {
   description?: string;
   createdBy: { name: string; email: string };
   status: string;
-  startDate?: string;   // derived for display
-  endDate?: string;     // derived for display
+  startDate?: string; // derived for display
+  endDate?: string; // derived for display
   startTime?: string;
   endTime?: string;
   website?: string;
-  flyer?: string;       // can be http(s) URL or data: URL
+  flyer?: string; // can be http(s) URL or data: URL
   type?: string;
   interested: number;
   latitude: number;
@@ -39,7 +39,7 @@ type Event = {
   occurrences?: EventOccurrence[];
 
   // local derived props for sorting/positioning
-  _nextDate?: string;   // YYYY-MM-DD of the next relevant occurrence
+  _nextDate?: string; // YYYY-MM-DD of the next relevant occurrence
   _isUpcoming?: boolean;
 };
 
@@ -60,12 +60,14 @@ export default function HomePage() {
 
   // Read role (prefer saved role, fallback to JWT)
   useEffect(() => {
-    const role = typeof window !== "undefined" ? localStorage.getItem("role") : null;
+    const role =
+      typeof window !== "undefined" ? localStorage.getItem("role") : null;
     if (role) {
       setIsAdmin(role === "ADMIN");
       return;
     }
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
     if (token) {
       try {
         const decoded = jwt.decode(token) as { role?: string } | null;
@@ -209,7 +211,17 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-[#FAF7F2] flex flex-col relative">
+    <div
+      className="min-h-screen w-full flex flex-col relative"
+      style={{
+        // Subtle "wallpaper" background that matches the site's warm palette
+        backgroundColor: "#FAF7F2",
+        backgroundImage:
+          "radial-gradient(rgba(249, 93, 9, 0.07) 1px, transparent 1px), radial-gradient(rgba(247, 150, 13, 0.05) 1px, transparent 1px)",
+        backgroundSize: "24px 24px",
+        backgroundPosition: "0 0, 12px 12px",
+      }}
+    >
       {/* Pass isAdmin so the banner shows Create Event (admin) or WAVA (others) */}
       <HeroBanner
         query={searchQuery}
@@ -331,21 +343,19 @@ export default function HomePage() {
                         }
                       `}
                     >
-                      <span>
-                      {isAdmin ? "Delete" : "View Details"}
-                    </span>
+                      <span>{isAdmin ? "Delete" : "View Details"}</span>
 
-                    {/* Icon animates only for non-admin mode */}
-                    {!isAdmin && (
-                      <ArrowRight
-                        className="
+                      {/* Icon animates only for non-admin mode */}
+                      {!isAdmin && (
+                        <ArrowRight
+                          className="
                           w-4 h-4 text-gray-800
                           transition-transform duration-200
                           group-hover:translate-x-1
                         "
-                      />
-                    )}
-                  </Button>
+                        />
+                      )}
+                    </Button>
                   </CardBody>
                 </Card>
               ))}
