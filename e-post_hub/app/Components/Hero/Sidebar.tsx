@@ -132,6 +132,8 @@ export default function Sidebar() {
         md:sticky md:top-6
         gap-4
         transform-gpu
+        isolate
+        will-change-transform
       "
     >
       {/* Slideshow */}
