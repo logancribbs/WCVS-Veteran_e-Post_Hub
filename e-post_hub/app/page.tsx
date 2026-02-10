@@ -55,23 +55,32 @@ export default function HomePage() {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const role = localStorage.getItem("role");
+    const role =
+      typeof window !== "undefined" ? localStorage.getItem("role") : null;
     if (role) {
       setIsAdmin(role === "ADMIN");
       return;
     }
-    const token = localStorage.getItem("token");
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
     if (token) {
-      const decoded = jwt.decode(token) as { role?: string } | null;
-      setIsAdmin(decoded?.role === "ADMIN");
+      try {
+        const decoded = jwt.decode(token) as { role?: string } | null;
+        setIsAdmin(decoded?.role === "ADMIN");
+      } catch {
+        setIsAdmin(false);
+      }
+    } else {
+      setIsAdmin(false);
     }
   }, []);
 
   function filterEventsByQuery(query: string, items: Event[]) {
     const q = query.trim().toLowerCase();
     if (!q) return items;
-    return items.filter((e) =>
-      [
+
+    return items.filter((e) => {
+      const haystack = [
         e.title,
         e.description,
         e.address,
@@ -80,14 +89,17 @@ export default function HomePage() {
       ]
         .filter(Boolean)
         .join(" ")
-        .toLowerCase()
-        .includes(q)
-    );
+        .toLowerCase();
+      return haystack.includes(q);
+    });
   }
 
-  function computeNextAnchor(ev: Event) {
+  function computeNextAnchor(ev: Event): {
+    nextDate?: string;
+    isUpcoming: boolean;
+  } {
     const occ = ev.occurrences ?? [];
-    if (!occ.length) return { nextDate: undefined, isUpcoming: false };
+    if (occ.length === 0) return { nextDate: undefined, isUpcoming: false };
 
     const sorted = [...occ].sort(
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
@@ -95,52 +107,63 @@ export default function HomePage() {
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    const todayMs = today.getTime();
 
     for (const o of sorted) {
       const d = new Date(o.date);
       d.setHours(0, 0, 0, 0);
-      if (d >= today) {
+      if (d.getTime() >= todayMs) {
         return { nextDate: d.toISOString().slice(0, 10), isUpcoming: true };
       }
     }
 
     const last = sorted[sorted.length - 1];
-    const d = new Date(last.date);
-    d.setHours(0, 0, 0, 0);
-    return { nextDate: d.toISOString().slice(0, 10), isUpcoming: false };
+    const lastDate = new Date(last.date);
+    lastDate.setHours(0, 0, 0, 0);
+    return { nextDate: lastDate.toISOString().slice(0, 10), isUpcoming: false };
   }
 
-  function sortByClosestToToday(a: Event, b: Event) {
+  function sortByClosestToToday(a: Event, b: Event): number {
     const aDate = a._nextDate ? new Date(a._nextDate).getTime() : Infinity;
     const bDate = b._nextDate ? new Date(b._nextDate).getTime() : Infinity;
-    if (a._isUpcoming && !b._isUpcoming) return -1;
-    if (!a._isUpcoming && b._isUpcoming) return 1;
-    return a._isUpcoming ? aDate - bDate : bDate - aDate;
+
+    const aUpcoming = a._isUpcoming ?? false;
+    const bUpcoming = b._isUpcoming ?? false;
+
+    if (aUpcoming && !bUpcoming) return -1;
+    if (!aUpcoming && bUpcoming) return 1;
+    if (aUpcoming && bUpcoming) return aDate - bDate;
+    return bDate - aDate;
   }
 
   useEffect(() => {
     async function fetchApprovedEvents() {
-      const res = await fetch("/api/Event/approved");
-      const data = await res.json();
-      const allEvents = data.events || [];
+      try {
+        const response = await fetch("/api/Event/approved");
+        if (!response.ok) return;
 
-      allEvents.forEach((ev: Event) => {
-        if (ev.occurrences?.length) {
-          ev.occurrences.sort(
-            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-          );
-          ev.startDate = ev.occurrences[0].date.split("T")[0];
-          ev.endDate =
-            ev.occurrences[ev.occurrences.length - 1].date.split("T")[0];
-          const { nextDate, isUpcoming } = computeNextAnchor(ev);
-          ev._nextDate = nextDate;
-          ev._isUpcoming = isUpcoming;
-        }
-      });
+        const data = await response.json();
+        const allEvents = (data.events as Event[]) || [];
 
-      const sorted = [...allEvents].sort(sortByClosestToToday);
-      setEvents(sorted);
-      setFilteredEvents(sorted);
+        allEvents.forEach((ev) => {
+          if (ev.occurrences?.length) {
+            ev.occurrences.sort(
+              (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+            );
+            ev.startDate = ev.occurrences[0].date.split("T")[0];
+            ev.endDate =
+              ev.occurrences[ev.occurrences.length - 1].date.split("T")[0];
+
+            const { nextDate, isUpcoming } = computeNextAnchor(ev);
+            ev._nextDate = nextDate;
+            ev._isUpcoming = isUpcoming;
+          }
+        });
+
+        const sorted = [...allEvents].sort(sortByClosestToToday);
+        setEvents(sorted);
+        setFilteredEvents(sorted);
+      } catch {}
     }
 
     fetchApprovedEvents();
@@ -152,69 +175,186 @@ export default function HomePage() {
     );
   }, [searchQuery, events]);
 
+  const handleCloseModal = () => setSelectedEvent(null);
+
+  const formatDateRange = (startDate?: string, endDate?: string) => {
+    if (!startDate) return "";
+    const start = new Date(startDate).toLocaleDateString();
+    if (!endDate || startDate === endDate) return start;
+    const end = new Date(endDate).toLocaleDateString();
+    return `${start} - ${end}`;
+  };
+
+  async function deleteEventById(eventId: string) {
+    try {
+      const res = await fetch(`/api/Event/${eventId}`, { method: "DELETE" });
+      if (!res.ok) return;
+      setEvents((prev) => prev.filter((e) => e.id !== eventId));
+      setFilteredEvents((prev) => prev.filter((e) => e.id !== eventId));
+      if (selectedEvent?.id === eventId) setSelectedEvent(null);
+    } catch {}
+  }
+
   return (
-    <div className="min-h-screen w-full flex flex-col">
+    <div
+      className="min-h-screen w-full flex flex-col relative"
+      style={{
+        backgroundColor: "#FAF7F2",
+        backgroundImage:
+          "linear-gradient(rgba(250, 247, 242, 0.50), rgba(250, 247, 242, 0.50)), url('/bg-floral.png')",
+        backgroundRepeat: "repeat",
+        backgroundSize: "220px 220px",
+        backgroundPosition: "top left",
+      }}
+    >
       <HeroBanner
         query={searchQuery}
         onQueryChange={setSearchQuery}
+        onSubmit={() => {}}
         isAdmin={isAdmin}
       />
 
       <div className="flex flex-col md:flex-row w-full pt-6">
-        <div className="w-full md:w-[30%] p-6">
+        <div className="w-full md:w-[30%] lg:w-[28%] xl:w-[25%] p-4 md:p-6">
           <Sidebar />
         </div>
 
-        <div className="flex-1 p-6">
-          <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
-            {filteredEvents.map((event) => (
-              <Card
-                key={event.id}
-                className="
-                  relative overflow-hidden
-                  bg-[#4F5D3A]
-                  border-[3px] border-[#22301A]
-                  rounded-2xl
-                  shadow-[0_12px_28px_rgba(0,0,0,0.42)]
-                  hover:shadow-[0_16px_36px_rgba(0,0,0,0.48)]
-                  transition-transform hover:scale-[1.03]
-                  duration-300
-                  before:absolute before:inset-0
-                  before:bg-[linear-gradient(135deg,rgba(255,255,255,0.18),rgba(255,255,255,0.04),transparent)]
-                  before:opacity-60
-                  before:pointer-events-none
-                "
-              >
-                <div className="text-center text-xl font-semibold text-white pt-4">
-                  {event.title}
-                </div>
-
-                <div
-                  className="px-3 cursor-pointer"
-                  onClick={() => setSelectedEvent(event)}
+        <div className="content flex-1 p-6 md:pl-8 lg:pl-12">
+          {filteredEvents.length === 0 ? (
+            <p className="text-center text-lg">No events available.</p>
+          ) : (
+            <div className="grid gap-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+              {filteredEvents.map((event) => (
+                <Card
+                  key={event.id}
+                  className="
+                    relative
+                    bg-[#4F5D3A]
+                    border-[3px] border-[#22301A]
+                    rounded-2xl
+                    shadow-[0_12px_28px_rgba(0,0,0,0.42)]
+                    hover:shadow-[0_16px_36px_rgba(0,0,0,0.48)]
+                    flex flex-col overflow-hidden
+                    transition-transform hover:scale-[1.03]
+                    hover:ring-4 hover:ring-orange-300
+                    duration-300 w-full max-w-[380px] h-[520px]
+                    after:absolute after:inset-0
+                    after:bg-[linear-gradient(135deg,rgba(255,255,255,0.14),rgba(255,255,255,0.04),transparent)]
+                    after:pointer-events-none
+                  "
                 >
-                  {event.flyer && !isPdfUrl(event.flyer) && (
-                    <img
-                      src={event.flyer}
-                      className="w-full h-[350px] object-cover rounded-xl border-2 border-white/30 bg-white"
-                    />
-                  )}
-                </div>
-
-                <CardBody className="flex justify-between items-center p-4">
-                  <div className="text-white text-lg">
-                    {event.startDate}
+                  <div className="text-center text-xl font-semibold text-white pt-4 pb-2">
+                    {event.title}
                   </div>
-                  <Button className="bg-white text-[#0F2A22]">
-                    View Details
-                    <ArrowRight className="ml-2 w-4 h-4" />
-                  </Button>
-                </CardBody>
-              </Card>
-            ))}
-          </div>
+
+                  <div
+                    className="flex justify-center items-center cursor-pointer px-3"
+                    onClick={() => setSelectedEvent(event)}
+                  >
+                    {event.flyer ? (
+                      isPdfUrl(event.flyer) ? (
+                        <div className="w-full rounded-xl border-2 border-white/30 bg-white p-2 shadow-sm">
+                          <PdfViewer
+                            fileUrl={event.flyer}
+                            containerHeight={340}
+                          />
+                        </div>
+                      ) : (
+                        <img
+                          src={event.flyer}
+                          alt="Flyer"
+                          className="w-full h-[350px] object-cover rounded-xl border-2 border-white/30 shadow-sm bg-white"
+                        />
+                      )
+                    ) : (
+                      <div className="w-full h-[350px] bg-white flex items-center justify-center text-gray-600 italic border-2 border-white/30 rounded-xl shadow-sm">
+                        No Flyer Available
+                      </div>
+                    )}
+                  </div>
+
+                  <CardBody className="flex justify-between items-center p-4 text-center">
+                    <div className="text-white text-lg font-medium">
+                      {formatDateRange(event.startDate, event.endDate)}
+                    </div>
+
+                    <Button
+                      onClick={() =>
+                        isAdmin
+                          ? deleteEventById(event.id)
+                          : setSelectedEvent(event)
+                      }
+                      aria-label={
+                        isAdmin
+                          ? `Delete ${event.title}`
+                          : `View details for ${event.title}`
+                      }
+                      className={`
+                        group inline-flex items-center justify-center gap-2
+                        px-16 py-2.5 rounded-xl
+                        text-sm font-semibold tracking-wide
+                        transition-all duration-200
+                        shadow-sm hover:shadow-md
+                        focus-visible:outline-none
+                        focus-visible:ring-2
+                        focus-visible:ring-offset-2
+                        ${
+                          isAdmin
+                            ? `
+                              bg-red-600 text-white
+                              border border-red-700
+                              hover:bg-red-700
+                              focus-visible:ring-red-600
+                            `
+                            : `
+                              bg-white/90
+                              border border-white/40
+                              text-[#0F2A22]
+                              hover:bg-white
+                              focus-visible:ring-orange-300
+                            `
+                        }
+                      `}
+                    >
+                      <span>{isAdmin ? "Delete" : "View Details"}</span>
+                      {!isAdmin && (
+                        <ArrowRight className="w-4 h-4 text-[#0F2A22] transition-transform duration-200 group-hover:translate-x-1" />
+                      )}
+                    </Button>
+                  </CardBody>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       </div>
+
+      {selectedEvent && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex justify-center items-center z-50">
+          <button
+            onClick={handleCloseModal}
+            className="absolute top-6 left-6 bg-[#ff8c00] text-white px-6 py-3 text-lg rounded-md shadow-lg hover:scale-105 transition-transform duration-200"
+          >
+            Back
+          </button>
+
+          <div className="relative bg-white rounded-lg shadow-2xl max-w-6xl w-full mx-6 flex justify-center items-center p-6">
+            {selectedEvent.flyer ? (
+              isPdfUrl(selectedEvent.flyer) ? (
+                <PdfViewer fileUrl={selectedEvent.flyer} containerHeight={700} />
+              ) : (
+                <img
+                  src={selectedEvent.flyer}
+                  alt="Flyer"
+                  className="max-h-[90vh] object-contain rounded-lg"
+                />
+              )
+            ) : (
+              <p className="text-gray-600 italic text-lg">No flyer available</p>
+            )}
+          </div>
+        </div>
+      )}
 
       <BottomBar />
     </div>
