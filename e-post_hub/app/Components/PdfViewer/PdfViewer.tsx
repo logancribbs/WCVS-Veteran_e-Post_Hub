@@ -34,23 +34,29 @@ export default function PdfViewer({ fileUrl, containerHeight }: PdfViewerProps) 
   useEffect(() => {
     let cancelled = false;
 
-    async function renderPdfCover(url: string, boxW: number, boxH: number) {
+    async function renderPdfPreview(url: string, boxW: number, boxH: number) {
       try {
         setError(null);
         setThumbnail(null);
 
+        // Wait until we know our container size.
         if (!boxW || boxW <= 0) return;
 
         const loadingTask = pdfjs.getDocument(url);
         const pdf = await loadingTask.promise;
         const page = await pdf.getPage(1);
 
+        // Base viewport at scale=1 for dimensions.
         const vp1 = page.getViewport({ scale: 1 });
-        const coverScale = Math.max(boxW / vp1.width, boxH / vp1.height);
 
+        // CONTAIN scale (fits entire page within the box; no cropping).
+        const containScale = Math.min(boxW / vp1.width, boxH / vp1.height);
+
+        // Render sharper on high-DPI screens.
         const dpr =
           typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
-        const renderScale = coverScale * dpr;
+
+        const renderScale = containScale * dpr;
         const viewport = page.getViewport({ scale: renderScale });
 
         const canvas = document.createElement("canvas");
@@ -71,7 +77,7 @@ export default function PdfViewer({ fileUrl, containerHeight }: PdfViewerProps) 
       }
     }
 
-    renderPdfCover(fileUrl, containerWidth, heightPx);
+    renderPdfPreview(fileUrl, containerWidth, heightPx);
 
     return () => {
       cancelled = true;
@@ -95,7 +101,8 @@ export default function PdfViewer({ fileUrl, containerHeight }: PdfViewerProps) 
           style={{
             width: "100%",
             height: "100%",
-            objectFit: "cover",
+            objectFit: "contain",
+            objectPosition: "center",
             display: "block",
           }}
         />
