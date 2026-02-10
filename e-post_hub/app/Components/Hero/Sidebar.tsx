@@ -15,7 +15,7 @@ export default function Sidebar() {
     "/Landscape_3.jpg",
   ];
 
-  // resource list for dynamic highlight
+  // resource list (PUBLIC)
   const resources = [
     {
       label: "Veteran Health Care",
@@ -31,20 +31,22 @@ export default function Sidebar() {
     },
     {
       label: "More Resources",
-      // to add permanent link
+      href: "/Resources",
     },
   ];
 
-  const [currentIndex, setCurrentIndex] = useState(0); // for slideshow
+  // ADMIN controls (same style, internal links)
+  const adminControls = [
+    { label: "Create Event", href: "/Event/create" },
+    { label: "Manage Homepage Images", href: "/Admin/slideshow" },
+    { label: "Manage Resource Links", href: "/Admin/resources" },
+  ];
 
-  // hover-to-reveal action (Login or Logout)
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [showAction, setShowAction] = useState(false);
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // admin state
   const [isAdmin, setIsAdmin] = useState(false);
 
-  // Read role from localStorage; fallback to token decode; also listen for role changes
   useEffect(() => {
     const readRole = () => {
       const role = typeof window !== "undefined" ? localStorage.getItem("role") : null;
@@ -66,8 +68,6 @@ export default function Sidebar() {
     };
 
     readRole();
-
-    // In case other parts of the app change localStorage (e.g., LoginForm), keep in sync
     const onStorage = (e: StorageEvent) => {
       if (e.key === "role" || e.key === "token") readRole();
     };
@@ -75,7 +75,6 @@ export default function Sidebar() {
     return () => window.removeEventListener("storage", onStorage);
   }, []);
 
-  // auto-advance every 5 sec - sidebar slideshow
   useEffect(() => {
     if (slideshowImages.length <= 1) return;
     const interval = setInterval(() => {
@@ -113,7 +112,6 @@ export default function Sidebar() {
       localStorage.removeItem("token");
       localStorage.removeItem("role");
     } catch {}
-    // hard reload the homepage so HeroBanner & Sidebar re-evaluate isAdmin
     window.location.href = "/";
   };
 
@@ -123,7 +121,6 @@ export default function Sidebar() {
         w-full
         md:min-w-[340px]
         lg:min-w-[360px]
-        bg-gradient-to-b from-[#8C1F1F] via-[#A32626] to-[#ff8c00]
         border-2 border-black/70
         rounded-2xl
         p-5 md:p-6
@@ -133,8 +130,21 @@ export default function Sidebar() {
         shadow-[0_6px_16px_rgba(0,0,0,0.35)]
         md:sticky md:top-6
         gap-4
+        isolate
+        transform-gpu
       "
+      style={{
+        // Explicit background image gradient (more consistent than utility gradient in some compositing cases)
+        backgroundColor: "#8C1F1F",
+        backgroundImage:
+          "linear-gradient(to bottom, #8C1F1F 0%, #A32626 55%, #ff8c00 100%)",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "100% 100%",
+        // Prevent any weird blending with parent wallpaper/background layers
+        mixBlendMode: "normal",
+      }}
     >
+      {/* Slideshow */}
       <div
         className="
           w-full max-w-[320px]
@@ -146,10 +156,7 @@ export default function Sidebar() {
         "
         onMouseEnter={startHoverTimer}
         onMouseLeave={clearHoverTimerAndHide}
-        onFocus={startHoverTimer}
-        onBlur={clearHoverTimerAndHide}
         tabIndex={0}
-        aria-label="Slideshow"
       >
         <Image
           src={slideshowImages[currentIndex]}
@@ -161,112 +168,43 @@ export default function Sidebar() {
           unoptimized
         />
 
-        {/* Prev/Next controls */}
         {slideshowImages.length > 1 && (
           <>
             <button
               type="button"
               onClick={showPrev}
-              className="
-                absolute left-2 top-1/2 -translate-y-1/2
-                bg-black/40 hover:bg-black/60
-                text-white
-                rounded-full
-                w-7 h-7
-                flex items-center justify-center
-                text-xs
-                transition-colors
-              "
-              aria-label="Previous image"
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 rounded-full w-7 h-7"
             >
               ‹
             </button>
             <button
               type="button"
               onClick={showNext}
-              className="
-                absolute right-2 top-1/2 -translate-y-1/2
-                bg-black/40 hover:bg-black/60
-                text-white
-                rounded-full
-                w-7 h-7
-                flex items-center justify-center
-                text-xs
-                transition-colors
-              "
-              aria-label="Next image"
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 rounded-full w-7 h-7"
             >
               ›
             </button>
-
-            {/* Dots */}
-            <div
-              className="
-                absolute bottom-2 left-1/2 -translate-x-1/2
-                flex gap-1.5
-              "
-            >
-              {slideshowImages.map((_, idx) => (
-                <span
-                  key={idx}
-                  className={`
-                    h-2 w-2 rounded-full
-                    ${idx === currentIndex ? "bg-white" : "bg-white/50"}
-                  `}
-                />
-              ))}
-            </div>
           </>
         )}
 
-        {/* Hidden Login/Logout action: slides up after 3s hover */}
         <div
           className={`
-            pointer-events-none
-            absolute inset-x-0 bottom-0
-            flex justify-center
+            pointer-events-none absolute inset-x-0 bottom-0 flex justify-center
             transition-all duration-300
             ${showAction ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}
           `}
         >
           {isAdmin ? (
             <button
-              type="button"
               onClick={handleLogout}
-              className="
-                pointer-events-auto
-                mb-2
-                inline-flex items-center justify-center
-                px-4 py-2
-                rounded-full
-                bg-white text-black font-semibold
-                border border-black/50
-                shadow
-                hover:translate-y-[-2px]
-                hover:shadow-md
-                transition
-              "
-              aria-label="Logout"
+              className="pointer-events-auto mb-2 px-4 py-2 rounded-full bg-white text-black font-semibold border border-black/50"
             >
               Logout
             </button>
           ) : (
             <Link
               href="/Login"
-              className="
-                pointer-events-auto
-                mb-2
-                inline-flex items-center justify-center
-                px-4 py-2
-                rounded-full
-                bg-white text-black font-semibold
-                border border-black/50
-                shadow
-                hover:translate-y-[-2px]
-                hover:shadow-md
-                transition
-              "
-              aria-label="Go to login page"
+              className="pointer-events-auto mb-2 px-4 py-2 rounded-full bg-white text-black font-semibold border border-black/50"
             >
               Login
             </Link>
@@ -274,6 +212,7 @@ export default function Sidebar() {
         </div>
       </div>
 
+      {/* Contact */}
       <div className="text-center mb-6">
         <h3 className="text-xl font-semibold mb-2">Contact Info</h3>
         <p className="text-md leading-relaxed">
@@ -289,49 +228,29 @@ export default function Sidebar() {
         </p>
       </div>
 
-            <nav className="w-full flex flex-col gap-3 text-left font-semibold text-white text-base">
-        {resources.map((resource, index) => (
-          <a
-            key={resource.href}
-            href={resource.href}
-            target="_blank"
-            rel="noopener noreferrer"
+      {/* NAV — ONLY THIS PART SWAPS */}
+      <nav className="w-full flex flex-col gap-3 text-left font-semibold text-white text-base">
+        {(isAdmin ? adminControls : resources).map((item) => (
+          <Link
+            key={item.label}
+            href={item.href}
+            target={isAdmin ? undefined : "_blank"}
+            rel={isAdmin ? undefined : "noopener noreferrer"}
             className="
-              group
-              flex items-center gap-3
-              rounded-lg
-              px-3 py-2
-              border border-white/20
-              bg-white/5
+              group flex items-center gap-3 rounded-lg px-3 py-2
+              border border-white/20 bg-white/5
               transition-all duration-200
               hover:bg-white/20 hover:border-orange-300 hover:shadow-md
             "
           >
-            {/* highlight cursor dot */}
             <span className="relative flex h-3 w-3">
-              {/* ping animation only on hover */}
-              <span
-                className="
-                  absolute inline-flex h-full w-full rounded-full opacity-75
-                  bg-orange-200
-                  group-hover:bg-orange-300
-                  group-hover:animate-ping
-                "
-              />
-              <span
-                className="
-                  relative inline-flex h-3 w-3 rounded-full
-                  bg-orange-200
-                  group-hover:bg-orange-400
-                "
-              />
+              <span className="absolute inline-flex h-full w-full rounded-full bg-orange-200 opacity-75 group-hover:animate-ping" />
+              <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-200" />
             </span>
-
-            <span className="truncate">{resource.label}</span>
-          </a>
+            <span className="truncate">{item.label}</span>
+          </Link>
         ))}
       </nav>
-
     </aside>
   );
 }
