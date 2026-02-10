@@ -1,10 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { pdfjs } from "react-pdf";
 
-// Use a worker served from /public to avoid Webpack/Terser issues on Vercel.
-// This file will be created at build/install time by scripts/copy-pdf-worker.mjs
 pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.js";
 
 interface PdfViewerProps {
@@ -12,43 +10,103 @@ interface PdfViewerProps {
   containerHeight?: number;
 }
 
-export default function PdfPreview({ fileUrl, containerHeight }: PdfViewerProps) {
+export default function PdfViewer({ fileUrl, containerHeight }: PdfViewerProps) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [containerWidth, setContainerWidth] = useState<number>(0);
   const [thumbnail, setThumbnail] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const renderPdfThumbnail = async (url: string) => {
-    const loadingTask = pdfjs.getDocument(url);
-    const pdf = await loadingTask.promise;
-    const page = await pdf.getPage(1);
-
-    const viewport = page.getViewport({ scale: 0.5 });
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d");
-
-    if (!context) return;
-
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
-
-    await page.render({ canvasContext: context, viewport }).promise;
-
-    setThumbnail(canvas.toDataURL());
-  };
+  const heightPx = useMemo(() => containerHeight ?? 400, [containerHeight]);
 
   useEffect(() => {
-    setThumbnail(null);
-    renderPdfThumbnail(fileUrl);
-  }, [fileUrl]);
+    if (!containerRef.current) return;
+
+    const el = containerRef.current;
+    const update = () => setContainerWidth(el.getBoundingClientRect().width);
+    update();
+
+    const ro = new ResizeObserver(() => update());
+    ro.observe(el);
+
+    return () => ro.disconnect();
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function renderPdfCover(url: string, boxW: number, boxH: number) {
+      try {
+        setError(null);
+        setThumbnail(null);
+
+        if (!boxW || boxW <= 0) return;
+
+        const loadingTask = pdfjs.getDocument(url);
+        const pdf = await loadingTask.promise;
+        const page = await pdf.getPage(1);
+
+        const vp1 = page.getViewport({ scale: 1 });
+        const coverScale = Math.max(boxW / vp1.width, boxH / vp1.height);
+
+        const dpr =
+          typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
+        const renderScale = coverScale * dpr;
+        const viewport = page.getViewport({ scale: renderScale });
+
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        if (!context) return;
+
+        canvas.width = Math.ceil(viewport.width);
+        canvas.height = Math.ceil(viewport.height);
+
+        await page.render({ canvasContext: context, viewport }).promise;
+        if (cancelled) return;
+
+        setThumbnail(canvas.toDataURL("image/png"));
+      } catch (e) {
+        console.error("Failed to render PDF preview", e);
+        if (cancelled) return;
+        setError("Unable to preview PDF");
+      }
+    }
+
+    renderPdfCover(fileUrl, containerWidth, heightPx);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [fileUrl, containerWidth, heightPx]);
 
   return (
-    <div style={{ height: containerHeight || 400, overflow: "hidden" }}>
+    <div
+      ref={containerRef}
+      style={{
+        height: heightPx,
+        width: "100%",
+        overflow: "hidden",
+        borderRadius: "8px",
+      }}
+    >
       {thumbnail ? (
         <img
           src={thumbnail}
-          alt="PDF Thumbnail"
-          style={{ width: "100%", height: "auto", borderRadius: "8px" }}
+          alt="PDF Preview"
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            display: "block",
+          }}
         />
+      ) : error ? (
+        <div className="w-full h-full flex items-center justify-center text-sm text-red-500">
+          {error}
+        </div>
       ) : (
-        <p>Loading...</p>
+        <div className="w-full h-full flex items-center justify-center text-sm text-gray-400">
+          Loading...
+        </div>
       )}
     </div>
   );
