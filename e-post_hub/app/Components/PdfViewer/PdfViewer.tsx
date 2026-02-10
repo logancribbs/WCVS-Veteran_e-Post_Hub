@@ -39,20 +39,16 @@ export default function PdfViewer({ fileUrl, containerHeight }: PdfViewerProps) 
         setError(null);
         setThumbnail(null);
 
-        // Wait until we know our container size.
         if (!boxW || boxW <= 0) return;
 
         const loadingTask = pdfjs.getDocument(url);
         const pdf = await loadingTask.promise;
         const page = await pdf.getPage(1);
 
-        // Base viewport at scale=1 for dimensions.
         const vp1 = page.getViewport({ scale: 1 });
 
-        // CONTAIN scale (fits entire page within the box; no cropping).
         const containScale = Math.min(boxW / vp1.width, boxH / vp1.height);
 
-        // Render sharper on high-DPI screens.
         const dpr =
           typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
 
@@ -92,6 +88,7 @@ export default function PdfViewer({ fileUrl, containerHeight }: PdfViewerProps) 
         width: "100%",
         overflow: "hidden",
         borderRadius: "8px",
+        border: "1px solid rgba(0, 0, 0, 0.25)",
       }}
     >
       {thumbnail ? (
