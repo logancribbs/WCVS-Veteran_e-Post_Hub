@@ -60,14 +60,12 @@ export default function HomePage() {
 
   // Read role (prefer saved role, fallback to JWT)
   useEffect(() => {
-    const role =
-      typeof window !== "undefined" ? localStorage.getItem("role") : null;
+    const role = typeof window !== "undefined" ? localStorage.getItem("role") : null;
     if (role) {
       setIsAdmin(role === "ADMIN");
       return;
     }
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
     if (token) {
       try {
         const decoded = jwt.decode(token) as { role?: string } | null;
@@ -85,13 +83,7 @@ export default function HomePage() {
     if (!q) return items;
 
     return items.filter((e) => {
-      const haystack = [
-        e.title,
-        e.description,
-        e.address,
-        e.type,
-        e.createdBy?.name,
-      ]
+      const haystack = [e.title, e.description, e.address, e.type, e.createdBy?.name]
         .filter(Boolean)
         .join(" ")
         .toLowerCase();
@@ -100,16 +92,11 @@ export default function HomePage() {
   }
 
   // Compute anchor date (the first upcoming occurrence; if none upcoming, use last)
-  function computeNextAnchor(ev: Event): {
-    nextDate?: string;
-    isUpcoming: boolean;
-  } {
+  function computeNextAnchor(ev: Event): { nextDate?: string; isUpcoming: boolean } {
     const occ = ev.occurrences ?? [];
     if (occ.length === 0) return { nextDate: undefined, isUpcoming: false };
 
-    const sorted = [...occ].sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-    );
+    const sorted = [...occ].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -126,10 +113,7 @@ export default function HomePage() {
     const last = sorted[sorted.length - 1];
     const lastDate = new Date(last.date);
     lastDate.setHours(0, 0, 0, 0);
-    return {
-      nextDate: lastDate.toISOString().slice(0, 10),
-      isUpcoming: false,
-    };
+    return { nextDate: lastDate.toISOString().slice(0, 10), isUpcoming: false };
   }
 
   // Sort logic: upcoming first, then nearest date; past items by most recent last date
@@ -154,10 +138,7 @@ export default function HomePage() {
       try {
         const response = await fetch("/api/Event/approved");
         if (!response.ok) {
-          console.error(
-            "Failed to fetch approved events:",
-            response.statusText
-          );
+          console.error("Failed to fetch approved events:", response.statusText);
           return;
         }
 
@@ -167,9 +148,7 @@ export default function HomePage() {
         // Normalize occurrences, compute display date range and sorting anchors
         allEvents.forEach((ev) => {
           if (ev.occurrences?.length) {
-            ev.occurrences.sort(
-              (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-            );
+            ev.occurrences.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
             const earliest = ev.occurrences[0].date;
             const latest = ev.occurrences[ev.occurrences.length - 1].date;
             ev.startDate = earliest.split("T")[0];
@@ -187,9 +166,7 @@ export default function HomePage() {
         const sorted = [...allEvents].sort(sortByClosestToToday);
 
         setEvents(sorted);
-        setFilteredEvents(
-          filterEventsByQuery(searchQuery, sorted).sort(sortByClosestToToday)
-        );
+        setFilteredEvents(filterEventsByQuery(searchQuery, sorted).sort(sortByClosestToToday));
       } catch (error) {
         console.error("Error fetching approved events:", error);
       }
@@ -199,9 +176,7 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    setFilteredEvents(
-      filterEventsByQuery(searchQuery, events).sort(sortByClosestToToday)
-    );
+    setFilteredEvents(filterEventsByQuery(searchQuery, events).sort(sortByClosestToToday));
   }, [searchQuery, events]);
 
   const handleCloseModal = () => setSelectedEvent(null);
@@ -243,12 +218,7 @@ export default function HomePage() {
         backgroundPosition: "top left",
       }}
     >
-      <HeroBanner
-        query={searchQuery}
-        onQueryChange={setSearchQuery}
-        onSubmit={() => {}}
-        isAdmin={isAdmin}
-      />
+      <HeroBanner query={searchQuery} onQueryChange={setSearchQuery} onSubmit={() => {}} isAdmin={isAdmin} />
 
       <div className="flex flex-col md:flex-row w-full pt-6">
         <div className="w-full md:w-[30%] lg:w-[28%] xl:w-[25%] p-4 md:p-6">
@@ -264,18 +234,19 @@ export default function HomePage() {
                 <Card
                   key={event.id}
                   className="
-                    bg-[#01497c]
-                    border-[3px] border-[#2F3A4D]/70
+                    bg-[#F3F4F6]
+                    border-2 border-[#1F2937]
                     rounded-2xl
-                    shadow-[0_12px_26px_rgba(0,0,0,0.35)]
-                    hover:shadow-[0_16px_34px_rgba(0,0,0,0.40)]
+                    shadow-[0_10px_24px_rgba(0,0,0,0.28)]
+                    hover:shadow-[0_14px_32px_rgba(0,0,0,0.34)]
                     flex flex-col overflow-hidden
                     transition-transform hover:scale-[1.03]
                     hover:ring-4 hover:ring-orange-300
-                    duration-300 w-full max-w-[380px] h-[520px]
+                    duration-300
+                    w-full max-w-[380px] h-[520px]
                   "
                 >
-                  <div className="text-center text-xl font-semibold text-[#1F2937] pt-4 pb-2">
+                  <div className="text-center text-xl font-semibold text-gray-900 pt-4 pb-2">
                     {event.title}
                   </div>
 
@@ -285,43 +256,29 @@ export default function HomePage() {
                   >
                     {event.flyer ? (
                       isPdfUrl(event.flyer) ? (
-                        <div className="w-full rounded-xl border-2 border-black/25 bg-white p-2 shadow-sm">
-                          <PdfViewer fileUrl={event.flyer} containerHeight={340} />
-                        </div>
+                        <PdfViewer fileUrl={event.flyer} containerHeight={340} />
                       ) : (
                         <img
                           src={event.flyer}
                           alt="Flyer"
-                          className="
-                            w-full h-[350px] object-cover
-                            rounded-xl
-                            border-2 border-black/25
-                            bg-white
-                            shadow-sm
-                          "
+                          className="w-full h-[350px] object-cover rounded-xl border-2 border-[#1F2937] shadow-sm"
                         />
                       )
                     ) : (
-                      <div className="w-full h-[350px] bg-white flex items-center justify-center text-gray-500 italic border-2 border-black/20 rounded-xl shadow-sm">
+                      <div className="w-full h-[350px] bg-gray-100 flex items-center justify-center text-gray-400 italic border border-gray-300 rounded-lg">
                         No Flyer Available
                       </div>
                     )}
                   </div>
 
                   <CardBody className="flex justify-between items-center p-4 text-center">
-                    <div className="text-[#1F2937] text-lg font-medium">
+                    <div className="text-gray-800 text-lg font-medium">
                       {formatDateRange(event.startDate, event.endDate)}
                     </div>
 
                     <Button
-                      onClick={() =>
-                        isAdmin ? deleteEventById(event.id) : setSelectedEvent(event)
-                      }
-                      aria-label={
-                        isAdmin
-                          ? `Delete ${event.title}`
-                          : `View details for ${event.title}`
-                      }
+                      onClick={() => (isAdmin ? deleteEventById(event.id) : setSelectedEvent(event))}
+                      aria-label={isAdmin ? `Delete ${event.title}` : `View details for ${event.title}`}
                       className={`
                         group inline-flex items-center justify-center gap-2
                         px-16 py-2.5 rounded-xl
@@ -378,11 +335,7 @@ export default function HomePage() {
               isPdfUrl(selectedEvent.flyer) ? (
                 <PdfViewer fileUrl={selectedEvent.flyer} containerHeight={700} />
               ) : (
-                <img
-                  src={selectedEvent.flyer}
-                  alt="Flyer"
-                  className="max-h-[90vh] object-contain rounded-lg"
-                />
+                <img src={selectedEvent.flyer} alt="Flyer" className="max-h-[90vh] object-contain rounded-lg" />
               )
             ) : (
               <p className="text-gray-600 italic text-lg">No flyer available</p>
