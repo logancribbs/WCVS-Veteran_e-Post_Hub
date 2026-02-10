@@ -100,7 +100,10 @@ export default function HomePage() {
   }
 
   // Compute anchor date (the first upcoming occurrence; if none upcoming, use last)
-  function computeNextAnchor(ev: Event): { nextDate?: string; isUpcoming: boolean } {
+  function computeNextAnchor(ev: Event): {
+    nextDate?: string;
+    isUpcoming: boolean;
+  } {
     const occ = ev.occurrences ?? [];
     if (occ.length === 0) return { nextDate: undefined, isUpcoming: false };
 
@@ -123,7 +126,10 @@ export default function HomePage() {
     const last = sorted[sorted.length - 1];
     const lastDate = new Date(last.date);
     lastDate.setHours(0, 0, 0, 0);
-    return { nextDate: lastDate.toISOString().slice(0, 10), isUpcoming: false };
+    return {
+      nextDate: lastDate.toISOString().slice(0, 10),
+      isUpcoming: false,
+    };
   }
 
   // Sort logic: upcoming first, then nearest date; past items by most recent last date
@@ -148,7 +154,10 @@ export default function HomePage() {
       try {
         const response = await fetch("/api/Event/approved");
         if (!response.ok) {
-          console.error("Failed to fetch approved events:", response.statusText);
+          console.error(
+            "Failed to fetch approved events:",
+            response.statusText
+          );
           return;
         }
 
@@ -254,11 +263,19 @@ export default function HomePage() {
               {filteredEvents.map((event) => (
                 <Card
                   key={event.id}
-                  // ONLY CHANGE: card background + border color to match bottom-bar blue
-                  className="bg-[#2B4C7E] border-2 border-[#1F3557] rounded-2xl shadow-md hover:shadow-xl flex flex-col overflow-hidden transition-transform hover:scale-[1.03] hover:ring-4 hover:ring-orange-300 duration-300 w-full max-w-[380px] h-[520px]"
+                  className="
+                    bg-[#E6EEF8]
+                    border-[3px] border-[#2F3A4D]/70
+                    rounded-2xl
+                    shadow-[0_12px_26px_rgba(0,0,0,0.35)]
+                    hover:shadow-[0_16px_34px_rgba(0,0,0,0.40)]
+                    flex flex-col overflow-hidden
+                    transition-transform hover:scale-[1.03]
+                    hover:ring-4 hover:ring-orange-300
+                    duration-300 w-full max-w-[380px] h-[520px]
+                  "
                 >
-                  {/* ONLY CHANGE: title text to white so it reads on blue */}
-                  <div className="text-center text-xl font-semibold text-white pt-4 pb-2">
+                  <div className="text-center text-xl font-semibold text-[#1F2937] pt-4 pb-2">
                     {event.title}
                   </div>
 
@@ -268,24 +285,31 @@ export default function HomePage() {
                   >
                     {event.flyer ? (
                       isPdfUrl(event.flyer) ? (
-                        <PdfViewer fileUrl={event.flyer} containerHeight={340} />
+                        <div className="w-full rounded-xl border-2 border-black/25 bg-white p-2 shadow-sm">
+                          <PdfViewer fileUrl={event.flyer} containerHeight={340} />
+                        </div>
                       ) : (
                         <img
                           src={event.flyer}
                           alt="Flyer"
-                          className="w-full h-[350px] object-cover rounded-lg border border-gray-300"
+                          className="
+                            w-full h-[350px] object-cover
+                            rounded-xl
+                            border-2 border-black/25
+                            bg-white
+                            shadow-sm
+                          "
                         />
                       )
                     ) : (
-                      <div className="w-full h-[350px] bg-gray-100 flex items-center justify-center text-gray-400 italic border border-gray-300 rounded-lg">
+                      <div className="w-full h-[350px] bg-white flex items-center justify-center text-gray-500 italic border-2 border-black/20 rounded-xl shadow-sm">
                         No Flyer Available
                       </div>
                     )}
                   </div>
 
                   <CardBody className="flex justify-between items-center p-4 text-center">
-                    {/* ONLY CHANGE: date text to white so it reads on blue */}
-                    <div className="text-white text-lg font-medium">
+                    <div className="text-[#1F2937] text-lg font-medium">
                       {formatDateRange(event.startDate, event.endDate)}
                     </div>
 
@@ -316,11 +340,11 @@ export default function HomePage() {
                               focus-visible:ring-red-600
                             `
                             : `
-                              bg-[#2B4C7E]
-                              border border-[#1F3557]
-                              text-white
-                              hover:bg-[#24406B]
-                              hover:border-[#1F3557]
+                              bg-[#FFECD1]
+                              border border-orange-300/70
+                              text-gray-900
+                              hover:bg-[#FFE3BC]
+                              hover:border-orange-400
                               focus-visible:ring-orange-300
                             `
                         }
@@ -329,7 +353,7 @@ export default function HomePage() {
                       <span>{isAdmin ? "Delete" : "View Details"}</span>
 
                       {!isAdmin && (
-                        <ArrowRight className="w-4 h-4 text-white transition-transform duration-200 group-hover:translate-x-1" />
+                        <ArrowRight className="w-4 h-4 text-gray-800 transition-transform duration-200 group-hover:translate-x-1" />
                       )}
                     </Button>
                   </CardBody>
