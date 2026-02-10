@@ -116,27 +116,42 @@ export default function Sidebar() {
   };
 
   return (
-    // Sticky wrapper (NO gradient here — fixes Safari/WebKit compositing bleed)
     <aside
       className="
         w-full
         md:min-w-[340px]
         lg:min-w-[360px]
+        border-2 border-black/70
+        rounded-2xl
+        shadow-[0_6px_16px_rgba(0,0,0,0.35)]
         md:sticky md:top-6
+        overflow-hidden
+        relative
+        isolate
       "
     >
-      {/* Visual container (gradient lives here, not on sticky element) */}
+      {/* Background layer (prevents Mac Chrome compositor “washing/blending” the gradient) */}
+      <div
+        aria-hidden="true"
+        className="
+          absolute inset-0
+          bg-gradient-to-b from-[#8C1F1F] via-[#A32626] to-[#ff8c00]
+        "
+        style={{
+          transform: "translateZ(0)",
+          backfaceVisibility: "hidden",
+          WebkitBackfaceVisibility: "hidden",
+        }}
+      />
+
+      {/* Content layer */}
       <div
         className="
-          w-full
-          bg-gradient-to-b from-[#8C1F1F] via-[#A32626] to-[#ff8c00]
-          border-2 border-black/70
-          rounded-2xl
+          relative z-10
           p-5 md:p-6
           flex flex-col
           items-center
           text-white
-          shadow-[0_6px_16px_rgba(0,0,0,0.35)]
           gap-4
         "
       >
