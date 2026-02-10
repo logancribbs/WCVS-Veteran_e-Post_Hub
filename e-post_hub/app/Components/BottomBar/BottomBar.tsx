@@ -48,11 +48,6 @@ export default function BottomBar() {
                     </Link>
                   </li>
                   <li>
-                    <Link className="hover:text-white transition" href="/Support/community/ask">
-                      Community
-                    </Link>
-                  </li>
-                  <li>
                     <Link className="hover:text-white transition" href="/Support">
                       Support
                     </Link>
