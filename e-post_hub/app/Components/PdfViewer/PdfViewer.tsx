@@ -88,7 +88,10 @@ export default function PdfViewer({ fileUrl, containerHeight }: PdfViewerProps) 
         width: "100%",
         overflow: "hidden",
         borderRadius: "8px",
-        border: "1px solid rgba(0, 0, 0, 0.25)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "10px",
       }}
     >
       {thumbnail ? (
@@ -96,11 +99,14 @@ export default function PdfViewer({ fileUrl, containerHeight }: PdfViewerProps) 
           src={thumbnail}
           alt="PDF Preview"
           style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "contain",
-            objectPosition: "center",
+            maxWidth: "100%",
+            maxHeight: "100%",
+            width: "auto",
+            height: "auto",
             display: "block",
+
+            border: "2px solid rgba(0, 0, 0, 0.65)",
+            borderRadius: "6px",
           }}
         />
       ) : error ? (
