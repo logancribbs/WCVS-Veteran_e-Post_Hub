@@ -1,8 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { Input, Button } from "@nextui-org/react";
-import { Search, Plus } from "lucide-react";
 import WhitmanLogo from "@/app/Images/whitman.png";
 import Link from "next/link";
 
@@ -14,9 +12,6 @@ type HeroBannerProps = {
 };
 
 export default function HeroBanner({
-  query,
-  onQueryChange,
-  onSubmit,
   isAdmin = false,
 }: HeroBannerProps) {
   return (
@@ -86,38 +81,6 @@ export default function HeroBanner({
               />
             )}
           </div>
-        </div>
-      </div>
-
-      {/* Search Bar */}
-      <div
-        className="
-          flex justify-center py-3
-          border-y-2 border-black/40
-          shadow-sm
-        "
-        style={{
-          background:
-            "linear-gradient(10deg, #B22234 20%, #FFFFFF 40%, #3C3B6E 100%)",
-        }}
-      >
-        <div className="w-full max-w-md px-4">
-          <Input
-            aria-label="Search Events"
-            placeholder="Search Events"
-            size="md"
-            startContent={<Search size={16} />}
-            value={query}
-            onChange={(e) => onQueryChange(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && onSubmit) onSubmit();
-            }}
-            classNames={{
-              input: "text-base px-4",
-              inputWrapper:
-                "rounded-full border-2 border-black bg-white/80 hover:border-black focus-within:border-black transition-all duration-200 shadow-sm",
-            }}
-          />
         </div>
       </div>
     </section>

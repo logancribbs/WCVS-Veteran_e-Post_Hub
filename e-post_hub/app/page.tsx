@@ -53,7 +53,6 @@ export default function HomePage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
 
   // controls Create Event vs WAVA in HeroBanner
   const [isAdmin, setIsAdmin] = useState(false);
@@ -77,19 +76,6 @@ export default function HomePage() {
       setIsAdmin(false);
     }
   }, []);
-
-  function filterEventsByQuery(query: string, items: Event[]) {
-    const q = query.trim().toLowerCase();
-    if (!q) return items;
-
-    return items.filter((e) => {
-      const haystack = [e.title, e.description, e.address, e.type, e.createdBy?.name]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-      return haystack.includes(q);
-    });
-  }
 
   // Compute anchor date (the first upcoming occurrence; if none upcoming, use last)
   function computeNextAnchor(ev: Event): { nextDate?: string; isUpcoming: boolean } {
@@ -170,7 +156,7 @@ export default function HomePage() {
         const sorted = [...allEvents].sort(sortByClosestToToday);
 
         setEvents(sorted);
-        setFilteredEvents(filterEventsByQuery(searchQuery, sorted).sort(sortByClosestToToday));
+        setFilteredEvents(sorted);
       } catch (error) {
         console.error("Error fetching approved events:", error);
       }
@@ -178,10 +164,6 @@ export default function HomePage() {
 
     fetchApprovedEvents();
   }, []);
-
-  useEffect(() => {
-    setFilteredEvents(filterEventsByQuery(searchQuery, events).sort(sortByClosestToToday));
-  }, [searchQuery, events]);
 
   const handleCloseModal = () => setSelectedEvent(null);
 
@@ -211,12 +193,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen w-full bg-[#FAF7F2] flex flex-col relative">
       {/* Pass isAdmin so the banner shows Create Event (admin) or WAVA (others) */}
-      <HeroBanner
-        query={searchQuery}
-        onQueryChange={setSearchQuery}
-        onSubmit={() => {}}
-        isAdmin={isAdmin}
-      />
+      <HeroBanner isAdmin={isAdmin} />
 
       <div className="flex flex-col md:flex-row w-full pt-6">
         {/* Sidebar */}
