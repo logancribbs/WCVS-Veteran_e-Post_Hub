@@ -264,7 +264,7 @@ export default function HomePage() {
                 <Card
                   key={event.id}
                   className="
-                    bg-[#E6EEF8]
+                    bg-[#01497c]
                     border-[3px] border-[#2F3A4D]/70
                     rounded-2xl
                     shadow-[0_12px_26px_rgba(0,0,0,0.35)]
