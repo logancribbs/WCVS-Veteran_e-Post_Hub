@@ -100,7 +100,10 @@ export default function HomePage() {
   }
 
   // Compute anchor date (the first upcoming occurrence; if none upcoming, use last)
-  function computeNextAnchor(ev: Event): { nextDate?: string; isUpcoming: boolean } {
+  function computeNextAnchor(ev: Event): {
+    nextDate?: string;
+    isUpcoming: boolean;
+  } {
     const occ = ev.occurrences ?? [];
     if (occ.length === 0) return { nextDate: undefined, isUpcoming: false };
 
@@ -253,8 +256,8 @@ export default function HomePage() {
                 <Card
                   key={event.id}
                   className="
-                    bg-[#2F5D50]
-                    border-[3px] border-[#0F2A22]
+                    bg-[#4F5D3A]
+                    border-[3px] border-[#22301A]
                     rounded-2xl
                     shadow-[0_12px_28px_rgba(0,0,0,0.42)]
                     hover:shadow-[0_16px_36px_rgba(0,0,0,0.48)]
@@ -275,7 +278,10 @@ export default function HomePage() {
                     {event.flyer ? (
                       isPdfUrl(event.flyer) ? (
                         <div className="w-full rounded-xl border-2 border-white/30 bg-white p-2 shadow-sm">
-                          <PdfViewer fileUrl={event.flyer} containerHeight={340} />
+                          <PdfViewer
+                            fileUrl={event.flyer}
+                            containerHeight={340}
+                          />
                         </div>
                       ) : (
                         <img
@@ -298,7 +304,9 @@ export default function HomePage() {
 
                     <Button
                       onClick={() =>
-                        isAdmin ? deleteEventById(event.id) : setSelectedEvent(event)
+                        isAdmin
+                          ? deleteEventById(event.id)
+                          : setSelectedEvent(event)
                       }
                       aria-label={
                         isAdmin
