@@ -64,6 +64,27 @@
   margin-right: auto;
 }
 
+/* Subtle textured background (used on landing page) */
+.landing-texture {
+  background-color: #faf7f2;
+  /*
+    Layer 1: soft paper-grain via inline SVG fractal noise
+    Layer 2: very subtle diagonal hatch for texture
+  */
+  background-image:
+    url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22220%22%20height%3D%22220%22%3E%0A%20%20%3Cfilter%20id%3D%22n%22%3E%0A%20%20%20%20%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.9%22%20numOctaves%3D%224%22%20stitchTiles%3D%22stitch%22/%3E%0A%20%20%20%20%3CfeColorMatrix%20type%3D%22matrix%22%20values%3D%220%200%200%200%200.55%20%200%200%200%200%200.50%20%200%200%200%200%200.45%20%200%200%200%200.10%200%22/%3E%0A%20%20%3C/filter%3E%0A%20%20%3Crect%20width%3D%22220%22%20height%3D%22220%22%20filter%3D%22url%28%23n%29%22%20opacity%3D%220.25%22/%3E%0A%3C/svg%3E"),
+    repeating-linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0.03) 0,
+      rgba(0, 0, 0, 0.03) 1px,
+      transparent 1px,
+      transparent 14px
+    );
+  background-size: 220px 220px, auto;
+  background-attachment: fixed;
+}
+
+
 @layer components {
   .vertical-center {
     height: calc(100vh - 64px);
