@@ -100,7 +100,10 @@ export default function HomePage() {
   }
 
   // Compute anchor date (the first upcoming occurrence; if none upcoming, use last)
-  function computeNextAnchor(ev: Event): { nextDate?: string; isUpcoming: boolean } {
+  function computeNextAnchor(ev: Event): {
+    nextDate?: string;
+    isUpcoming: boolean;
+  } {
     const occ = ev.occurrences ?? [];
     if (occ.length === 0) return { nextDate: undefined, isUpcoming: false };
 
@@ -123,7 +126,10 @@ export default function HomePage() {
     const last = sorted[sorted.length - 1];
     const lastDate = new Date(last.date);
     lastDate.setHours(0, 0, 0, 0);
-    return { nextDate: lastDate.toISOString().slice(0, 10), isUpcoming: false };
+    return {
+      nextDate: lastDate.toISOString().slice(0, 10),
+      isUpcoming: false,
+    };
   }
 
   // Sort logic: upcoming first, then nearest date; past items by most recent last date
@@ -148,7 +154,10 @@ export default function HomePage() {
       try {
         const response = await fetch("/api/Event/approved");
         if (!response.ok) {
-          console.error("Failed to fetch approved events:", response.statusText);
+          console.error(
+            "Failed to fetch approved events:",
+            response.statusText
+          );
           return;
         }
 
@@ -254,7 +263,7 @@ export default function HomePage() {
               {filteredEvents.map((event) => (
                 <Card
                   key={event.id}
-                  className="bg-[#FFEBC4] border-2 border-gray-500 rounded-2xl shadow-md hover:shadow-xl flex flex-col overflow-hidden transition-transform hover:scale-[1.03] hover:ring-4 hover:ring-orange-300 duration-300 w-full max-w-[380px] h-[520px]"
+                  className="bg-[#F2F4F8] border-2 border-gray-500 rounded-2xl shadow-md hover:shadow-xl flex flex-col overflow-hidden transition-transform hover:scale-[1.03] hover:ring-4 hover:ring-orange-300 duration-300 w-full max-w-[380px] h-[520px]"
                 >
                   <div className="text-center text-xl font-semibold text-gray-900 pt-4 pb-2">
                     {event.title}
