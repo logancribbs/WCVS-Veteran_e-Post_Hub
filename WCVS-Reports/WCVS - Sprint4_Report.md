@@ -53,10 +53,17 @@ On the backend, we designed and implemented Prisma models to support structured 
 
 ## Retrospective Summary 🧾
 Here's what went well:
-*
+* Rebuilding the website from the ground up gave us full architectural control and eliminated dependency on the original domain infrastructure.
+* Prisma integration and database migrations were successfully implemented, allowing structured and secure data persistence.
+* Independent deployment through Vercel streamlined our release process and gave us flexibility for future updates.
+* Team collaboration improved as responsibilities were divided clearly between backend integration, frontend enhancements, and deployment testing.
 
 Here's what we'd like to improve:
-*
+* Earlier identification of domain ownership and data access limitations could have saved time in planning.
+* More structured issue creation at the beginning of the sprint would have improved task tracking.
+* Additional testing time should be allocated before deployment to catch smaller UI and validation inconsistencies.
 
 Here are changes we plan to implement in the next sprint:
-*
+* Create detailed GitHub issues with clearly defined acceptance criteria at sprint planning.
+* Allocate dedicated time for testing and validation before final alpha and beta deployment.
+* Begin early coordination with the client regarding ADA compliance, GDPR protection, and licensing requirements to ensure legal and accessibility standards are addressed proactively.
