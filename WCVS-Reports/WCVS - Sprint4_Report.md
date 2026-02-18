@@ -48,10 +48,10 @@
 
 ## Retrospective Summary 🧾
 Here's what went well:
--
+*
 
 Here's what we'd like to improve:
--
+*
 
 Here are changes we plan to implement in the next sprint:
--
+*
