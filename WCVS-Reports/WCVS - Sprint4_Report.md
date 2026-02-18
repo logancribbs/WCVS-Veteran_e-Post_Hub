@@ -49,7 +49,13 @@ On the backend, we designed and implemented Prisma models to support structured 
   - Work is underway to allow users to download event flyers directly from the site. The backend logic is partially implemented, but full integration and user testing are still pending to make sure this action is done fluidly with no visual clutter/pop-ups.
 
 ## Code Files for Review 📝📈
--
+* [Bottom Bar Component](e-post_hub/app/Components/BottomBar/BottomBar.tsx)
+* [Hero Banner Component](e-post_hub/app/Components/Hero)
+* [Website Globals CSS](e-post_hub/app/globals.css)
+* [Landing Page Layer](e-post_hub/app/page.tsx)
+* [Vercel Live Branch - Authentication](e-post_hub/app/(auth))
+* [Vercel Live Branch - App Components](e-post_hub/app/Components)
+* [Vercel Live Branch - APIs](e-post_hub/app/api)
 
 ## Retrospective Summary 🧾
 Here's what went well:
