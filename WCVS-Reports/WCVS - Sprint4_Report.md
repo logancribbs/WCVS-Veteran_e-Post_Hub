@@ -2,10 +2,12 @@
 ## * youtube link here *
 
 ## What's New (User Facing) 👶🆕
--
+During this sprint, we successfully deployed the newly enhanced version of the Whitman County Veterans e-Post Hub (whitmanvs.com). The updated version now integrates a Prisma database that supports persistent storage for uploaded files, event information, admin login usernames, and securely hashed credentials. In addition to these backend improvements, we enhanced the user interface by adding a new dynamic background to give the website more visual depth. We also implemented a bottom bar containing supplementary support information and copyrights details, helping to create a more complete, polished, and professional overall look and feel for the site.
 
 ## Work Summary (Developer Facing) 🧑‍💻
--
+From a development perspective, our main objective was to rebuild and deploy an enhanced version of the pre-exisiting website with full backend integration and independent hosting. A key challenge we faces was that we did not own the original domain and did not have access credentials to retrieve or migrate the existing site's data. As a result, we made the strategic decision to rebuild the platform with the pre-exisiting codebase from the ground up rather than attempt partial integration. Although this required re-implementing core functionality, it ultimately gave us full control over the architecture, database design, and deployment pipeline.
+
+On the backend, we designed and implemented Prisma models to support structured storage for event information, image files, and administrative login credentials. We configured database migrations and ensured proper API integration for persistent data handling. For authentication, we're using the existing secure password hashing (b-crypt) to protect admin credentials and validate login logic for access control. On the frontend, we enhanced the visual presentation by adding a textured background and implementating a bottom bar component to improve structure and professionalism. Finally we independently deployed the rebuilt application using Vercel, giving our team the flexibility to manage updates and releases without reliances on the original site infrastructure. This sprint strengthened our understanding of full-stack integration, secure authentication practices, and deployment workflows.
 
 ## Unfinished Work (Issues to be created soon) ☝️
 -
