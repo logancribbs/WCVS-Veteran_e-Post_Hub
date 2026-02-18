@@ -1,5 +1,5 @@
 # Sprint 4 Report (02/17/2026)
-## ([Youtube link for Sprint 4]https://youtu.be/PlpauJ13ZqU)
+## [Youtube link for Sprint 4](https://youtu.be/PlpauJ13ZqU)
 
 ## What's New (User Facing) 👶🆕
 During this sprint, we successfully deployed the newly enhanced version of the Whitman County Veterans e-Post Hub (whitmanvs.com). The updated version now integrates a Prisma database that supports persistent storage for uploaded files, event information, admin login usernames, and securely hashed credentials. In addition to these backend improvements, we enhanced the user interface by adding a new textured background to give the website more visual depth. We also implemented a bottom bar containing supplementary support information and copyrights details, helping to create a more complete, polished, and professional overall look and feel for the site.
