@@ -49,13 +49,13 @@ On the backend, we designed and implemented Prisma models to support structured 
   - Work is underway to allow users to download event flyers directly from the site. The backend logic is partially implemented, but full integration and user testing are still pending to make sure this action is done fluidly with no visual clutter/pop-ups.
 
 ## Code Files for Review 📝📈
-* [Bottom Bar Component](e-post_hub/app/Components/BottomBar/BottomBar.tsx)
-* [Hero Banner Component](e-post_hub/app/Components/Hero)
-* [Website Globals CSS](e-post_hub/app/globals.css)
-* [Landing Page Layer](e-post_hub/app/page.tsx)
-* [Vercel Live Branch - Authentication](e-post_hub/app/(auth))
-* [Vercel Live Branch - App Components](e-post_hub/app/Components)
-* [Vercel Live Branch - APIs](e-post_hub/app/api)
+* [Bottom Bar Component](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/tree/2b6e9d03cc733d7b603084feb3ac290ecc6a790f/e-post_hub/app/Components/BottomBar)
+* [Hero Banner Component](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/tree/2b6e9d03cc733d7b603084feb3ac290ecc6a790f/e-post_hub/app/Components/Hero)
+* [Website Globals CSS](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/blob/2b6e9d03cc733d7b603084feb3ac290ecc6a790f/e-post_hub/app/globals.css)
+* [Landing Page Layer](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/blob/2b6e9d03cc733d7b603084feb3ac290ecc6a790f/e-post_hub/app/page.tsx)
+* [Vercel Live Branch - Authentication](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/tree/e752120c2a76030ed803ce3814eb102212f21712/e-post_hub/app/(auth))
+* [Vercel Live Branch - App Components](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/tree/e752120c2a76030ed803ce3814eb102212f21712/e-post_hub/app/Components)
+* [Vercel Live Branch - APIs](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/tree/e752120c2a76030ed803ce3814eb102212f21712/e-post_hub/app/api)
 
 ## Retrospective Summary 🧾
 Here's what went well:
