@@ -10,7 +10,10 @@ From a development perspective, our main objective was to rebuild and deploy an 
 On the backend, we designed and implemented Prisma models to support structured storage for event information, image files, and administrative login credentials. We configured database migrations and ensured proper API integration for persistent data handling. For authentication, we're using the existing secure password hashing (b-crypt) to protect admin credentials and validate login logic for access control. On the frontend, we enhanced the visual presentation by adding a textured background and implementating a bottom bar component to improve structure and professionalism. Finally we independently deployed the rebuilt application using Vercel, giving our team the flexibility to manage updates and releases without reliances on the original site infrastructure. This sprint strengthened our understanding of full-stack integration, secure authentication practices, and deployment workflows.
 
 ## Unfinished Work (Issues to be created soon) ☝️
--
+* Event Management Enhancements – While events can now be stored in the Prisma database, we plan to improve validation, editing functionality, and admin-side controls for managing event entries more efficiently (wouldn't hard to make it better).
+* Image Upload Optimization – Additional refinement is needed for handling image uploads, including improved error handling, file validation, and potential optimization for storage and retrieval performance.
+* Licensing, Compliance, and Legal Documentation – We plan to work with the client to establish proper licensing and copyright claims, and to ensure the website meets ADA accessibility standards, GDPR data protection requirements, and other necessary legal documentation to support the site’s long-term validity and compliance.
+* Authentication Hardening – Although admin login with hashed credentials is implemented, we plan to enhance session management and add stronger protections against invalid login attempts.
 
 ## Completed Issues/User Stories ✅
 * [Searchbar Feature Removal](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/30)
