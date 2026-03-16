@@ -18,35 +18,29 @@ function BannerDecorations({ theme }: { theme: LandingTheme }) {
   if (theme.bannerDecoration === "snowLights") {
     return (
       <>
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-14">
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-14">
           <div className="relative h-full w-full">
-            <div className="absolute left-0 right-0 top-3 h-[2px] bg-white/35" />
-            <span className="absolute left-[4%] top-[6px] text-red-400">●</span>
-            <span className="absolute left-[10%] top-[18px] text-yellow-300">●</span>
-            <span className="absolute left-[16%] top-[7px] text-green-400">●</span>
-            <span className="absolute left-[24%] top-[20px] text-blue-300">●</span>
-            <span className="absolute left-[32%] top-[8px] text-red-400">●</span>
-            <span className="absolute left-[40%] top-[19px] text-yellow-300">●</span>
-            <span className="absolute left-[48%] top-[7px] text-green-400">●</span>
-            <span className="absolute left-[56%] top-[20px] text-blue-300">●</span>
-            <span className="absolute left-[64%] top-[8px] text-red-400">●</span>
-            <span className="absolute left-[72%] top-[18px] text-yellow-300">●</span>
-            <span className="absolute left-[80%] top-[7px] text-green-400">●</span>
-            <span className="absolute left-[88%] top-[18px] text-blue-300">●</span>
-            <span className="absolute left-[96%] top-[8px] text-red-400">●</span>
+            <div className="absolute left-0 right-0 bottom-6 h-[2px] bg-white/35" />
+            <span className="absolute left-[4%] bottom-[20px] text-red-400">●</span>
+            <span className="absolute left-[10%] bottom-[8px] text-yellow-300">●</span>
+            <span className="absolute left-[16%] bottom-[21px] text-green-400">●</span>
+            <span className="absolute left-[24%] bottom-[7px] text-blue-300">●</span>
+            <span className="absolute left-[32%] bottom-[20px] text-red-400">●</span>
+            <span className="absolute left-[40%] bottom-[8px] text-yellow-300">●</span>
+            <span className="absolute left-[48%] bottom-[21px] text-green-400">●</span>
+            <span className="absolute left-[56%] bottom-[7px] text-blue-300">●</span>
+            <span className="absolute left-[64%] bottom-[20px] text-red-400">●</span>
+            <span className="absolute left-[72%] bottom-[8px] text-yellow-300">●</span>
+            <span className="absolute left-[80%] bottom-[21px] text-green-400">●</span>
+            <span className="absolute left-[88%] bottom-[7px] text-blue-300">●</span>
+            <span className="absolute left-[96%] bottom-[20px] text-red-400">●</span>
           </div>
         </div>
 
-        <div className="pointer-events-none absolute left-8 top-6 z-10 text-xl text-white/80">
+        <div className="pointer-events-none absolute left-8 top-8 z-10 text-xl text-white/80">
           ❄
         </div>
-        <div className="pointer-events-none absolute right-8 top-6 z-10 text-xl text-white/80">
-          ❄
-        </div>
-        <div className="pointer-events-none absolute left-10 bottom-8 z-10 text-lg text-white/70">
-          ❄
-        </div>
-        <div className="pointer-events-none absolute right-10 bottom-8 z-10 text-lg text-white/70">
+        <div className="pointer-events-none absolute right-8 top-8 z-10 text-xl text-white/80">
           ❄
         </div>
       </>
@@ -73,12 +67,6 @@ function BannerDecorations({ theme }: { theme: LandingTheme }) {
         </div>
         <div className="pointer-events-none absolute right-8 top-4 z-10 text-2xl text-white/85">
           ★
-        </div>
-        <div className="pointer-events-none absolute left-12 bottom-6 z-10 text-lg text-white/70">
-          ✦
-        </div>
-        <div className="pointer-events-none absolute right-12 bottom-6 z-10 text-lg text-white/70">
-          ✦
         </div>
       </>
     );

@@ -24,25 +24,29 @@ function SidebarDecorations({ theme }: { theme: LandingTheme }) {
   if (theme.sidebarDecoration === "christmas") {
     return (
       <>
-        <div className="pointer-events-none absolute left-4 top-5 text-lg text-white/80">
-          ❄
+        <div className="pointer-events-none absolute left-3 top-14 flex flex-col gap-8 text-white/70">
+          <span>❄</span>
+          <span>❄</span>
+          <span>❄</span>
+          <span>❄</span>
         </div>
-        <div className="pointer-events-none absolute right-5 top-4 text-5xl drop-shadow-md">
+
+        <div className="pointer-events-none absolute right-3 top-14 flex flex-col gap-8 text-white/70">
+          <span>❄</span>
+          <span>❄</span>
+          <span>❄</span>
+          <span>❄</span>
+        </div>
+
+        <div className="pointer-events-none absolute left-[-2px] top-[360px] z-10 text-4xl drop-shadow-md">
           🧦
         </div>
-        <div className="pointer-events-none absolute right-8 top-0 h-8 w-[2px] bg-white/60" />
-        <div className="pointer-events-none absolute left-2 top-14 flex flex-col gap-8 text-white/70">
-          <span>❄</span>
-          <span>❄</span>
-          <span>❄</span>
-          <span>❄</span>
+        <div className="pointer-events-none absolute left-[18px] top-[334px] h-7 w-[2px] bg-white/60" />
+
+        <div className="pointer-events-none absolute right-[-2px] top-[530px] z-10 text-4xl drop-shadow-md">
+          🧦
         </div>
-        <div className="pointer-events-none absolute right-2 top-16 flex flex-col gap-8 text-white/70">
-          <span>❄</span>
-          <span>❄</span>
-          <span>❄</span>
-          <span>❄</span>
-        </div>
+        <div className="pointer-events-none absolute right-[18px] top-[504px] h-7 w-[2px] bg-white/60" />
       </>
     );
   }
