@@ -4,15 +4,21 @@ import React, { useEffect, useState } from "react";
 import { pdfjs } from "react-pdf";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url,
+  "pdfjs-dist/build/pdf.worker.min.mjs",
+  import.meta.url
 ).toString();
+
 interface PdfViewerProps {
-  fileUrl: string;   
+  fileUrl: string;
   containerHeight?: number;
+  altText?: string;
 }
- 
-export default function PdfPreview({ fileUrl, containerHeight }: PdfViewerProps) {
+
+export default function PdfPreview({
+  fileUrl,
+  containerHeight,
+  altText,
+}: PdfViewerProps) {
   const [thumbnail, setThumbnail] = useState<string | null>(null);
 
   const renderPdfThumbnail = async (url: string) => {
@@ -20,7 +26,7 @@ export default function PdfPreview({ fileUrl, containerHeight }: PdfViewerProps)
     const pdf = await loadingTask.promise;
     const page = await pdf.getPage(1); // First page
 
-    const viewport = page.getViewport({ scale: 0.5 }); //scale for image size
+    const viewport = page.getViewport({ scale: 0.5 }); // scale for image size
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
 
@@ -29,7 +35,7 @@ export default function PdfPreview({ fileUrl, containerHeight }: PdfViewerProps)
       canvas.height = viewport.height;
       await page.render({ canvasContext: context, viewport }).promise;
 
-      const imageUrl = canvas.toDataURL(); // Get image from canvas
+      const imageUrl = canvas.toDataURL();
       setThumbnail(imageUrl);
     }
   };
@@ -43,7 +49,7 @@ export default function PdfPreview({ fileUrl, containerHeight }: PdfViewerProps)
       {thumbnail ? (
         <img
           src={thumbnail}
-          alt="PDF Thumbnail"
+          alt={altText || "PDF preview"}
           style={{ width: "100%", height: "auto", borderRadius: "8px" }}
         />
       ) : (
