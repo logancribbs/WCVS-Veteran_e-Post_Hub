@@ -1,21 +1,18 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import jwt from "jsonwebtoken";
 
-export default function Sidebar() {
-  // slideshow images
-  const slideshowImages = [
-    "/Helmet_w_Flag.jpg",
-    "/Landscape_1.jpg",
-    "/Landscape_2.jpg",
-    "/US_Flags_Veterans.jpg",
-    "/Landscape_3.jpg",
-  ];
+const defaultSlideshowImages = [
+  "/Helmet_w_Flag.jpg",
+  "/Landscape_1.jpg",
+  "/Landscape_2.jpg",
+  "/US_Flags_Veterans.jpg",
+  "/Landscape_3.jpg",
+];
 
-  // resource list (PUBLIC)
+export default function Sidebar() {
   const resources = [
     {
       label: "Veteran Health Care",
@@ -35,26 +32,45 @@ export default function Sidebar() {
     },
   ];
 
-  // ADMIN controls (same style, internal links)
   const adminControls = [
     { label: "Create Event", href: "/Event/create" },
-    { label: "Manage Homepage Images", href: "/Admin/slideshow" },
+    { label: "Manage Homepage Images", action: "manageImages" },
     { label: "Manage Resource Links", href: "/Admin/resources" },
   ];
 
+  const [slideshowImages, setSlideshowImages] = useState<string[]>(defaultSlideshowImages);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [showAction, setShowAction] = useState(false);
-  const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [showManager, setShowManager] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const res = await fetch("/api/slideshow", { cache: "no-store" });
+        const data = await res.json();
+
+        if (data.images.length > 0) {
+          setSlideshowImages(data.images);
+        }
+      } catch {}
+    };
+
+    fetchImages();
+  }, []);
 
   useEffect(() => {
     const readRole = () => {
-      const role = typeof window !== "undefined" ? localStorage.getItem("role") : null;
+      const role = localStorage.getItem("role");
+
       if (role) {
         setIsAdmin(role === "ADMIN");
         return;
       }
-      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+      const token = localStorage.getItem("token");
+
       if (token) {
         try {
           const decoded = jwt.decode(token) as { role?: string } | null;
@@ -62,195 +78,141 @@ export default function Sidebar() {
         } catch {
           setIsAdmin(false);
         }
-      } else {
-        setIsAdmin(false);
       }
     };
 
     readRole();
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === "role" || e.key === "token") readRole();
-    };
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
   }, []);
 
   useEffect(() => {
-    if (slideshowImages.length <= 1) return;
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % slideshowImages.length);
     }, 5000);
+
     return () => clearInterval(interval);
-  }, [slideshowImages.length]);
+  }, [slideshowImages]);
 
-  const startHoverTimer = () => {
-    if (hoverTimerRef.current) return;
-    hoverTimerRef.current = setTimeout(() => {
-      setShowAction(true);
-      hoverTimerRef.current = null;
-    }, 3000);
+  const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+
+    if (!files) return;
+
+    const newImages: string[] = [];
+
+    Array.from(files).forEach((file) => {
+      const url = URL.createObjectURL(file);
+      newImages.push(url);
+    });
+
+    setSlideshowImages((prev) => [...prev, ...newImages]);
   };
 
-  const clearHoverTimerAndHide = () => {
-    if (hoverTimerRef.current) {
-      clearTimeout(hoverTimerRef.current);
-      hoverTimerRef.current = null;
-    }
-    setShowAction(false);
+  const removeImage = (index: number) => {
+    setSlideshowImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const showPrev = () => {
-    setCurrentIndex((prev) => (prev === 0 ? slideshowImages.length - 1 : prev - 1));
-  };
+  const saveImages = async () => {
+    await fetch("/api/slideshow", {
+      method: "POST",
+      body: JSON.stringify({ images: slideshowImages }),
+      headers: { "Content-Type": "application/json" },
+    });
 
-  const showNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % slideshowImages.length);
-  };
-
-  const handleLogout = () => {
-    try {
-      localStorage.removeItem("token");
-      localStorage.removeItem("role");
-    } catch {}
-    window.location.href = "/";
+    setShowManager(false);
   };
 
   return (
-    <aside
-      className="
-        w-full
-        md:min-w-[340px]
-        lg:min-w-[360px]
-        border-2 border-black/70
-        rounded-2xl
-        p-5 md:p-6
-        flex flex-col
-        items-center
-        text-white
-        shadow-[0_6px_16px_rgba(0,0,0,0.35)]
-        md:sticky md:top-6
-        gap-4
-        isolate
-        transform-gpu
-      "
-      style={{
-        // Explicit background image gradient (more consistent than utility gradient in some compositing cases)
-        backgroundColor: "#8C1F1F",
-        backgroundImage:
-          "linear-gradient(to bottom, #8C1F1F 0%, #A32626 55%, #ff8c00 100%)",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "100% 100%",
-        // Prevent any weird blending with parent wallpaper/background layers
-        mixBlendMode: "normal",
-      }}
-    >
-      {/* Slideshow */}
-      <div
-        className="
-          w-full max-w-[320px]
-          rounded-lg
-          border border-gray-300
-          overflow-hidden
-          relative
-          shadow-md
-        "
-        onMouseEnter={startHoverTimer}
-        onMouseLeave={clearHoverTimerAndHide}
-        tabIndex={0}
+    <>
+      <aside
+        className="w-full md:min-w-[340px] lg:min-w-[360px] border-2 border-black/70 rounded-2xl p-6 flex flex-col items-center text-white gap-4"
+        style={{
+          backgroundColor: "#8C1F1F",
+          backgroundImage:
+            "linear-gradient(to bottom, #8C1F1F 0%, #A32626 55%, #ff8c00 100%)",
+        }}
       >
-        <Image
-          src={slideshowImages[currentIndex]}
-          alt="Veteran Services photos"
-          width={0}
-          height={0}
-          sizes="100vw"
-          className="w-full h-auto object-contain"
-          unoptimized
-        />
-
-        {slideshowImages.length > 1 && (
-          <>
-            <button
-              type="button"
-              onClick={showPrev}
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 rounded-full w-7 h-7"
-            >
-              ‹
-            </button>
-            <button
-              type="button"
-              onClick={showNext}
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 rounded-full w-7 h-7"
-            >
-              ›
-            </button>
-          </>
-        )}
-
-        <div
-          className={`
-            pointer-events-none absolute inset-x-0 bottom-0 flex justify-center
-            transition-all duration-300
-            ${showAction ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}
-          `}
-        >
-          {isAdmin ? (
-            <button
-              onClick={handleLogout}
-              className="pointer-events-auto mb-2 px-4 py-2 rounded-full bg-white text-black font-semibold border border-black/50"
-            >
-              Logout
-            </button>
-          ) : (
-            <Link
-              href="/Login"
-              className="pointer-events-auto mb-2 px-4 py-2 rounded-full bg-white text-black font-semibold border border-black/50"
-            >
-              Login
-            </Link>
-          )}
+        <div className="w-full max-w-[320px] rounded-lg border border-gray-300 overflow-hidden relative">
+          <div className="aspect-[4/3] flex items-center justify-center bg-black/10">
+            <img
+              src={slideshowImages[currentIndex]}
+              className="h-full w-full object-contain"
+            />
+          </div>
         </div>
-      </div>
 
-      {/* Contact */}
-      <div className="text-center mb-6">
-        <h3 className="text-xl font-semibold mb-2">Contact Info</h3>
-        <p className="text-md leading-relaxed">
-          <strong>Email:</strong>{" "}
-          <a href="mailto:BeckyBuri@whitmancounty.gov" className="text-blue-300 hover:underline">
-            BeckyBuri@whitmancounty.gov
-          </a>
-          <br />
-          <strong>Phone:</strong>{" "}
-          <a href="tel:+15093975246" className="text-blue-300 hover:underline">
-            +1 (509)-397-5246
-          </a>
-        </p>
-      </div>
+        <nav className="w-full flex flex-col gap-3 text-left font-semibold text-white text-base">
+          {(isAdmin ? adminControls : resources).map((item) =>
+            item.action === "manageImages" ? (
+              <button
+                key={item.label}
+                onClick={() => setShowManager(true)}
+                className="group flex items-center gap-3 rounded-lg px-3 py-2 border border-white/20 bg-white/5 hover:bg-white/20"
+              >
+                {item.label}
+              </button>
+            ) : (
+              <Link
+                key={item.label}
+                href={item.href!}
+                className="group flex items-center gap-3 rounded-lg px-3 py-2 border border-white/20 bg-white/5 hover:bg-white/20"
+              >
+                {item.label}
+              </Link>
+            )
+          )}
+        </nav>
+      </aside>
 
-      {/* NAV — ONLY THIS PART SWAPS */}
-      <nav className="w-full flex flex-col gap-3 text-left font-semibold text-white text-base">
-        {(isAdmin ? adminControls : resources).map((item) => (
-          <Link
-            key={item.label}
-            href={item.href}
-            target={isAdmin ? undefined : "_blank"}
-            rel={isAdmin ? undefined : "noopener noreferrer"}
-            className="
-              group flex items-center gap-3 rounded-lg px-3 py-2
-              border border-white/20 bg-white/5
-              transition-all duration-200
-              hover:bg-white/20 hover:border-orange-300 hover:shadow-md
-            "
-          >
-            <span className="relative flex h-3 w-3">
-              <span className="absolute inline-flex h-full w-full rounded-full bg-orange-200 opacity-75 group-hover:animate-ping" />
-              <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-200" />
-            </span>
-            <span className="truncate">{item.label}</span>
-          </Link>
-        ))}
-      </nav>
-    </aside>
+      {showManager && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+          <div className="bg-white text-black rounded-xl shadow-lg p-6 w-[600px]">
+            <h2 className="text-xl font-semibold mb-4">
+              Manage Homepage Images
+            </h2>
+
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              {slideshowImages.map((img, i) => (
+                <div key={i} className="border rounded p-2">
+                  <div className="aspect-[4/3] flex items-center justify-center">
+                    <img src={img} className="object-contain w-full h-full" />
+                  </div>
+
+                  <button
+                    onClick={() => removeImage(i)}
+                    className="mt-2 text-red-600 text-sm"
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={handleUpload}
+            />
+
+            <div className="flex justify-end mt-4 gap-3">
+              <button
+                onClick={() => setShowManager(false)}
+                className="px-4 py-2 bg-gray-300 rounded"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={saveImages}
+                className="px-4 py-2 bg-orange-500 text-white rounded"
+              >
+                Save Images
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
