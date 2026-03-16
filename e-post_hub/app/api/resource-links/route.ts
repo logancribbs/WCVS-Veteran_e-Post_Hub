@@ -16,8 +16,9 @@ export async function GET() {
     return NextResponse.json({
       links: JSON.parse(setting.value),
     });
-  } catch {
-    return NextResponse.json({ links: [] });
+  } catch (error) {
+    console.error("GET /api/resource-links error:", error);
+    return NextResponse.json({ links: [] }, { status: 500 });
   }
 }
 
@@ -25,6 +26,13 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const links = body.links;
+
+    if (!Array.isArray(links)) {
+      return NextResponse.json(
+        { success: false, message: "Invalid links payload." },
+        { status: 400 }
+      );
+    }
 
     await prisma.settings.upsert({
       where: { key: "sidebar_resource_links" },
@@ -37,8 +45,12 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json({ success: true });
-  } catch {
-    return NextResponse.json({ success: false }, { status: 500 });
+    return NextResponse.json({ success: true, links });
+  } catch (error) {
+    console.error("POST /api/resource-links error:", error);
+    return NextResponse.json(
+      { success: false, message: "Failed to save resource links." },
+      { status: 500 }
+    );
   }
 }
