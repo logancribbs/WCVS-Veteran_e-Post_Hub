@@ -13,10 +13,10 @@ export const christmasTheme: LandingTheme = {
   bannerDecoration: "snowLights",
   sidebarDecoration: "christmas",
 
-pageBackgroundColor: "#D72626",
+pageBackgroundColor: "#B94747",
 
 pageBackgroundImage:
-  "repeating-linear-gradient(135deg, #ffffff 0px, #ffffff 14px, #D72626 14px, #D72626 28px)",
+  "repeating-linear-gradient(135deg, #F2EAEA 0px, #F2EAEA 14px, #B94747 14px, #B94747 28px)",
 
 pageBackgroundRepeat: "repeat",
 
