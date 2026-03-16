@@ -4,17 +4,21 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import WhitmanLogo from "@/app/Images/whitman.png";
 import Link from "next/link";
+import { LandingTheme } from "@/app/Themes/types";
 
 type HeroBannerProps = {
   query: string;
   onQueryChange: (q: string) => void;
   onSubmit?: () => void;
+  isAdmin?: boolean;
+  theme: LandingTheme;
 };
 
 export default function HeroBanner({
   query,
   onQueryChange,
   onSubmit,
+  theme,
 }: HeroBannerProps) {
   const [showRegister, setShowRegister] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -41,15 +45,34 @@ export default function HeroBanner({
         className="relative flex flex-col md:flex-row items-center justify-between px-6 md:px-16 py-6 overflow-hidden"
         style={{
           boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
-          backgroundImage: "url('/palouse_hills.jpg')",
+          backgroundImage: `url('${theme.heroBannerImage}')`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
-        <div className="absolute inset-0 bg-black/25" />
+        <div
+          className="absolute inset-0"
+          style={{ backgroundColor: theme.heroOverlayColor }}
+        />
+
+        {theme.heroAccent && (
+          <>
+            <div className="pointer-events-none absolute left-6 top-4 text-2xl text-white/80">
+              {theme.heroAccent}
+            </div>
+            <div className="pointer-events-none absolute right-6 top-4 text-2xl text-white/80">
+              {theme.heroAccent}
+            </div>
+            <div className="pointer-events-none absolute left-10 bottom-4 text-xl text-white/70">
+              {theme.heroAccent}
+            </div>
+            <div className="pointer-events-none absolute right-10 bottom-4 text-xl text-white/70">
+              {theme.heroAccent}
+            </div>
+          </>
+        )}
 
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between w-full gap-4">
-          {/* Left */}
           <Image
             src={WhitmanLogo}
             alt="Whitman County Logo"
@@ -59,12 +82,10 @@ export default function HeroBanner({
             priority
           />
 
-          {/* Center */}
           <h1 className="text-4xl md:text-5xl font-extrabold text-center text-white drop-shadow-[2px_2px_3px_rgba(0,0,0,0.6)]">
             Veterans e-Post Hub
           </h1>
 
-          {/* Right – ALWAYS WAVA */}
           <div
             className="relative flex items-center justify-center rounded-md overflow-hidden"
             onMouseEnter={startTimer}

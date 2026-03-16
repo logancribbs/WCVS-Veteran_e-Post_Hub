@@ -6,13 +6,25 @@ import { useEffect, useRef, useState } from "react";
 import jwt from "jsonwebtoken";
 import ManageHomepageImagesModal from "./ManageHomepageImagesModal";
 import ManageResourceLinksModal from "./ManageResourceLinksModal";
+import ManageLandingThemeModal from "./ManageLandingThemeModal";
+import { LandingTheme, ThemeOverride } from "@/app/Themes/types";
 
 type ResourceLink = {
   label: string;
   href: string;
 };
 
-export default function Sidebar() {
+type SidebarProps = {
+  theme: LandingTheme;
+  themeOverride: ThemeOverride;
+  onThemeSaved: (override: ThemeOverride) => void;
+};
+
+export default function Sidebar({
+  theme,
+  themeOverride,
+  onThemeSaved,
+}: SidebarProps) {
   const defaultSlideshowImages = [
     "/Helmet_w_Flag.jpg",
     "/Landscape_1.jpg",
@@ -44,6 +56,7 @@ export default function Sidebar() {
     { label: "Create Event", href: "/Event/create" },
     { label: "Manage Homepage Images", href: "#" },
     { label: "Manage Resource Links", href: "#" },
+    { label: "Manage Landing Theme", href: "#" },
   ];
 
   const [slideshowImages, setSlideshowImages] = useState<string[]>(defaultSlideshowImages);
@@ -54,6 +67,7 @@ export default function Sidebar() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showImageManager, setShowImageManager] = useState(false);
   const [showResourceManager, setShowResourceManager] = useState(false);
+  const [showThemeManager, setShowThemeManager] = useState(false);
 
   useEffect(() => {
     const readRole = () => {
@@ -174,6 +188,7 @@ export default function Sidebar() {
     <>
       <aside
         className="
+          relative
           w-full
           md:min-w-[340px]
           lg:min-w-[360px]
@@ -188,16 +203,33 @@ export default function Sidebar() {
           gap-4
           isolate
           transform-gpu
+          overflow-hidden
         "
         style={{
-          backgroundColor: "#8C1F1F",
-          backgroundImage:
-            "linear-gradient(to bottom, #8C1F1F 0%, #A32626 55%, #ff8c00 100%)",
+          backgroundColor: theme.sidebarBackgroundColor,
+          backgroundImage: theme.sidebarBackgroundImage,
           backgroundRepeat: "no-repeat",
           backgroundSize: "100% 100%",
           mixBlendMode: "normal",
         }}
       >
+        {theme.sidebarAccent && (
+          <>
+            <div className="pointer-events-none absolute left-2 top-6 flex flex-col gap-8 text-white/80">
+              <span>{theme.sidebarAccent}</span>
+              <span>{theme.sidebarAccent}</span>
+              <span>{theme.sidebarAccent}</span>
+              <span>{theme.sidebarAccent}</span>
+            </div>
+            <div className="pointer-events-none absolute right-2 top-6 flex flex-col gap-8 text-white/80">
+              <span>{theme.sidebarAccent}</span>
+              <span>{theme.sidebarAccent}</span>
+              <span>{theme.sidebarAccent}</span>
+              <span>{theme.sidebarAccent}</span>
+            </div>
+          </>
+        )}
+
         <div
           className="
             w-full max-w-[320px]
@@ -329,6 +361,29 @@ export default function Sidebar() {
               );
             }
 
+            if (isAdmin && item.label === "Manage Landing Theme") {
+              return (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={() => setShowThemeManager(true)}
+                  className="
+                    group flex items-center gap-3 rounded-lg px-3 py-2
+                    border border-white/20 bg-white/5
+                    transition-all duration-200
+                    hover:bg-white/20 hover:border-orange-300 hover:shadow-md
+                    w-full text-left
+                  "
+                >
+                  <span className="relative flex h-3 w-3">
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-orange-200 opacity-75 group-hover:animate-ping" />
+                    <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-200" />
+                  </span>
+                  <span className="truncate">{item.label}</span>
+                </button>
+              );
+            }
+
             return (
               <Link
                 key={item.label}
@@ -369,7 +424,16 @@ export default function Sidebar() {
         links={resources}
         onSaved={(updatedLinks: ResourceLink[]) => {
           setResources(updatedLinks);
-          }}
+        }}
+      />
+
+      <ManageLandingThemeModal
+        isOpen={showThemeManager}
+        onClose={() => setShowThemeManager(false)}
+        currentOverride={themeOverride}
+        onSaved={(updatedOverride) => {
+          onThemeSaved(updatedOverride);
+        }}
       />
     </>
   );

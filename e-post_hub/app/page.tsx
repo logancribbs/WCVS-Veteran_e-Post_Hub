@@ -1,4 +1,3 @@
-// e-post_hub/app/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -9,6 +8,7 @@ import PdfViewer from "./Components/PdfViewer/PdfViewer";
 import HeroBanner from "./Components/Hero/HeroBanner";
 import Sidebar from "./Components/Hero/Sidebar";
 import { ArrowRight } from "lucide-react";
+import { useLandingTheme } from "./themes";
 
 type EventOccurrence = {
   id: string;
@@ -42,6 +42,8 @@ type Event = {
 };
 
 export default function HomePage() {
+  const { theme, themeOverride, setThemeOverride } = useLandingTheme();
+
   function isPdfUrl(url?: string | null) {
     if (!url) return false;
     const lower = url.toLowerCase();
@@ -199,9 +201,8 @@ export default function HomePage() {
     <div
       className="min-h-screen w-full flex flex-col relative"
       style={{
-        backgroundColor: "#FAF7F2",
-        backgroundImage:
-          "linear-gradient(rgba(250, 247, 242, 0.50), rgba(250, 247, 242, 0.50)), url('/bg-floral.png')",
+        backgroundColor: theme.pageBackgroundColor,
+        backgroundImage: theme.pageBackgroundImage,
         backgroundRepeat: "repeat",
         backgroundSize: "220px 220px",
         backgroundPosition: "top left",
@@ -212,11 +213,16 @@ export default function HomePage() {
         onQueryChange={setSearchQuery}
         onSubmit={() => {}}
         isAdmin={isAdmin}
+        theme={theme}
       />
 
       <div className="flex flex-col md:flex-row w-full pt-6">
         <div className="w-full md:w-[30%] lg:w-[28%] xl:w-[25%] p-4 md:p-6">
-          <Sidebar />
+          <Sidebar
+            theme={theme}
+            themeOverride={themeOverride}
+            onThemeSaved={setThemeOverride}
+          />
         </div>
 
         <div className="content flex-1 p-6 md:pl-8 lg:pl-12">
@@ -229,8 +235,6 @@ export default function HomePage() {
                   key={event.id}
                   className="
                     relative
-                    bg-[#4F5D3A]
-                    border-[3px] border-[#22301A]
                     rounded-2xl
                     shadow-[0_12px_28px_rgba(0,0,0,0.42)]
                     hover:shadow-[0_16px_36px_rgba(0,0,0,0.48)]
@@ -242,8 +246,21 @@ export default function HomePage() {
                     after:bg-[linear-gradient(135deg,rgba(255,255,255,0.14),rgba(255,255,255,0.04),transparent)]
                     after:pointer-events-none
                   "
+                  style={{
+                    backgroundColor: theme.eventCardBackground,
+                    border: `3px solid ${theme.eventCardBorder}`,
+                  }}
                 >
-                  <div className="text-center text-xl font-semibold text-white pt-4 pb-2">
+                  {theme.tileAccent && (
+                    <div className="absolute right-3 top-3 z-10 rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-[#0F2A22] shadow-sm">
+                      {theme.tileAccent}
+                    </div>
+                  )}
+
+                  <div
+                    className="text-center text-xl font-semibold pt-4 pb-2"
+                    style={{ color: theme.eventTitleColor }}
+                  >
                     {event.title}
                   </div>
 
@@ -274,7 +291,10 @@ export default function HomePage() {
                   </div>
 
                   <CardBody className="flex justify-between items-center p-4 text-center">
-                    <div className="text-white text-lg font-medium">
+                    <div
+                      className="text-lg font-medium"
+                      style={{ color: theme.eventDateColor }}
+                    >
                       {formatDateRange(event.startDate, event.endDate)}
                     </div>
 
@@ -307,18 +327,27 @@ export default function HomePage() {
                               focus-visible:ring-red-600
                             `
                             : `
-                              bg-white/90
-                              border border-white/40
-                              text-[#0F2A22]
                               hover:bg-white
                               focus-visible:ring-orange-300
                             `
                         }
                       `}
+                      style={
+                        isAdmin
+                          ? undefined
+                          : {
+                              backgroundColor: theme.eventButtonBackground,
+                              color: theme.eventButtonText,
+                              border: `1px solid ${theme.eventButtonBorder}`,
+                            }
+                      }
                     >
                       <span>{isAdmin ? "Delete" : "View Details"}</span>
                       {!isAdmin && (
-                        <ArrowRight className="w-4 h-4 text-[#0F2A22] transition-transform duration-200 group-hover:translate-x-1" />
+                        <ArrowRight
+                          className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
+                          style={{ color: theme.eventButtonText }}
+                        />
                       )}
                     </Button>
                   </CardBody>
