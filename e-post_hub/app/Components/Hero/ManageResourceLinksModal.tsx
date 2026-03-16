@@ -48,7 +48,6 @@ export default function ManageResourceLinksModal({
   const handleAddLink = () => {
     setEditingLinks((prev) => [{ label: "", href: "" }, ...prev]);
 
-    // scroll to top input
     setTimeout(() => {
       topInputRef.current?.scrollIntoView({
         behavior: "smooth",
@@ -60,6 +59,26 @@ export default function ManageResourceLinksModal({
 
   const handleDelete = (index: number) => {
     setEditingLinks((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const moveLinkUp = (index: number) => {
+    if (index === 0) return;
+
+    setEditingLinks((prev) => {
+      const updated = [...prev];
+      [updated[index - 1], updated[index]] = [updated[index], updated[index - 1]];
+      return updated;
+    });
+  };
+
+  const moveLinkDown = (index: number) => {
+    if (index === editingLinks.length - 1) return;
+
+    setEditingLinks((prev) => {
+      const updated = [...prev];
+      [updated[index], updated[index + 1]] = [updated[index + 1], updated[index]];
+      return updated;
+    });
   };
 
   const handleSave = async () => {
@@ -109,7 +128,7 @@ export default function ManageResourceLinksModal({
             Manage Resource Links
           </h2>
           <p className="mt-1 text-sm text-black/70">
-            Update the button text and URLs shown in the guest sidebar.
+            Update the button text, URLs, and order shown in the guest sidebar.
           </p>
         </div>
 
@@ -137,6 +156,31 @@ export default function ManageResourceLinksModal({
                 key={index}
                 className="rounded-xl border border-black/20 bg-white p-4 shadow-sm"
               >
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-sm font-semibold text-black">
+                    Link {index + 1}
+                  </span>
+
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => moveLinkUp(index)}
+                      disabled={isSaving || index === 0}
+                      className="rounded-lg border border-black/20 bg-white px-3 py-2 text-sm font-semibold text-black hover:bg-black/5 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Move Up
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => moveLinkDown(index)}
+                      disabled={isSaving || index === editingLinks.length - 1}
+                      className="rounded-lg border border-black/20 bg-white px-3 py-2 text-sm font-semibold text-black hover:bg-black/5 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Move Down
+                    </button>
+                  </div>
+                </div>
+
                 <div className="mb-3">
                   <label className="mb-2 block text-sm font-semibold text-black">
                     Button Text
