@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type ResourceLink = {
   label: string;
@@ -24,6 +24,8 @@ export default function ManageResourceLinksModal({
   const [message, setMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
 
+  const topInputRef = useRef<HTMLInputElement | null>(null);
+
   useEffect(() => {
     if (isOpen) {
       setEditingLinks(links);
@@ -33,14 +35,27 @@ export default function ManageResourceLinksModal({
 
   if (!isOpen) return null;
 
-  const handleChange = (index: number, field: "label" | "href", value: string) => {
+  const handleChange = (
+    index: number,
+    field: "label" | "href",
+    value: string
+  ) => {
     setEditingLinks((prev) =>
       prev.map((link, i) => (i === index ? { ...link, [field]: value } : link))
     );
   };
 
   const handleAddLink = () => {
-    setEditingLinks((prev) => [...prev, { label: "", href: "" }]);
+    setEditingLinks((prev) => [{ label: "", href: "" }, ...prev]);
+
+    // scroll to top input
+    setTimeout(() => {
+      topInputRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      topInputRef.current?.focus();
+    }, 50);
   };
 
   const handleDelete = (index: number) => {
@@ -90,7 +105,9 @@ export default function ManageResourceLinksModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
       <div className="w-full max-w-4xl rounded-2xl border-2 border-black/70 bg-[#f7f1e8] shadow-[0_6px_16px_rgba(0,0,0,0.35)]">
         <div className="border-b border-black/20 px-6 py-4">
-          <h2 className="text-2xl font-semibold text-black">Manage Resource Links</h2>
+          <h2 className="text-2xl font-semibold text-black">
+            Manage Resource Links
+          </h2>
           <p className="mt-1 text-sm text-black/70">
             Update the button text and URLs shown in the guest sidebar.
           </p>
@@ -125,20 +142,27 @@ export default function ManageResourceLinksModal({
                     Button Text
                   </label>
                   <input
+                    ref={index === 0 ? topInputRef : null}
                     type="text"
                     value={link.label}
-                    onChange={(e) => handleChange(index, "label", e.target.value)}
+                    onChange={(e) =>
+                      handleChange(index, "label", e.target.value)
+                    }
                     disabled={isSaving}
                     className="block w-full rounded-lg border border-black/20 bg-white p-3 text-sm text-black"
                   />
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-black">URL</label>
+                  <label className="mb-2 block text-sm font-semibold text-black">
+                    URL
+                  </label>
                   <input
                     type="text"
                     value={link.href}
-                    onChange={(e) => handleChange(index, "href", e.target.value)}
+                    onChange={(e) =>
+                      handleChange(index, "href", e.target.value)
+                    }
                     disabled={isSaving}
                     className="block w-full rounded-lg border border-black/20 bg-white p-3 text-sm text-black"
                   />
