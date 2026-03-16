@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ThemeOverride } from "@/app/Themes/types";
+import { ThemeOverride } from "@/app/themes/types";
 
 type ManageLandingThemeModalProps = {
   isOpen: boolean;
@@ -18,7 +18,7 @@ const themeOptions: {
   {
     value: "auto",
     title: "Auto",
-    description: "Uses 4th of July from June 27 to July 7, and Christmas from December 1 to December 31.",
+    description: "Themes will automatically apply based on the date.",
   },
   {
     value: "default",
@@ -28,12 +28,12 @@ const themeOptions: {
   {
     value: "fourthOfJuly",
     title: "4th of July",
-    description: "Forces the patriotic theme on manually.",
+    description: "Turn on 4th of July Theme.",
   },
   {
     value: "christmas",
     title: "Christmas",
-    description: "Forces the Christmas theme on manually.",
+    description: "Turn on Chirstmas Theme.",
   },
 ];
 

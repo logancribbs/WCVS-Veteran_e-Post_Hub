@@ -4,7 +4,7 @@ export const christmasTheme: LandingTheme = {
   key: "christmas",
   label: "Christmas",
 
-  heroBannerImage: "/christmas.jpeg",
+  heroBannerImage: "/greenChristmas.jpeg",
   heroOverlayColor: "rgba(18, 52, 36, 0.10)",
   heroImageFit: "cover",
   heroImagePosition: "center center",
