@@ -5,6 +5,12 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import jwt from "jsonwebtoken";
 import ManageHomepageImagesModal from "./ManageHomepageImagesModal";
+import ManageResourceLinksModal from "./ManageResourceLinksModal";
+
+type ResourceLink = {
+  label: string;
+  href: string;
+};
 
 export default function Sidebar() {
   const defaultSlideshowImages = [
@@ -15,7 +21,7 @@ export default function Sidebar() {
     "/Landscape_3.jpg",
   ];
 
-  const resources = [
+  const defaultResources: ResourceLink[] = [
     {
       label: "Veteran Health Care",
       href: "https://www.va.gov/spokane-health-care/locations/mann-grandstaff-department-of-veterans-affairs-medical-center/",
@@ -37,15 +43,17 @@ export default function Sidebar() {
   const adminControls = [
     { label: "Create Event", href: "/Event/create" },
     { label: "Manage Homepage Images", href: "#" },
-    { label: "Manage Resource Links", href: "/Admin/resources" },
+    { label: "Manage Resource Links", href: "#" },
   ];
 
   const [slideshowImages, setSlideshowImages] = useState<string[]>(defaultSlideshowImages);
+  const [resources, setResources] = useState<ResourceLink[]>(defaultResources);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showAction, setShowAction] = useState(false);
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showImageManager, setShowImageManager] = useState(false);
+  const [showResourceManager, setShowResourceManager] = useState(false);
 
   useEffect(() => {
     const readRole = () => {
@@ -93,6 +101,23 @@ export default function Sidebar() {
     };
 
     fetchSlideshowImages();
+  }, []);
+
+  useEffect(() => {
+    const fetchResourceLinks = async () => {
+      try {
+        const response = await fetch("/api/resource-links", { cache: "no-store" });
+        if (!response.ok) return;
+
+        const data = await response.json();
+
+        if (Array.isArray(data.links) && data.links.length > 0) {
+          setResources(data.links);
+        }
+      } catch {}
+    };
+
+    fetchResourceLinks();
   }, []);
 
   useEffect(() => {
@@ -257,27 +282,54 @@ export default function Sidebar() {
         </div>
 
         <nav className="w-full flex flex-col gap-3 text-left font-semibold text-white text-base">
-          {(isAdmin ? adminControls : resources).map((item) =>
-            isAdmin && item.label === "Manage Homepage Images" ? (
-              <button
-                key={item.label}
-                type="button"
-                onClick={() => setShowImageManager(true)}
-                className="
-                  group flex items-center gap-3 rounded-lg px-3 py-2
-                  border border-white/20 bg-white/5
-                  transition-all duration-200
-                  hover:bg-white/20 hover:border-orange-300 hover:shadow-md
-                  w-full text-left
-                "
-              >
-                <span className="relative flex h-3 w-3">
-                  <span className="absolute inline-flex h-full w-full rounded-full bg-orange-200 opacity-75 group-hover:animate-ping" />
-                  <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-200" />
-                </span>
-                <span className="truncate">{item.label}</span>
-              </button>
-            ) : (
+          {(isAdmin ? adminControls : resources).map((item) => {
+            if (isAdmin && item.label === "Manage Homepage Images") {
+              return (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={() => setShowImageManager(true)}
+                  className="
+                    group flex items-center gap-3 rounded-lg px-3 py-2
+                    border border-white/20 bg-white/5
+                    transition-all duration-200
+                    hover:bg-white/20 hover:border-orange-300 hover:shadow-md
+                    w-full text-left
+                  "
+                >
+                  <span className="relative flex h-3 w-3">
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-orange-200 opacity-75 group-hover:animate-ping" />
+                    <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-200" />
+                  </span>
+                  <span className="truncate">{item.label}</span>
+                </button>
+              );
+            }
+
+            if (isAdmin && item.label === "Manage Resource Links") {
+              return (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={() => setShowResourceManager(true)}
+                  className="
+                    group flex items-center gap-3 rounded-lg px-3 py-2
+                    border border-white/20 bg-white/5
+                    transition-all duration-200
+                    hover:bg-white/20 hover:border-orange-300 hover:shadow-md
+                    w-full text-left
+                  "
+                >
+                  <span className="relative flex h-3 w-3">
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-orange-200 opacity-75 group-hover:animate-ping" />
+                    <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-200" />
+                  </span>
+                  <span className="truncate">{item.label}</span>
+                </button>
+              );
+            }
+
+            return (
               <Link
                 key={item.label}
                 href={item.href}
@@ -296,8 +348,8 @@ export default function Sidebar() {
                 </span>
                 <span className="truncate">{item.label}</span>
               </Link>
-            )
-          )}
+            );
+          })}
         </nav>
       </aside>
 
@@ -309,6 +361,15 @@ export default function Sidebar() {
           setSlideshowImages(updatedImages);
           setCurrentIndex(0);
         }}
+      />
+
+      <ManageResourceLinksModal
+        isOpen={showResourceManager}
+        onClose={() => setShowResourceManager(false)}
+        links={resources}
+        onSaved={(updatedLinks: ResourceLink[]) => {
+          setResources(updatedLinks);
+          }}
       />
     </>
   );
