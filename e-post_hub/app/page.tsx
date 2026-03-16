@@ -343,11 +343,13 @@ export default function HomePage() {
               isPdfUrl(selectedEvent.flyer) ? (
                 <PdfViewer fileUrl={selectedEvent.flyer} containerHeight={700} />
               ) : (
-                <img
-                  src={selectedEvent.flyer}
-                  alt="Flyer"
-                  className="max-h-[90vh] object-contain rounded-lg"
-                />
+                <div className="w-full rounded-xl border-2 border-black/10 bg-white p-2 shadow-sm">
+                  <img
+                    src={selectedEvent.flyer}
+                    alt="Flyer"
+                    className="w-full h-[700px] object-contain rounded-lg"
+                  />
+                </div>
               )
             ) : (
               <p className="text-gray-600 italic text-lg">No flyer available</p>

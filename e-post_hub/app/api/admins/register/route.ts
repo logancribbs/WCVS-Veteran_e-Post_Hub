@@ -41,7 +41,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // Creator code check (default matches your Prisma schema default)
+    // creator code check 
     const expectedCreatorCode =
       process.env.ADMIN_CREATOR_CODE || "wc_create_admin";
 
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // Prevent duplicate emails
+    // prevent duplicate emails
     const existing = await prisma.user.findUnique({
       where: { email },
       select: { id: true },
@@ -65,7 +65,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // Create user + linked admin profile
+    // create user + linked admin profile
     const passwordHash = await bcrypt.hash(password, 10);
 
     const user = await prisma.user.create({
@@ -86,7 +86,7 @@ export async function POST(req: Request) {
       select: { id: true, email: true, name: true, role: true },
     });
 
-    // Issue a JWT like your login route does
+    // issue a JWT
     const token = jwt.sign(
       { userId: user.id, email: user.email, role: user.role, name: user.name },
       (process.env.JWT_SECRET as string) || "dev-secret"
@@ -97,7 +97,7 @@ export async function POST(req: Request) {
       { status: 201 }
     );
   } catch (error: any) {
-    // Prisma unique constraint (backup)
+    // prisma constraint 
     if (error?.code === "P2002") {
       return NextResponse.json(
         { message: "Email already in use" },

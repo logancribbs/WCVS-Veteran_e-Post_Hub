@@ -2,8 +2,6 @@
 
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { Input } from "@nextui-org/react";
-import { Search } from "lucide-react";
 import WhitmanLogo from "@/app/Images/whitman.png";
 import Link from "next/link";
 
@@ -107,31 +105,6 @@ export default function HeroBanner({
               </Link>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Search bar */}
-      <div
-        className="flex justify-center py-3 border-y-2 border-black/40 shadow-sm"
-        style={{
-          background:
-            "linear-gradient(10deg, #B22234 20%, #FFFFFF 40%, #3C3B6E 100%)",
-        }}
-      >
-        <div className="w-full max-w-md px-4">
-          <Input
-            placeholder="Search Events"
-            startContent={<Search size={16} />}
-            value={query}
-            onChange={(e) => onQueryChange(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && onSubmit) onSubmit();
-            }}
-            classNames={{
-              inputWrapper:
-                "rounded-full border-2 border-black bg-white/80",
-            }}
-          />
         </div>
       </div>
     </section>
