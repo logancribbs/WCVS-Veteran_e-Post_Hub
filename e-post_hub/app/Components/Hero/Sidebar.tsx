@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 import ManageHomepageImagesModal from "./ManageHomepageImagesModal";
 import ManageResourceLinksModal from "./ManageResourceLinksModal";
 import ManageLandingThemeModal from "./ManageLandingThemeModal";
-import { LandingTheme, ThemeOverride } from "@/app/Themes/types";
+import { LandingTheme, ThemeOverride } from "@/app/themes/types";
 
 type ResourceLink = {
   label: string;
@@ -19,6 +19,66 @@ type SidebarProps = {
   themeOverride: ThemeOverride;
   onThemeSaved: (override: ThemeOverride) => void;
 };
+
+function SidebarDecorations({ theme }: { theme: LandingTheme }) {
+  if (theme.sidebarDecoration === "christmas") {
+    return (
+      <>
+        <div className="pointer-events-none absolute left-4 top-5 text-lg text-white/80">
+          ❄
+        </div>
+        <div className="pointer-events-none absolute right-5 top-4 text-5xl drop-shadow-md">
+          🧦
+        </div>
+        <div className="pointer-events-none absolute right-8 top-0 h-8 w-[2px] bg-white/60" />
+        <div className="pointer-events-none absolute left-2 top-14 flex flex-col gap-8 text-white/70">
+          <span>❄</span>
+          <span>❄</span>
+          <span>❄</span>
+          <span>❄</span>
+        </div>
+        <div className="pointer-events-none absolute right-2 top-16 flex flex-col gap-8 text-white/70">
+          <span>❄</span>
+          <span>❄</span>
+          <span>❄</span>
+          <span>❄</span>
+        </div>
+      </>
+    );
+  }
+
+  if (theme.sidebarDecoration === "fourthOfJuly") {
+    return (
+      <>
+        <div className="pointer-events-none absolute inset-x-0 top-2 flex justify-center gap-2 text-white/85">
+          <span className="text-sm text-red-300">▼</span>
+          <span>★</span>
+          <span className="text-sm text-white">▼</span>
+          <span>★</span>
+          <span className="text-sm text-red-300">▼</span>
+          <span>★</span>
+          <span className="text-sm text-white">▼</span>
+          <span>★</span>
+          <span className="text-sm text-red-300">▼</span>
+        </div>
+        <div className="pointer-events-none absolute left-2 top-12 flex flex-col gap-8 text-white/75">
+          <span>★</span>
+          <span>★</span>
+          <span>★</span>
+          <span>★</span>
+        </div>
+        <div className="pointer-events-none absolute right-2 top-12 flex flex-col gap-8 text-white/75">
+          <span>★</span>
+          <span>★</span>
+          <span>★</span>
+          <span>★</span>
+        </div>
+      </>
+    );
+  }
+
+  return null;
+}
 
 export default function Sidebar({
   theme,
@@ -213,22 +273,7 @@ export default function Sidebar({
           mixBlendMode: "normal",
         }}
       >
-        {theme.sidebarAccent && (
-          <>
-            <div className="pointer-events-none absolute left-2 top-6 flex flex-col gap-8 text-white/80">
-              <span>{theme.sidebarAccent}</span>
-              <span>{theme.sidebarAccent}</span>
-              <span>{theme.sidebarAccent}</span>
-              <span>{theme.sidebarAccent}</span>
-            </div>
-            <div className="pointer-events-none absolute right-2 top-6 flex flex-col gap-8 text-white/80">
-              <span>{theme.sidebarAccent}</span>
-              <span>{theme.sidebarAccent}</span>
-              <span>{theme.sidebarAccent}</span>
-              <span>{theme.sidebarAccent}</span>
-            </div>
-          </>
-        )}
+        <SidebarDecorations theme={theme} />
 
         <div
           className="

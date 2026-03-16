@@ -203,9 +203,9 @@ export default function HomePage() {
       style={{
         backgroundColor: theme.pageBackgroundColor,
         backgroundImage: theme.pageBackgroundImage,
-        backgroundRepeat: "repeat",
-        backgroundSize: "220px 220px",
-        backgroundPosition: "top left",
+        backgroundRepeat: theme.pageBackgroundRepeat,
+        backgroundSize: theme.pageBackgroundSize,
+        backgroundPosition: theme.pageBackgroundPosition,
       }}
     >
       <HeroBanner
@@ -251,12 +251,6 @@ export default function HomePage() {
                     border: `3px solid ${theme.eventCardBorder}`,
                   }}
                 >
-                  {theme.tileAccent && (
-                    <div className="absolute right-3 top-3 z-10 rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-[#0F2A22] shadow-sm">
-                      {theme.tileAccent}
-                    </div>
-                  )}
-
                   <div
                     className="text-center text-xl font-semibold pt-4 pb-2"
                     style={{ color: theme.eventTitleColor }}
