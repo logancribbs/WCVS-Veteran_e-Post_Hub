@@ -7,9 +7,11 @@ import { Button, Card, CardBody, CardHeader, Input } from "@nextui-org/react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { GiPadlock } from "react-icons/gi";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 export default function LoginForm() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -87,10 +89,23 @@ export default function LoginForm() {
                 defaultValue=""
                 label="Password"
                 variant="bordered"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 {...register("password")}
                 isInvalid={!!errors.password}
                 errorMessage={errors.password?.message as string}
+                endContent={
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="focus:outline-none"
+                  >
+                    {showPassword ? (
+                      <FiEyeOff className="text-gray-500" size={20} />
+                    ) : (
+                      <FiEye className="text-gray-500" size={20} />
+                    )}
+                  </button>
+                }
               />
               <Button
                 isDisabled={!isValid}
