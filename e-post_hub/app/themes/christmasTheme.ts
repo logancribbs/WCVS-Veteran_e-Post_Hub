@@ -4,7 +4,7 @@ export const christmasTheme: LandingTheme = {
   key: "christmas",
   label: "Christmas",
 
-  heroBannerImage: "/christmasDark.jpeg",
+  heroBannerImage: "/christmas.jpeg",
   heroOverlayColor: "rgba(18, 52, 36, 0.10)",
   heroImageFit: "cover",
   heroImagePosition: "center center",
@@ -13,12 +13,16 @@ export const christmasTheme: LandingTheme = {
   bannerDecoration: "snowLights",
   sidebarDecoration: "christmas",
 
-  pageBackgroundColor: "#F7EFEF",
-  pageBackgroundImage:
-    "linear-gradient(rgba(247, 239, 239, 0.74), rgba(247, 239, 239, 0.74)), repeating-linear-gradient(135deg, rgba(170, 36, 36, 0.10) 0px, rgba(170, 36, 36, 0.10) 18px, rgba(255, 255, 255, 0.10) 18px, rgba(255, 255, 255, 0.10) 36px), url('/bg-floral.png')",
-  pageBackgroundRepeat: "repeat",
-  pageBackgroundSize: "220px 220px, 180px 180px, 220px 220px",
-  pageBackgroundPosition: "top left, 0 0, top left",
+pageBackgroundColor: "#D72626",
+
+pageBackgroundImage:
+  "repeating-linear-gradient(135deg, #ffffff 0px, #ffffff 14px, #D72626 14px, #D72626 28px)",
+
+pageBackgroundRepeat: "repeat",
+
+pageBackgroundSize: "auto",
+
+pageBackgroundPosition: "top left",
 
   sidebarBackgroundColor: "#1F5C3F",
   sidebarBackgroundImage:
