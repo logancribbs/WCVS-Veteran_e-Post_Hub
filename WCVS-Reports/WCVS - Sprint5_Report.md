@@ -7,13 +7,31 @@
 
 
 ## Unfinished Work (Issues to be created soon) ☝️
+* [Comprehensive Website Testing]
+* [ARIA website extension]
+* [Rights, Policies & License for whitmanvs.com]
+* [Responsive UI to seasons]
+* [Past Event Removal Automation]
+* [Downloading Event Flyers]
 
 ## Completed Issues/User Stories ✅
-
-
+* [Admin Dashboard Refinement]
+* [Bottom Bar Refinement]
+* [ADA compliance checks]
+* [Resources Revision - Link Checks]
+* [Smoother Website Transitions - Images]
+* [Clicked Image Layout Refinement]
+* [Cleaning/Removing Unwanted Text]
+* [4th of July Theme Change]
+* [Christmas Theme Change]
+* [Theme Buttons]
 
 ## Incomplete & In-Progress Issues/User Stories ⚠️
-
+* [ARIA website extension]
+* [Rights, Policies & License for whitmanvs.com]
+* [Responsive UI to seasons]
+* [Past Event Removal Automation]
+* [Downloading Event Flyers]
 
 ## Code Files for Review 📝📈
 
