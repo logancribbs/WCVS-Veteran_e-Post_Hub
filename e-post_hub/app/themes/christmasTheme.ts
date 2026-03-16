@@ -4,8 +4,8 @@ export const christmasTheme: LandingTheme = {
   key: "christmas",
   label: "Christmas",
 
-  heroBannerImage: "/snowy_hills.jpeg",
-  heroOverlayColor: "rgba(18, 52, 36, 0.14)",
+  heroBannerImage: "/christmas.jpeg",
+  heroOverlayColor: "rgba(18, 52, 36, 0.10)",
   heroImageFit: "cover",
   heroImagePosition: "center center",
   heroBannerBackgroundColor: "#b8cedb",
@@ -13,12 +13,12 @@ export const christmasTheme: LandingTheme = {
   bannerDecoration: "snowLights",
   sidebarDecoration: "christmas",
 
-  pageBackgroundColor: "#F1F7EF",
+  pageBackgroundColor: "#F7EFEF",
   pageBackgroundImage:
-    "linear-gradient(rgba(241, 247, 239, 0.84), rgba(241, 247, 239, 0.84)), radial-gradient(circle at 18px 18px, rgba(31, 92, 63, 0.10) 2px, transparent 2px), radial-gradient(circle at 68px 68px, rgba(163, 38, 38, 0.08) 2px, transparent 2px), linear-gradient(135deg, rgba(255,255,255,0.16) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.16) 50%, rgba(255,255,255,0.16) 75%, transparent 75%, transparent), url('/bg-floral.png')",
+    "linear-gradient(rgba(247, 239, 239, 0.74), rgba(247, 239, 239, 0.74)), repeating-linear-gradient(135deg, rgba(170, 36, 36, 0.10) 0px, rgba(170, 36, 36, 0.10) 18px, rgba(255, 255, 255, 0.10) 18px, rgba(255, 255, 255, 0.10) 36px), url('/bg-floral.png')",
   pageBackgroundRepeat: "repeat",
-  pageBackgroundSize: "220px 220px, 120px 120px, 120px 120px, 140px 140px, 220px 220px",
-  pageBackgroundPosition: "top left, 0 0, 28px 28px, 0 0, top left",
+  pageBackgroundSize: "220px 220px, 180px 180px, 220px 220px",
+  pageBackgroundPosition: "top left, 0 0, top left",
 
   sidebarBackgroundColor: "#1F5C3F",
   sidebarBackgroundImage:

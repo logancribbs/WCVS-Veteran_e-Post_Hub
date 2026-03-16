@@ -37,16 +37,6 @@ function SidebarDecorations({ theme }: { theme: LandingTheme }) {
           <span>❄</span>
           <span>❄</span>
         </div>
-
-        <div className="pointer-events-none absolute left-[-2px] top-[360px] z-10 text-4xl drop-shadow-md">
-          🧦
-        </div>
-        <div className="pointer-events-none absolute left-[18px] top-[334px] h-7 w-[2px] bg-white/60" />
-
-        <div className="pointer-events-none absolute right-[-2px] top-[530px] z-10 text-4xl drop-shadow-md">
-          🧦
-        </div>
-        <div className="pointer-events-none absolute right-[18px] top-[504px] h-7 w-[2px] bg-white/60" />
       </>
     );
   }
