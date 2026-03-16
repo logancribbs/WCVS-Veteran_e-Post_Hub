@@ -5,20 +5,20 @@ export const fourthOfJulyTheme: LandingTheme = {
   label: "4th of July",
 
   heroBannerImage: "/july_4th.jpeg",
-  heroOverlayColor: "rgba(7, 24, 64, 0.22)",
+  heroOverlayColor: "rgba(0, 0, 0, 0.12)",
   heroImageFit: "cover",
   heroImagePosition: "center center",
-  heroBannerBackgroundColor: "#123c7a",
+  heroBannerBackgroundColor: "#8F1622",
 
   bannerDecoration: "patrioticBunting",
   sidebarDecoration: "fourthOfJuly",
 
-  pageBackgroundColor: "#EEF4FF",
+  pageBackgroundColor: "#7A0F17",
   pageBackgroundImage:
-    "linear-gradient(rgba(238, 244, 255, 0.82), rgba(238, 244, 255, 0.82)), radial-gradient(circle at 18px 18px, rgba(17, 60, 122, 0.12) 2px, transparent 2px), radial-gradient(circle at 68px 68px, rgba(178, 34, 52, 0.10) 2px, transparent 2px), linear-gradient(135deg, rgba(255,255,255,0.18) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.18) 75%, transparent 75%, transparent), url('/bg-floral.png')",
+    "linear-gradient(rgba(122,15,23,0.82), rgba(122,15,23,0.82)), repeating-linear-gradient(45deg, rgba(255,255,255,0.07) 0px, rgba(255,255,255,0.07) 6px, transparent 6px, transparent 18px), radial-gradient(circle at 30px 30px, rgba(255,255,255,0.08) 2px, transparent 2px), url('/bg-floral.png')",
   pageBackgroundRepeat: "repeat",
-  pageBackgroundSize: "220px 220px, 120px 120px, 120px 120px, 140px 140px, 220px 220px",
-  pageBackgroundPosition: "top left, 0 0, 30px 30px, 0 0, top left",
+  pageBackgroundSize: "220px 220px, 120px 120px, 120px 120px, 220px 220px",
+  pageBackgroundPosition: "top left, 0 0, 0 0, top left",
 
   sidebarBackgroundColor: "#102B66",
   sidebarBackgroundImage:
