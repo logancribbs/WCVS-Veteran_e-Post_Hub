@@ -27,16 +27,14 @@ During this sprint, development efforts focused on improving administrative func
 * [Manage Resource Links Feature - Admin side](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/51)
 * [Manage Slideshow Image - Admin side](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/52)
 * [Password quick view - Admin side](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/53)
+* [Script for Past Event Automation](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/21)
+* [Responsive UI to Seasons](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/26)
 
 ## Incomplete & In-Progress Issues/User Stories ⚠️
 * [ARIA extension feature](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/46)
   - Feature that has yet to be integrated into our fully functioning website that will ease appearance for those with disabilities. We aim to have this feature available and ready to use in Sprint 5 at the earliest.
 * [Pending Rights, Policies & License for whitmanvs.com](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/47)
   - Proper documents needs to be supplemented before the website can officially be hard launched, especially since we are in the process of moving on from whitmancountyveterans.com to whitmanvs.com.
-* [Responsive UI to Seasons](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/26)
-  - This feature is still in progress and focuses on dynamically updating the website's visual theme based on the current season. Development and planning is ongoing as design assets and implementation details are being refined on the current default webpage. This is not our top priority but is definitely a feature we're are aiming to complete by Sprint 6.
-* [Script for Past Event Automation](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/21)
-  - This automation feature is in progress and aims to automatically remove expired events to keep the platform up to date. Additional testing and deployment setup are required before it can go live.
 * [Downloading Flyers as internal links](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/9)
   - Work is underway to allow users to download event flyers directly from the site. The backend logic is partially implemented, but full integration and user testing are still pending to make sure this action is done fluidly with no visual clutter/pop-ups.
 * [Overall Website Clean-up/Refinement](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/issues/33)
@@ -71,4 +69,4 @@ Here are changes we plan to implement in the next sprint:
 * Complete accessibility validation using WAVE and finalize ARIA integration.
 * Optimize the image upload system with improved validation and error handling.
 * Strengthen authentication security through improved session handling and protection against repeated login attempts.
-* Continue development on automation features such as past-event removal and flyer downloads.
+* Continue development on flyer downloads.
