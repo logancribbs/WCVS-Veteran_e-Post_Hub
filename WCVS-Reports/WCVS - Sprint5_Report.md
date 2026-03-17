@@ -1,5 +1,5 @@
 # Sprint 5 Report (03/15/2026)
-## [Youtube link for Sprint 5](*insert here*)
+## [Youtube link for Sprint 5](https://youtu.be/QyiAxNX1pIY)
 
 ## What's New (User Facing) 👶🆕
 This sprint introduced several improvements aimed at enhancing usability, visual presentation, and overall navigation throughout the website. The bottom navigation bar was refined to provide a clearer and more accessible way for users to explore resources and events. Seasonal theme customization was also introduced, allowing administrators to easily switch between holiday-themed appearances such as Christmas and the Fourth of July. In addition, the image viewing experience was improved through smoother transitions and refined layouts, creating a more seamless browsing experience when interacting with featured images and slideshow content. Several interface cleanups were also performed, removing unnecessary text and visual clutter to provide users with a cleaner and more intuitive website experience. Resource links across the site were also reviewed and updated to ensure they remain accurate and helpful for visitors
