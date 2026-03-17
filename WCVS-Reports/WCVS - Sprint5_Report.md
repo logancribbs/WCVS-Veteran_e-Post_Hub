@@ -1,10 +1,11 @@
 # Sprint 5 Report (03/15/2026)
-## [Youtube link for Sprint 5]()
+## [Youtube link for Sprint 5](*insert here*)
 
 ## What's New (User Facing) 👶🆕
+This sprint introduced several improvements aimed at enhancing usability, visual presentation, and overall navigation throughout the website. The bottom navigation bar was refined to provide a clearer and more accessible way for users to explore resources and events. Seasonal theme customization was also introduced, allowing administrators to easily switch between holiday-themed appearances such as Christmas and the Fourth of July. In addition, the image viewing experience was improved through smoother transitions and refined layouts, creating a more seamless browsing experience when interacting with featured images and slideshow content. Several interface cleanups were also performed, removing unnecessary text and visual clutter to provide users with a cleaner and more intuitive website experience. Resource links across the site were also reviewed and updated to ensure they remain accurate and helpful for visitors
 
 ## Work Summary (Developer Facing) 🧑‍💻
-
+During this sprint, development efforts focused on improving administrative functionality, refining UI components, and strengthening the platform’s accessibility and maintainability. The admin dashboard was enhanced to make managing website content more efficient, including the addition of tools for updating resource links and slideshow images directly through the administrative interface. Several core frontend components, such as the bottom navigation bar and hero components, were refined to improve layout consistency and visual flow across the site. Initial accessibility improvements were implemented through ADA compliance checks and early ARIA feature development to support users with disabilities. Additional work included general UI cleanup, resource link validation, and improvements to image transitions to create smoother interactions. Authentication functionality was also strengthened through the implementation of hashed credential storage and an admin password quick-view feature designed to improve administrative usability while maintaining secure authentication practices.
 
 ## Unfinished Work (Issues to be created soon) ☝️
 * Comprehensive Website Testing - Full end-to-end testing of the website has not yet been completed. Future work will include testing across multiple browsers and devices to ensure consistent functionality and performance.
@@ -43,7 +44,7 @@
 
 ## Code Files for Review 📝📈
 * [Bottom Bar Component](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/tree/2b6e9d03cc733d7b603084feb3ac290ecc6a790f/e-post_hub/app/Components/BottomBar)
-* * [Vercel Live Branch - Authentication](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/tree/e752120c2a76030ed803ce3814eb102212f21712/e-post_hub/app/(auth))
+* [Vercel Live Branch - Authentication](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/tree/e752120c2a76030ed803ce3814eb102212f21712/e-post_hub/app/(auth))
 * [Vercel Live Branch - App Components](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/tree/e752120c2a76030ed803ce3814eb102212f21712/e-post_hub/app/Components)
 * [Vercel Live Branch - APIs](https://github.com/logancribbs/WCVS-Veteran_e-Post_Hub/tree/fix/vercel-prod/e-post_hub/app/api)
 * [Landing Page Layer](https://github.com/lsc-compsci/WCVS-Veteran_e-Post_Hub/blob/2b6e9d03cc733d7b603084feb3ac290ecc6a790f/e-post_hub/app/page.tsx)
@@ -55,10 +56,19 @@
 
 ## Retrospective Summary 🧾
 Here's what went well:
-
+* The team successfully completed a large number of UI refinement issues and administrative features.
+* Collaboration across frontend components allowed several improvements to be implemented simultaneously without major conflicts.
+* Administrative tools for managing resources and slideshow images significantly improved maintainability of the site.
+* The implementation of hashed credential authentication strengthened the platform’s baseline security.
 
 Here's what we'd like to improve:
-
+* Some features required additional testing and refinement before completion, particularly accessibility and automation-related tasks.
+* End-to-end testing and cross-browser validation were not fully completed during this sprint.
+* Several features were partially implemented but require further integration and testing before deployment.
 
 Here are changes we plan to implement in the next sprint:
-
+* Perform comprehensive website testing across browsers and devices.
+* Complete accessibility validation using WAVE and finalize ARIA integration.
+* Optimize the image upload system with improved validation and error handling.
+* Strengthen authentication security through improved session handling and protection against repeated login attempts.
+* Continue development on automation features such as past-event removal and flyer downloads.
