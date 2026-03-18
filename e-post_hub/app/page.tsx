@@ -369,14 +369,18 @@ export default function HomePage() {
 
       {/* Modal */}
       {selectedEvent && (
-      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex justify-center items-center z-50 px-4">
+      <div className="fixed inset-0 z-50 flex items-center justify-center px-4
+                bg-black/60 backdrop-blur-md
+                animate-in fade-in duration-200">
         <div
           role="dialog"
           aria-modal="true"
           aria-labelledby="event-preview-title"
-          className="relative bg-white rounded-lg shadow-2xl max-w-6xl w-full flex flex-col justify-center items-center p-6"
+          className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-2xl
+           transition-all duration-200 ease-out
+           opacity-0 scale-95 animate-[fadeInScale_0.2s_ease-out_forwards]"
         >
-          <div className="w-full flex justify-between items-center mb-4">
+          <div className="w-full flex items-center justify-between px-5 py-4 border-b border-slate-200">
             <h2
               id="event-preview-title"
               className="text-xl md:text-2xl font-semibold text-gray-900"
@@ -389,29 +393,30 @@ export default function HomePage() {
               type="button"
               onClick={handleCloseModal}
               aria-label="Close event preview"
-              className="bg-orange-700 text-white px-5 py-2.5 rounded-md shadow-md hover:bg-orange-800 transition-colors duration-200"
+              className="inline-flex items-center rounded-md bg-[#243560] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#1d2b4d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-700 focus-visible:outline-offset-2"
             >
-              Back
+              Close
             </button>
           </div>
-
-          {selectedEvent.flyer ? (
-            isPdfUrl(selectedEvent.flyer) ? (
-              <PdfViewer
-                fileUrl={selectedEvent.flyer}
-                containerHeight={700}
-                altText={`${selectedEvent.title} flyer preview`}
-              />
+          <div className="w-full overflow-y-auto bg-slate-50 p-5 flex justify-center">
+            {selectedEvent.flyer ? (
+              isPdfUrl(selectedEvent.flyer) ? (
+                <PdfViewer
+                  fileUrl={selectedEvent.flyer}
+                  containerHeight={700}
+                  altText={`${selectedEvent.title} flyer preview`}
+                />
+              ) : (
+                <img
+                  src={selectedEvent.flyer}
+                  alt={`${selectedEvent.title} flyer`}
+                  className="max-h-[78vh] w-auto object-contain rounded-lg shadow-sm"
+                />
+              )
             ) : (
-              <img
-                src={selectedEvent.flyer}
-                alt={`${selectedEvent.title} flyer`}
-                className="max-h-[90vh] object-contain rounded-lg"
-              />
-            )
-          ) : (
-            <p className="text-gray-600 italic text-lg">No flyer available</p>
-          )}
+              <p className="text-gray-600 italic text-lg">No flyer available</p>
+            )}
+          </div>
         </div>
       </div>
     )}
