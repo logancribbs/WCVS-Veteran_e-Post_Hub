@@ -152,7 +152,6 @@ export default function HeroBanner({
             className="relative flex items-center justify-center overflow-hidden rounded-md"
             onMouseEnter={startTimer}
             onMouseLeave={clearTimer}
-            tabIndex={0}
           >
             <Image
               src="/WAVA.jpeg"
@@ -164,6 +163,7 @@ export default function HeroBanner({
             />
 
             <div
+              aria-hidden={!showRegister}
               className={`
                 absolute inset-x-0 bottom-0 z-50 flex justify-center
                 transition-all duration-300
@@ -176,6 +176,7 @@ export default function HeroBanner({
             >
               <Link
                 href="/Registeradmin"
+                tabIndex={showRegister ? 0 : -1}
                 className="
                   mb-1 rounded-full border border-black/50
                   bg-white px-4 py-2 font-semibold text-black

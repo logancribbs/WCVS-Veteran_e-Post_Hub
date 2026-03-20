@@ -72,6 +72,7 @@ export default function Sidebar({
   const [showImageManager, setShowImageManager] = useState(false);
   const [showResourceManager, setShowResourceManager] = useState(false);
   const [showThemeManager, setShowThemeManager] = useState(false);
+  const [pendingExternalLink, setPendingExternalLink] = useState<ResourceLink | null>(null);
 
   const isExternalLink = (href: string) => /^https?:\/\//i.test(href);
 
@@ -188,6 +189,12 @@ export default function Sidebar({
     } catch {}
 
     window.location.href = "/";
+  };
+
+  const handleExternalConfirm = () => {
+    if (!pendingExternalLink) return;
+    window.open(pendingExternalLink.href, "_blank", "noopener,noreferrer");
+    setPendingExternalLink(null);
   };
 
   return (
@@ -377,17 +384,36 @@ export default function Sidebar({
               );
             }
 
-            const opensInNewTab = !isAdmin && isExternalLink(item.href);
+            const opensExternally = !isAdmin && isExternalLink(item.href);
+
+            if (opensExternally) {
+              return (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={() => setPendingExternalLink(item)}
+                  aria-label={`${item.label} external resource`}
+                  className="
+                    group flex w-full items-center gap-3 rounded-lg px-3 py-2
+                    border border-white/20 bg-white/5
+                    transition-all duration-200
+                    hover:bg-white/20 hover:border-orange-300 hover:shadow-md
+                    text-left
+                  "
+                >
+                  <span className="relative flex h-3 w-3">
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-orange-200 opacity-75 group-hover:animate-ping" />
+                    <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-200" />
+                  </span>
+                  <span className="truncate">{item.label}</span>
+                </button>
+              );
+            }
 
             return (
               <Link
                 key={item.label}
                 href={item.href}
-                target={opensInNewTab ? "_blank" : undefined}
-                rel={opensInNewTab ? "noopener noreferrer" : undefined}
-                aria-label={
-                  opensInNewTab ? `${item.label} (opens in new tab)` : item.label
-                }
                 className="
                   group flex items-center gap-3 rounded-lg px-3 py-2
                   border border-white/20 bg-white/5
@@ -399,17 +425,65 @@ export default function Sidebar({
                   <span className="absolute inline-flex h-full w-full rounded-full bg-orange-200 opacity-75 group-hover:animate-ping" />
                   <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-200" />
                 </span>
-                <span className="truncate">
-                  {item.label}
-                  {opensInNewTab && (
-                    <span className="ml-1 text-sm font-normal">(opens in new tab)</span>
-                  )}
-                </span>
+                <span className="truncate">{item.label}</span>
               </Link>
             );
           })}
         </nav>
       </aside>
+
+      {pendingExternalLink && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-200">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="external-link-title"
+            aria-describedby="external-link-description"
+            className="relative w-full max-w-md overflow-hidden rounded-2xl border shadow-2xl"
+            style={{
+              backgroundColor: theme.sidebarBackgroundColor,
+              backgroundImage: theme.sidebarBackgroundImage,
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "100% 100%",
+              borderColor: "rgba(255,255,255,0.2)",
+            }}
+          >
+            <div className="px-5 py-4 border-b border-white/20">
+              <h2 id="external-link-title" className="text-xl font-semibold text-white">
+                Leave site?
+              </h2>
+            </div>
+
+            <div className="px-5 py-4 text-white/95">
+              <p id="external-link-description" className="text-sm leading-6">
+                You are opening <span className="font-semibold">{pendingExternalLink.label}</span> in a new tab.
+              </p>
+            </div>
+
+            <div className="flex justify-end gap-3 px-5 py-4 border-t border-white/20 bg-black/10">
+              <button
+                type="button"
+                onClick={() => setPendingExternalLink(null)}
+                className="rounded-xl border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-white/20"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleExternalConfirm}
+                className="rounded-xl px-4 py-2 text-sm font-semibold transition-all hover:brightness-95"
+                style={{
+                  backgroundColor: theme.eventButtonBackground,
+                  color: theme.eventButtonText,
+                  border: `1px solid ${theme.eventButtonBorder}`,
+                }}
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <ManageHomepageImagesModal
         isOpen={showImageManager}
