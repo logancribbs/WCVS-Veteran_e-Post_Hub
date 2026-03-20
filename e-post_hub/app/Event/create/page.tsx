@@ -13,7 +13,7 @@ export default function CreateEventPage() {
 
   const [isRecurring, setIsRecurring] = useState(false);
 
-  // Uncontrolled refs (keep your layout untouched)
+  // Uncontrolled refs
   const titleRef = useRef<HTMLInputElement>(null);
   const descRef = useRef<HTMLTextAreaElement>(null);
   const websiteRef = useRef<HTMLInputElement>(null);
@@ -29,6 +29,8 @@ export default function CreateEventPage() {
   const [rangeEnd, setRangeEnd] = useState("");
   const [addingDatesError, setAddingDatesError] = useState<string | null>(null);
 
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
   const existingDatesSet = useMemo(
     () => new Set(occurrences.map((o) => o.date)),
     [occurrences]
@@ -38,6 +40,7 @@ export default function CreateEventPage() {
     setAddingDatesError(null);
     setShowDateModal(true);
   }
+
   function closeDateModal() {
     setShowDateModal(false);
   }
@@ -49,8 +52,12 @@ export default function CreateEventPage() {
   }
 
   function addDatesToOccurrences(newDates: string[]) {
-    const unique = newDates.filter(isValidISODate).filter((d) => !existingDatesSet.has(d));
+    const unique = newDates
+      .filter(isValidISODate)
+      .filter((d) => !existingDatesSet.has(d));
+
     if (unique.length === 0) return;
+
     setOccurrences((prev) =>
       [...prev, ...unique.map((d) => ({ date: d }))].sort(
         (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
@@ -74,25 +81,44 @@ export default function CreateEventPage() {
           .split(/[\s,]+/)
           .map((s) => s.trim())
           .filter(Boolean);
+
         const valids = tokens.filter(isValidISODate);
+
         if (valids.length === 0) {
-          setAddingDatesError("Enter one or more valid dates separated by commas or new lines.");
+          setAddingDatesError(
+            "Enter one or more valid dates separated by commas or new lines."
+          );
           return;
         }
+
         parsed = valids;
       } else {
-        if (!rangeStart || !rangeEnd || !isValidISODate(rangeStart) || !isValidISODate(rangeEnd)) {
-          setAddingDatesError("Provide a valid start and end date (YYYY-MM-DD).");
+        if (
+          !rangeStart ||
+          !rangeEnd ||
+          !isValidISODate(rangeStart) ||
+          !isValidISODate(rangeEnd)
+        ) {
+          setAddingDatesError(
+            "Provide a valid start and end date (YYYY-MM-DD)."
+          );
           return;
         }
+
         const start = new Date(rangeStart + "T00:00:00");
         const end = new Date(rangeEnd + "T00:00:00");
+
         if (start > end) {
           setAddingDatesError("Start date must be on or before end date.");
           return;
         }
+
         const buf: string[] = [];
-        for (let d = new Date(start); d.getTime() <= end.getTime(); d.setDate(d.getDate() + 1)) {
+        for (
+          let d = new Date(start);
+          d.getTime() <= end.getTime();
+          d.setDate(d.getDate() + 1)
+        ) {
           buf.push(d.toISOString().slice(0, 10));
         }
         parsed = buf;
@@ -109,21 +135,22 @@ export default function CreateEventPage() {
     setOccurrences((prev) => prev.filter((o) => o.date !== d));
   }
 
-  // Recurring “priority”: add +14d and +28d copies so it bubbles up periodically
   function extendForRecurring(baseDates: string[]): string[] {
     if (!isRecurring || baseDates.length === 0) return baseDates;
+
     const last = new Date(baseDates[baseDates.length - 1] + "T00:00:00");
     const d1 = new Date(last);
     d1.setDate(d1.getDate() + 14);
     const d2 = new Date(last);
     d2.setDate(d2.getDate() + 28);
+
     const extras = [d1, d2]
       .map((d) => d.toISOString().slice(0, 10))
       .filter((d) => !baseDates.includes(d));
+
     return [...baseDates, ...extras];
   }
 
-  // Read the file as a data URL (image/* or application/pdf). No server creds needed.
   async function readFileAsDataUrl(): Promise<string | undefined> {
     const file = fileRef.current?.files?.[0];
     if (!file) return undefined;
@@ -139,41 +166,52 @@ export default function CreateEventPage() {
       fr.readAsDataURL(file);
     });
 
-    // sanity check
     if (asDataURL.startsWith("data:")) return asDataURL;
     return undefined;
   }
 
+  const hasTitle = Boolean(titleRef.current?.value?.trim());
+  const hasDescription = Boolean(descRef.current?.value?.trim());
+  const hasDate = occurrences.length > 0;
+  const canSubmit = hasTitle && hasDescription && hasDate;
+
   async function handleSubmit() {
     try {
-      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      setSubmitError(null);
 
-      const rawTitle = (titleRef.current?.value || "").trim();
+      const token =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+      const title = (titleRef.current?.value || "").trim();
       const description = (descRef.current?.value || "").trim();
       const website = (websiteRef.current?.value || "").trim();
-      const pickedFile = fileRef.current?.files?.[0];
 
-      // Get data URL (image/pdf) or undefined
-      const flyerDataUrl = await readFileAsDataUrl();
-
-      // If title is empty but a file was picked, fall back to file name (no extension)
-      let title = rawTitle;
-      if (!title && pickedFile?.name) {
-        title = pickedFile.name.replace(/\.[^.]+$/, "");
+      if (!title) {
+        setSubmitError("Event title is required.");
+        return;
       }
 
-      // Backend requires title OR flyer
-      if (!title && !flyerDataUrl) return;
+      if (!description) {
+        setSubmitError("Event description is required.");
+        return;
+      }
+
+      if (occurrences.length === 0) {
+        setSubmitError("Add at least one date before submitting.");
+        return;
+      }
+
+      const flyerDataUrl = await readFileAsDataUrl();
 
       const baseDates = occurrences.map((o) => o.date);
       const finalDates = extendForRecurring(baseDates);
       const eventOccurrences: Occurrence[] = finalDates.map((d) => ({ date: d }));
 
       const body = {
-        title: title || undefined,
-        description: description || undefined,
+        title,
+        description,
         website: website || undefined,
-        flyer: flyerDataUrl || undefined, // <- store data URL directly
+        flyer: flyerDataUrl || undefined,
         eventOccurrences,
       };
 
@@ -186,18 +224,20 @@ export default function CreateEventPage() {
         body: JSON.stringify(body),
       });
 
-      if (!res.ok) return;
+      if (!res.ok) {
+        setSubmitError("Could not create event. Please try again.");
+        return;
+      }
 
       router.push("/");
       router.refresh?.();
     } catch {
-      // keep UX unchanged
+      setSubmitError("Could not create event. Please try again.");
     }
   }
 
   return (
     <div className="min-h-screen w-full bg-blue-100 flex justify-center items-center py-20">
-      {/* Back Button */}
       <Link
         href="/"
         className="fixed top-6 left-6 px-4 py-2 bg-[#d6b26a] text-black rounded-md shadow hover:scale-105 transition-transform"
@@ -205,28 +245,27 @@ export default function CreateEventPage() {
         ← Back
       </Link>
 
-      {/* Create Event Card (structure/classes kept intact) */}
       <div
         className="
-          w-full max-w-3xl 
+          w-full max-w-3xl
           bg-[#f4ede3]
-          rounded-xl 
-          shadow-xl 
+          rounded-xl
+          shadow-xl
           border border-gray-300
           p-10
         "
       >
         <h1 className="text-3xl font-bold text-center mb-8">Create New Event</h1>
 
-        {/* Event Title */}
         <input
           ref={titleRef}
           type="text"
           placeholder="Event Title"
-          className="w-full p-3 rounded-md bg-white shadow-inner border border-gray-300 mb-6"
+          className="w-full p-3 rounded-md bg-white shadow-inner border border-gray-300 mb-2"
+          onChange={() => setSubmitError(null)}
         />
+        <p className="text-sm text-gray-600 mb-6">Required</p>
 
-        {/* Add Dates + Recurring Event */}
         <div className="flex gap-4 mb-4">
           <button
             type="button"
@@ -249,7 +288,6 @@ export default function CreateEventPage() {
           </button>
         </div>
 
-        {/* Selected dates as chips */}
         {occurrences.length > 0 && (
           <div className="mb-6">
             <div className="mb-2 text-sm font-medium text-gray-700">Dates added:</div>
@@ -274,15 +312,19 @@ export default function CreateEventPage() {
           </div>
         )}
 
-        {/* Description Box */}
+        {occurrences.length === 0 && (
+          <p className="text-sm text-gray-600 mb-6">At least one date is required.</p>
+        )}
+
         <textarea
           ref={descRef}
           placeholder="Event Description"
-          className="w-full h-40 p-3 rounded-md bg-white shadow-inner border border-gray-300 mb-8"
+          className="w-full h-40 p-3 rounded-md bg-white shadow-inner border border-gray-300 mb-2"
+          onChange={() => setSubmitError(null)}
         />
+        <p className="text-sm text-gray-600 mb-8">Required</p>
 
-        {/* File Upload (accept images + PDF; now stored as data URL) */}
-        <div className="mb-4 font-medium">Flyer / Attachment (Required*)</div>
+        <div className="mb-4 font-medium">Flyer / Attachment</div>
         <input
           ref={fileRef}
           type="file"
@@ -290,24 +332,36 @@ export default function CreateEventPage() {
           className="w-full p-3 rounded-md bg-gray-100 shadow-inner border border-gray-300 mb-8"
         />
 
-        {/* Website or Additional Info (optional) */}
         <input
           ref={websiteRef}
           type="text"
           placeholder="Website or Additional Info"
-          className="w-full p-3 rounded-md bg-white shadow-inner border border-gray-300 mb-10"
+          className="w-full p-3 rounded-md bg-white shadow-inner border border-gray-300 mb-6"
         />
 
-        {/* Submit Button */}
+        {submitError && (
+          <div className="mb-4 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">
+            {submitError}
+          </div>
+        )}
+
         <button
-          className="w-full bg-[#e48a24] text-black py-3 rounded-md border border-gray-400 shadow hover:scale-[1.02] transition-transform font-semibold"
+          className={`w-full py-3 rounded-md border shadow font-semibold transition-transform ${
+            canSubmit
+              ? "bg-[#e48a24] text-black border-gray-400 hover:scale-[1.02]"
+              : "bg-gray-300 text-gray-600 border-gray-300 cursor-not-allowed"
+          }`}
           onClick={handleSubmit}
+          disabled={!canSubmit}
         >
           Submit Event
         </button>
+
+        <div className="text-[#757575] mt-3" style={{ fontSize: "12px" }}>
+          Required: Event Title, Event Description, and at least one Date. Flyer and Website are optional.
+        </div>
       </div>
 
-      {/* Date Modal */}
       {showDateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div className="w-full max-w-lg rounded-xl bg-white shadow-xl border border-gray-200">
@@ -322,7 +376,6 @@ export default function CreateEventPage() {
             </div>
 
             <div className="px-5 pt-4">
-              {/* Mode Switcher */}
               <div className="mb-4 flex gap-2">
                 <button
                   onClick={() => setDateMode("single")}
@@ -350,7 +403,6 @@ export default function CreateEventPage() {
                 </button>
               </div>
 
-              {/* Mode Content */}
               {dateMode === "single" && (
                 <div className="mb-5">
                   <label className="block text-sm font-medium mb-1">Pick a date</label>
