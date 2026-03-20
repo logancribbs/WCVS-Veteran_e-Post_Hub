@@ -14,6 +14,7 @@ import {
   CalendarDays,
   Clock,
   FileText,
+  Download,
 } from "lucide-react";
 import { useLandingTheme } from "./themes";
 
@@ -58,6 +59,70 @@ export default function HomePage() {
     if (!url) return false;
     const lower = url.toLowerCase();
     return lower.endsWith(".pdf") || lower.startsWith("data:application/pdf");
+  }
+
+  function getFlyerExtension(url?: string | null) {
+    if (!url) return "file";
+
+    if (url.startsWith("data:application/pdf")) return "pdf";
+    if (url.startsWith("data:image/jpeg")) return "jpg";
+    if (url.startsWith("data:image/png")) return "png";
+    if (url.startsWith("data:image/webp")) return "webp";
+    if (url.startsWith("data:image/gif")) return "gif";
+
+    try {
+      const cleanUrl = url.split("?")[0].split("#")[0].toLowerCase();
+      const match = cleanUrl.match(/\.([a-z0-9]+)$/i);
+      return match?.[1] || "file";
+    } catch {
+      return "file";
+    }
+  }
+
+  function buildDownloadFileName(event: Event) {
+    const safeTitle = (event.title || "event-flyer")
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
+    const ext = getFlyerExtension(event.flyer);
+    return `${safeTitle || "event-flyer"}.${ext}`;
+  }
+
+  async function handleDownloadFlyer(event: Event) {
+    if (!event.flyer) return;
+
+    try {
+      const fileName = buildDownloadFileName(event);
+
+      if (event.flyer.startsWith("data:")) {
+        const link = document.createElement("a");
+        link.href = event.flyer;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        return;
+      }
+
+      const response = await fetch(event.flyer);
+      if (!response.ok) throw new Error("Download failed");
+
+      const blob = await response.blob();
+      const objectUrl = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = objectUrl;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      URL.revokeObjectURL(objectUrl);
+    } catch {
+      window.open(event.flyer, "_blank", "noopener,noreferrer");
+    }
   }
 
   const [events, setEvents] = useState<Event[]>([]);
@@ -645,6 +710,25 @@ export default function HomePage() {
                       )}
                     </div>
                   </div>
+
+                  {selectedDetailEvent.flyer && (
+                    <div className="rounded-2xl bg-white/12 p-4 shadow-sm">
+                      <button
+                        type="button"
+                        onClick={() => handleDownloadFlyer(selectedDetailEvent)}
+                        className="inline-flex items-center gap-2 rounded-md px-5 py-2.5 text-base font-bold shadow-md transition-all duration-200 hover:-translate-y-0.5"
+                        style={{
+                          backgroundColor: "#f59e0b",
+                          color: "#1b1b1b",
+                          border: "2px solid #6b3f00",
+                        }}
+                        aria-label={`Download flyer for ${selectedDetailEvent.title}`}
+                      >
+                        <Download className="w-4 h-4" />
+                        <span>Download Flyer</span>
+                      </button>
+                    </div>
+                  )}
 
                   <div className="rounded-2xl bg-white/12 p-4 shadow-sm">
                     <p
