@@ -232,7 +232,7 @@ export default function Sidebar({
           className="
             w-full max-w-[320px]
             rounded-lg
-            border border-gray-300
+            border border-white/70
             overflow-hidden
             relative
             shadow-md
@@ -256,14 +256,16 @@ export default function Sidebar({
               <button
                 type="button"
                 onClick={showPrev}
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 rounded-full w-7 h-7"
+                aria-label="Previous slideshow image"
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/70 text-white hover:bg-black/85 rounded-full w-8 h-8 border border-white/70"
               >
                 ‹
               </button>
               <button
                 type="button"
                 onClick={showNext}
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 rounded-full w-7 h-7"
+                aria-label="Next slideshow image"
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/70 text-white hover:bg-black/85 rounded-full w-8 h-8 border border-white/70"
               >
                 ›
               </button>
@@ -282,7 +284,7 @@ export default function Sidebar({
               <button
                 onClick={handleLogout}
                 tabIndex={showAction ? 0 : -1}
-                className="pointer-events-auto mb-2 px-4 py-2 rounded-full bg-white text-black font-semibold border border-black/50"
+                className="pointer-events-auto mb-2 px-4 py-2 rounded-full bg-white text-black font-semibold border border-black/60 shadow-sm"
               >
                 Logout
               </button>
@@ -290,7 +292,7 @@ export default function Sidebar({
               <Link
                 href="/Login"
                 tabIndex={showAction ? 0 : -1}
-                className="pointer-events-auto mb-2 px-4 py-2 rounded-full bg-white text-black font-semibold border border-black/50"
+                className="pointer-events-auto mb-2 px-4 py-2 rounded-full bg-white text-black font-semibold border border-black/60 shadow-sm"
               >
                 Login
               </Link>
@@ -298,16 +300,22 @@ export default function Sidebar({
           </div>
         </div>
 
-        <div className="text-center mb-6">
-          <h3 className="text-xl font-semibold mb-2">Contact Info</h3>
-          <p className="text-md leading-relaxed">
+        <div className="text-center mb-6 w-full">
+          <h3 className="text-xl font-semibold mb-2 text-white">Contact Info</h3>
+          <p className="text-md leading-relaxed text-white">
             <strong>Email:</strong>{" "}
-            <a href="mailto:BeckyBuri@whitmancounty.gov" className="text-blue-300 hover:underline">
+            <a
+              href="mailto:BeckyBuri@whitmancounty.gov"
+              className="text-white underline underline-offset-4 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/90 rounded-sm"
+            >
               BeckyBuri@whitmancounty.gov
             </a>
             <br />
             <strong>Phone:</strong>{" "}
-            <a href="tel:+15093975246" className="text-blue-300 hover:underline">
+            <a
+              href="tel:+15093975246"
+              className="text-white underline underline-offset-4 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/90 rounded-sm"
+            >
               +1 (509)-397-5246
             </a>
           </p>
@@ -323,15 +331,15 @@ export default function Sidebar({
                   onClick={() => setShowImageManager(true)}
                   className="
                     group flex items-center gap-3 rounded-lg px-3 py-2
-                    border border-white/20 bg-white/5
+                    border border-white/60 bg-black/20
                     transition-all duration-200
-                    hover:bg-white/20 hover:border-orange-300 hover:shadow-md
-                    w-full text-left
+                    hover:bg-white/12 hover:border-white hover:shadow-md
+                    w-full text-left text-white
                   "
                 >
                   <span className="relative flex h-3 w-3">
-                    <span className="absolute inline-flex h-full w-full rounded-full bg-orange-200 opacity-75 group-hover:animate-ping" />
-                    <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-200" />
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-white/80 opacity-75 group-hover:animate-ping" />
+                    <span className="relative inline-flex h-3 w-3 rounded-full bg-white" />
                   </span>
                   <span className="truncate">{item.label}</span>
                 </button>
@@ -346,15 +354,15 @@ export default function Sidebar({
                   onClick={() => setShowResourceManager(true)}
                   className="
                     group flex items-center gap-3 rounded-lg px-3 py-2
-                    border border-white/20 bg-white/5
+                    border border-white/60 bg-black/20
                     transition-all duration-200
-                    hover:bg-white/20 hover:border-orange-300 hover:shadow-md
-                    w-full text-left
+                    hover:bg-white/12 hover:border-white hover:shadow-md
+                    w-full text-left text-white
                   "
                 >
                   <span className="relative flex h-3 w-3">
-                    <span className="absolute inline-flex h-full w-full rounded-full bg-orange-200 opacity-75 group-hover:animate-ping" />
-                    <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-200" />
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-white/80 opacity-75 group-hover:animate-ping" />
+                    <span className="relative inline-flex h-3 w-3 rounded-full bg-white" />
                   </span>
                   <span className="truncate">{item.label}</span>
                 </button>
@@ -369,15 +377,15 @@ export default function Sidebar({
                   onClick={() => setShowThemeManager(true)}
                   className="
                     group flex items-center gap-3 rounded-lg px-3 py-2
-                    border border-white/20 bg-white/5
+                    border border-white/60 bg-black/20
                     transition-all duration-200
-                    hover:bg-white/20 hover:border-orange-300 hover:shadow-md
-                    w-full text-left
+                    hover:bg-white/12 hover:border-white hover:shadow-md
+                    w-full text-left text-white
                   "
                 >
                   <span className="relative flex h-3 w-3">
-                    <span className="absolute inline-flex h-full w-full rounded-full bg-orange-200 opacity-75 group-hover:animate-ping" />
-                    <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-200" />
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-white/80 opacity-75 group-hover:animate-ping" />
+                    <span className="relative inline-flex h-3 w-3 rounded-full bg-white" />
                   </span>
                   <span className="truncate">{item.label}</span>
                 </button>
@@ -395,15 +403,15 @@ export default function Sidebar({
                   aria-label={`${item.label} external resource`}
                   className="
                     group flex w-full items-center gap-3 rounded-lg px-3 py-2
-                    border border-white/20 bg-white/5
+                    border border-white/60 bg-black/20
                     transition-all duration-200
-                    hover:bg-white/20 hover:border-orange-300 hover:shadow-md
-                    text-left
+                    hover:bg-white/12 hover:border-white hover:shadow-md
+                    text-left text-white
                   "
                 >
                   <span className="relative flex h-3 w-3">
-                    <span className="absolute inline-flex h-full w-full rounded-full bg-orange-200 opacity-75 group-hover:animate-ping" />
-                    <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-200" />
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-white/80 opacity-75 group-hover:animate-ping" />
+                    <span className="relative inline-flex h-3 w-3 rounded-full bg-white" />
                   </span>
                   <span className="truncate">{item.label}</span>
                 </button>
@@ -416,14 +424,15 @@ export default function Sidebar({
                 href={item.href}
                 className="
                   group flex items-center gap-3 rounded-lg px-3 py-2
-                  border border-white/20 bg-white/5
+                  border border-white/60 bg-black/20
                   transition-all duration-200
-                  hover:bg-white/20 hover:border-orange-300 hover:shadow-md
+                  hover:bg-white/12 hover:border-white hover:shadow-md
+                  text-white
                 "
               >
                 <span className="relative flex h-3 w-3">
-                  <span className="absolute inline-flex h-full w-full rounded-full bg-orange-200 opacity-75 group-hover:animate-ping" />
-                  <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-200" />
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-white/80 opacity-75 group-hover:animate-ping" />
+                  <span className="relative inline-flex h-3 w-3 rounded-full bg-white" />
                 </span>
                 <span className="truncate">{item.label}</span>
               </Link>
@@ -441,37 +450,42 @@ export default function Sidebar({
             aria-describedby="external-link-description"
             className="relative w-full max-w-md overflow-hidden rounded-2xl border shadow-2xl"
             style={{
-              backgroundColor: theme.sidebarBackgroundColor,
-              backgroundImage: theme.sidebarBackgroundImage,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "100% 100%",
-              borderColor: "rgba(255,255,255,0.2)",
+              backgroundColor: theme.eventCardBackground,
+              borderColor: theme.eventCardBorder,
             }}
           >
-            <div className="px-5 py-4 border-b border-white/20">
-              <h2 id="external-link-title" className="text-xl font-semibold text-white">
+            <div className="px-5 py-4 border-b" style={{ borderColor: theme.eventCardBorder }}>
+              <h2 id="external-link-title" className="text-xl font-semibold" style={{ color: theme.eventTitleColor }}>
                 Leave site?
               </h2>
             </div>
 
-            <div className="px-5 py-4 text-white/95">
+            <div className="px-5 py-4" style={{ color: theme.eventDateColor }}>
               <p id="external-link-description" className="text-sm leading-6">
                 You are opening <span className="font-semibold">{pendingExternalLink.label}</span> in a new tab.
               </p>
             </div>
 
-            <div className="flex justify-end gap-3 px-5 py-4 border-t border-white/20 bg-black/10">
+            <div
+              className="flex justify-end gap-3 px-5 py-4 border-t"
+              style={{ borderColor: theme.eventCardBorder }}
+            >
               <button
                 type="button"
                 onClick={() => setPendingExternalLink(null)}
-                className="rounded-xl border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-white/20"
+                className="rounded-xl px-4 py-2 text-sm font-semibold"
+                style={{
+                  backgroundColor: "rgba(255,255,255,0.12)",
+                  color: theme.eventTitleColor,
+                  border: `1px solid ${theme.eventCardBorder}`,
+                }}
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleExternalConfirm}
-                className="rounded-xl px-4 py-2 text-sm font-semibold transition-all hover:brightness-95"
+                className="rounded-xl px-4 py-2 text-sm font-semibold"
                 style={{
                   backgroundColor: theme.eventButtonBackground,
                   color: theme.eventButtonText,
