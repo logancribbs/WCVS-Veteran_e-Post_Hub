@@ -7,7 +7,14 @@ import BottomBar from "./Components/BottomBar/BottomBar";
 import PdfViewer from "./Components/PdfViewer/PdfViewer";
 import HeroBanner from "./Components/Hero/HeroBanner";
 import Sidebar from "./Components/Hero/Sidebar";
-import { ArrowRight, ExternalLink, MapPin, CalendarDays, Clock, FileText } from "lucide-react";
+import {
+  ArrowRight,
+  ExternalLink,
+  MapPin,
+  CalendarDays,
+  Clock,
+  FileText,
+} from "lucide-react";
 import { useLandingTheme } from "./themes";
 
 type EventOccurrence = {
@@ -55,8 +62,11 @@ export default function HomePage() {
 
   const [events, setEvents] = useState<Event[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
-  const [selectedDetailEvent, setSelectedDetailEvent] = useState<Event | null>(null);
-  const [selectedPreviewEvent, setSelectedPreviewEvent] = useState<Event | null>(null);
+  const [selectedDetailEvent, setSelectedDetailEvent] = useState<Event | null>(
+    null
+  );
+  const [selectedPreviewEvent, setSelectedPreviewEvent] =
+    useState<Event | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -126,7 +136,10 @@ export default function HomePage() {
     const last = sorted[sorted.length - 1];
     const lastDate = new Date(last.date);
     lastDate.setHours(0, 0, 0, 0);
-    return { nextDate: lastDate.toISOString().slice(0, 10), isUpcoming: false };
+    return {
+      nextDate: lastDate.toISOString().slice(0, 10),
+      isUpcoming: false,
+    };
   }
 
   function sortByClosestToToday(a: Event, b: Event): number {
@@ -286,24 +299,25 @@ export default function HomePage() {
                   className="
                     relative
                     rounded-2xl
-                    shadow-[0_12px_28px_rgba(0,0,0,0.42)]
-                    hover:shadow-[0_16px_36px_rgba(0,0,0,0.48)]
+                    shadow-[0_12px_28px_rgba(0,0,0,0.32)]
+                    hover:shadow-[0_16px_36px_rgba(0,0,0,0.38)]
                     flex flex-col overflow-hidden
                     transition-transform hover:scale-[1.03]
-                    hover:ring-4 hover:ring-orange-300
+                    hover:ring-4 hover:ring-emerald-200/70
                     duration-300 w-full max-w-[380px] h-[520px]
                     after:absolute after:inset-0
-                    after:bg-[linear-gradient(135deg,rgba(255,255,255,0.14),rgba(255,255,255,0.04),transparent)]
+                    after:bg-[linear-gradient(135deg,rgba(255,255,255,0.22),rgba(255,255,255,0.08),transparent)]
                     after:pointer-events-none
                   "
                   style={{
-                    backgroundColor: theme.eventCardBackground,
-                    border: `3px solid ${theme.eventCardBorder}`,
+                    background:
+                      "linear-gradient(180deg, rgba(241,252,246,0.98) 0%, rgba(220,243,230,0.97) 52%, rgba(204,233,216,0.97) 100%)",
+                    border: "2px solid rgba(67, 120, 89, 0.55)",
                   }}
                 >
                   <div
-                    className="text-center text-xl font-semibold pt-4 pb-2"
-                    style={{ color: theme.eventTitleColor }}
+                    className="text-center text-xl font-semibold pt-4 pb-2 px-3"
+                    style={{ color: "#133222" }}
                   >
                     {event.title}
                   </div>
@@ -319,7 +333,7 @@ export default function HomePage() {
                   >
                     {event.flyer ? (
                       isPdfUrl(event.flyer) ? (
-                        <div className="w-full rounded-xl border-2 border-white/30 bg-white p-2 shadow-sm">
+                        <div className="w-full rounded-xl border bg-white p-2 shadow-sm">
                           <PdfViewer
                             fileUrl={event.flyer}
                             containerHeight={340}
@@ -330,11 +344,15 @@ export default function HomePage() {
                         <img
                           src={event.flyer}
                           alt={buildFlyerAltText(event)}
-                          className="w-full h-[350px] object-cover rounded-xl border-2 border-white/30 shadow-sm bg-white"
+                          className="w-full h-[350px] object-cover rounded-xl border shadow-sm bg-white"
+                          style={{ borderColor: "rgba(67, 120, 89, 0.3)" }}
                         />
                       )
                     ) : (
-                      <div className="w-full h-[350px] bg-white flex items-center justify-center text-gray-600 italic border-2 border-white/30 rounded-xl shadow-sm">
+                      <div
+                        className="w-full h-[350px] bg-white flex items-center justify-center text-gray-700 italic border rounded-xl shadow-sm"
+                        style={{ borderColor: "rgba(67, 120, 89, 0.3)" }}
+                      >
                         No Flyer Available
                       </div>
                     )}
@@ -343,7 +361,7 @@ export default function HomePage() {
                   <CardBody className="flex justify-between items-center p-4 text-center">
                     <div
                       className="text-lg font-medium"
-                      style={{ color: theme.eventDateColor }}
+                      style={{ color: "#1d4630" }}
                     >
                       {formatDateRange(event.startDate, event.endDate)}
                     </div>
@@ -353,7 +371,8 @@ export default function HomePage() {
                         isAdmin
                           ? deleteEventById(event.id)
                           : (() => {
-                              modalTriggerRef.current = e.currentTarget as HTMLElement;
+                              modalTriggerRef.current =
+                                e.currentTarget as HTMLElement;
                               setSelectedDetailEvent(event);
                             })()
                       }
@@ -380,8 +399,8 @@ export default function HomePage() {
                               focus-visible:ring-red-600
                             `
                             : `
-                              hover:bg-white
-                              focus-visible:ring-orange-300
+                              hover:brightness-95
+                              focus-visible:ring-emerald-700
                             `
                         }
                       `}
@@ -389,9 +408,9 @@ export default function HomePage() {
                         isAdmin
                           ? undefined
                           : {
-                              backgroundColor: theme.eventButtonBackground,
-                              color: theme.eventButtonText,
-                              border: `1px solid ${theme.eventButtonBorder}`,
+                              backgroundColor: "#1f5b3a",
+                              color: "#ffffff",
+                              border: "1px solid #18472d",
                             }
                       }
                     >
@@ -399,7 +418,7 @@ export default function HomePage() {
                       {!isAdmin && (
                         <ArrowRight
                           className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
-                          style={{ color: theme.eventButtonText }}
+                          style={{ color: "#ffffff" }}
                         />
                       )}
                     </Button>
@@ -419,18 +438,25 @@ export default function HomePage() {
             aria-labelledby="event-details-title"
             className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-2xl shadow-2xl border"
             style={{
-              backgroundColor: theme.eventCardBackground,
-              borderColor: theme.eventCardBorder,
+              backgroundColor: "rgba(255,255,255,0.94)",
+              backgroundImage: theme.pageBackgroundImage,
+              backgroundRepeat: theme.pageBackgroundRepeat,
+              backgroundSize: theme.pageBackgroundSize,
+              backgroundPosition: theme.pageBackgroundPosition,
+              borderColor: "rgba(20, 51, 34, 0.18)",
             }}
           >
             <div
-              className="w-full flex items-center justify-between px-5 py-4 border-b"
-              style={{ borderColor: theme.eventCardBorder }}
+              className="w-full flex items-center justify-between px-5 py-4 border-b backdrop-blur-sm"
+              style={{
+                borderColor: "rgba(20, 51, 34, 0.18)",
+                backgroundColor: "rgba(255,255,255,0.78)",
+              }}
             >
               <h2
                 id="event-details-title"
                 className="text-xl md:text-2xl font-semibold"
-                style={{ color: theme.eventTitleColor }}
+                style={{ color: "#163624" }}
               >
                 {selectedDetailEvent.title}
               </h2>
@@ -447,17 +473,20 @@ export default function HomePage() {
                 aria-label="Close event details"
                 className="inline-flex items-center rounded-md px-4 py-2 text-sm font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5"
                 style={{
-                  backgroundColor: theme.eventButtonBackground,
-                  color: theme.eventButtonText,
-                  border: `1px solid ${theme.eventButtonBorder}`,
+                  backgroundColor: "#1f5b3a",
+                  color: "#ffffff",
+                  border: "1px solid #18472d",
                 }}
               >
                 Close
               </button>
             </div>
 
-            <div className="grid max-h-[calc(90vh-74px)] grid-cols-1 gap-0 overflow-y-auto lg:grid-cols-[1.05fr_1fr]">
-              <div className="p-5 lg:p-6 flex items-center justify-center border-b lg:border-b-0 lg:border-r" style={{ borderColor: theme.eventCardBorder }}>
+            <div className="grid max-h-[calc(90vh-74px)] grid-cols-1 gap-0 overflow-y-auto lg:grid-cols-[1.02fr_1fr]">
+              <div
+                className="p-5 lg:p-6 flex items-center justify-center border-b lg:border-b-0 lg:border-r"
+                style={{ borderColor: "rgba(20, 51, 34, 0.18)" }}
+              >
                 {selectedDetailEvent.flyer ? (
                   <button
                     type="button"
@@ -466,25 +495,40 @@ export default function HomePage() {
                     aria-label={`Open full flyer preview for ${selectedDetailEvent.title}`}
                   >
                     {isPdfUrl(selectedDetailEvent.flyer) ? (
-                      <div className="w-full rounded-xl border bg-white p-3 shadow-sm" style={{ borderColor: theme.eventButtonBorder }}>
+                      <div
+                        className="w-full rounded-xl bg-white/96 p-3 shadow-sm"
+                        style={{
+                          border: "1px solid rgba(20, 51, 34, 0.16)",
+                        }}
+                      >
                         <PdfViewer
                           fileUrl={selectedDetailEvent.flyer}
-                          containerHeight={460}
+                          containerHeight={430}
                           altText={buildFlyerAltText(selectedDetailEvent)}
                         />
                       </div>
                     ) : (
-                      <div className="w-full rounded-xl border bg-white p-3 shadow-sm" style={{ borderColor: theme.eventButtonBorder }}>
+                      <div
+                        className="w-full rounded-xl bg-white/96 p-3 shadow-sm"
+                        style={{
+                          border: "1px solid rgba(20, 51, 34, 0.16)",
+                        }}
+                      >
                         <img
                           src={selectedDetailEvent.flyer}
                           alt={buildFlyerAltText(selectedDetailEvent)}
-                          className="w-full h-[460px] object-contain rounded-lg"
+                          className="w-full h-[430px] object-contain rounded-lg"
                         />
                       </div>
                     )}
                   </button>
                 ) : (
-                  <div className="w-full h-[460px] rounded-xl border bg-white flex items-center justify-center text-gray-600 italic" style={{ borderColor: theme.eventButtonBorder }}>
+                  <div
+                    className="w-full h-[430px] rounded-xl bg-white/96 flex items-center justify-center text-gray-700 italic"
+                    style={{
+                      border: "1px solid rgba(20, 51, 34, 0.16)",
+                    }}
+                  >
                     No Flyer Available
                   </div>
                 )}
@@ -493,65 +537,108 @@ export default function HomePage() {
               <div className="p-5 lg:p-6">
                 <div className="space-y-4">
                   <div
-                    className="rounded-2xl border p-4"
+                    className="rounded-2xl p-4 backdrop-blur-sm"
                     style={{
-                      backgroundColor: "rgba(255,255,255,0.08)",
-                      borderColor: theme.eventCardBorder,
+                      backgroundColor: "rgba(255,255,255,0.82)",
+                      border: "1px solid rgba(20, 51, 34, 0.14)",
                     }}
                   >
                     <div className="flex items-start gap-3">
-                      <FileText className="mt-0.5 h-5 w-5 shrink-0" style={{ color: theme.eventTitleColor }} />
+                      <FileText
+                        className="mt-0.5 h-5 w-5 shrink-0"
+                        style={{ color: "#1f5b3a" }}
+                      />
                       <div>
-                        <h3 className="text-lg font-semibold" style={{ color: theme.eventTitleColor }}>
-                          Event Description
-                        </h3>
-                        <p className="mt-1 text-sm leading-6" style={{ color: theme.eventDateColor }}>
-                          {selectedDetailEvent.description?.trim() || "No event description was provided."}
+                        <p
+                          className="text-base font-semibold"
+                          style={{ color: "#163624" }}
+                        >
+                          Description
+                        </p>
+                        <p
+                          className="mt-1 text-sm leading-6"
+                          style={{ color: "#254333" }}
+                        >
+                          {selectedDetailEvent.description?.trim() ||
+                            "No event description was provided."}
                         </p>
                       </div>
                     </div>
                   </div>
 
                   <div
-                    className="rounded-2xl border p-4"
+                    className="rounded-2xl p-4 backdrop-blur-sm"
                     style={{
-                      backgroundColor: "rgba(255,255,255,0.08)",
-                      borderColor: theme.eventCardBorder,
+                      backgroundColor: "rgba(255,255,255,0.82)",
+                      border: "1px solid rgba(20, 51, 34, 0.14)",
                     }}
                   >
                     <div className="space-y-4">
                       <div className="flex items-start gap-3">
-                        <CalendarDays className="mt-0.5 h-5 w-5 shrink-0" style={{ color: theme.eventTitleColor }} />
+                        <CalendarDays
+                          className="mt-0.5 h-5 w-5 shrink-0"
+                          style={{ color: "#1f5b3a" }}
+                        />
                         <div>
-                          <p className="text-sm font-semibold" style={{ color: theme.eventTitleColor }}>
+                          <p
+                            className="text-sm font-semibold"
+                            style={{ color: "#163624" }}
+                          >
                             Date
                           </p>
-                          <p className="text-sm leading-6" style={{ color: theme.eventDateColor }}>
-                            {formatDateRange(selectedDetailEvent.startDate, selectedDetailEvent.endDate) || "Date not provided"}
+                          <p
+                            className="text-sm leading-6"
+                            style={{ color: "#254333" }}
+                          >
+                            {formatDateRange(
+                              selectedDetailEvent.startDate,
+                              selectedDetailEvent.endDate
+                            ) || "Date not provided"}
                           </p>
                         </div>
                       </div>
 
                       <div className="flex items-start gap-3">
-                        <Clock className="mt-0.5 h-5 w-5 shrink-0" style={{ color: theme.eventTitleColor }} />
+                        <Clock
+                          className="mt-0.5 h-5 w-5 shrink-0"
+                          style={{ color: "#1f5b3a" }}
+                        />
                         <div>
-                          <p className="text-sm font-semibold" style={{ color: theme.eventTitleColor }}>
+                          <p
+                            className="text-sm font-semibold"
+                            style={{ color: "#163624" }}
+                          >
                             Time
                           </p>
-                          <p className="text-sm leading-6" style={{ color: theme.eventDateColor }}>
-                            {formatTimeRange(selectedDetailEvent.startTime, selectedDetailEvent.endTime)}
+                          <p
+                            className="text-sm leading-6"
+                            style={{ color: "#254333" }}
+                          >
+                            {formatTimeRange(
+                              selectedDetailEvent.startTime,
+                              selectedDetailEvent.endTime
+                            )}
                           </p>
                         </div>
                       </div>
 
                       {selectedDetailEvent.address && (
                         <div className="flex items-start gap-3">
-                          <MapPin className="mt-0.5 h-5 w-5 shrink-0" style={{ color: theme.eventTitleColor }} />
+                          <MapPin
+                            className="mt-0.5 h-5 w-5 shrink-0"
+                            style={{ color: "#1f5b3a" }}
+                          />
                           <div>
-                            <p className="text-sm font-semibold" style={{ color: theme.eventTitleColor }}>
+                            <p
+                              className="text-sm font-semibold"
+                              style={{ color: "#163624" }}
+                            >
                               Location
                             </p>
-                            <p className="text-sm leading-6" style={{ color: theme.eventDateColor }}>
+                            <p
+                              className="text-sm leading-6"
+                              style={{ color: "#254333" }}
+                            >
                               {selectedDetailEvent.address}
                             </p>
                           </div>
@@ -560,9 +647,15 @@ export default function HomePage() {
 
                       {selectedDetailEvent.website && (
                         <div className="flex items-start gap-3">
-                          <ExternalLink className="mt-0.5 h-5 w-5 shrink-0" style={{ color: theme.eventTitleColor }} />
+                          <ExternalLink
+                            className="mt-0.5 h-5 w-5 shrink-0"
+                            style={{ color: "#1f5b3a" }}
+                          />
                           <div>
-                            <p className="text-sm font-semibold" style={{ color: theme.eventTitleColor }}>
+                            <p
+                              className="text-sm font-semibold"
+                              style={{ color: "#163624" }}
+                            >
                               Website
                             </p>
                             <a
@@ -570,7 +663,7 @@ export default function HomePage() {
                               target="_blank"
                               rel="noopener noreferrer"
                               className="text-sm underline underline-offset-4"
-                              style={{ color: theme.eventButtonBackground }}
+                              style={{ color: "#1f5b3a" }}
                             >
                               Visit event website
                             </a>
@@ -581,17 +674,24 @@ export default function HomePage() {
                   </div>
 
                   <div
-                    className="rounded-2xl border p-4"
+                    className="rounded-2xl p-4 backdrop-blur-sm"
                     style={{
-                      backgroundColor: "rgba(255,255,255,0.08)",
-                      borderColor: theme.eventCardBorder,
+                      backgroundColor: "rgba(255,255,255,0.82)",
+                      border: "1px solid rgba(20, 51, 34, 0.14)",
                     }}
                   >
-                    <p className="text-sm font-semibold" style={{ color: theme.eventTitleColor }}>
-                      Flyer accessibility text
+                    <p
+                      className="text-sm font-semibold"
+                      style={{ color: "#163624" }}
+                    >
+                      Organizer
                     </p>
-                    <p className="mt-1 text-sm leading-6" style={{ color: theme.eventDateColor }}>
-                      {buildFlyerAltText(selectedDetailEvent)}
+                    <p
+                      className="mt-1 text-sm leading-6"
+                      style={{ color: "#254333" }}
+                    >
+                      {selectedDetailEvent.createdBy?.name ||
+                        "Whitman County Veteran Services"}
                     </p>
                   </div>
                 </div>
@@ -607,12 +707,27 @@ export default function HomePage() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="event-preview-title"
-            className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-2xl transition-all duration-200 ease-out opacity-0 scale-95 animate-[fadeInScale_0.2s_ease-out_forwards]"
+            className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-2xl shadow-2xl border transition-all duration-200 ease-out opacity-0 scale-95 animate-[fadeInScale_0.2s_ease-out_forwards]"
+            style={{
+              backgroundColor: "rgba(255,255,255,0.94)",
+              backgroundImage: theme.pageBackgroundImage,
+              backgroundRepeat: theme.pageBackgroundRepeat,
+              backgroundSize: theme.pageBackgroundSize,
+              backgroundPosition: theme.pageBackgroundPosition,
+              borderColor: "rgba(20, 51, 34, 0.18)",
+            }}
           >
-            <div className="w-full flex items-center justify-between px-5 py-4 border-b border-slate-200">
+            <div
+              className="w-full flex items-center justify-between px-5 py-4 border-b backdrop-blur-sm"
+              style={{
+                borderColor: "rgba(20, 51, 34, 0.18)",
+                backgroundColor: "rgba(255,255,255,0.78)",
+              }}
+            >
               <h2
                 id="event-preview-title"
-                className="text-xl md:text-2xl font-semibold text-gray-900"
+                className="text-xl md:text-2xl font-semibold"
+                style={{ color: "#163624" }}
               >
                 {selectedPreviewEvent.title}
               </h2>
@@ -622,21 +737,38 @@ export default function HomePage() {
                 type="button"
                 onClick={() => setSelectedPreviewEvent(null)}
                 aria-label="Close event preview"
-                className="inline-flex items-center rounded-md bg-[#243560] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#1d2b4d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-700 focus-visible:outline-offset-2"
+                className="inline-flex items-center rounded-md px-4 py-2 text-sm font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5"
+                style={{
+                  backgroundColor: "#1f5b3a",
+                  color: "#ffffff",
+                  border: "1px solid #18472d",
+                }}
               >
                 Close
               </button>
             </div>
-            <div className="w-full overflow-y-auto bg-slate-50 p-5 flex justify-center">
+            <div className="w-full overflow-y-auto p-5 flex justify-center">
               {selectedPreviewEvent.flyer ? (
                 isPdfUrl(selectedPreviewEvent.flyer) ? (
-                  <PdfViewer
-                    fileUrl={selectedPreviewEvent.flyer}
-                    containerHeight={700}
-                    altText={buildFlyerAltText(selectedPreviewEvent)}
-                  />
+                  <div
+                    className="w-full rounded-xl bg-white/96 p-3 shadow-sm"
+                    style={{
+                      border: "1px solid rgba(20, 51, 34, 0.16)",
+                    }}
+                  >
+                    <PdfViewer
+                      fileUrl={selectedPreviewEvent.flyer}
+                      containerHeight={700}
+                      altText={buildFlyerAltText(selectedPreviewEvent)}
+                    />
+                  </div>
                 ) : (
-                  <div className="w-full rounded-xl border-2 border-black/10 bg-white p-2 shadow-sm">
+                  <div
+                    className="w-full rounded-xl bg-white/96 p-3 shadow-sm"
+                    style={{
+                      border: "1px solid rgba(20, 51, 34, 0.16)",
+                    }}
+                  >
                     <img
                       src={selectedPreviewEvent.flyer}
                       alt={buildFlyerAltText(selectedPreviewEvent)}
@@ -645,7 +777,7 @@ export default function HomePage() {
                   </div>
                 )
               ) : (
-                <p className="text-gray-600 italic text-lg">No flyer available</p>
+                <p className="text-gray-700 italic text-lg">No flyer available</p>
               )}
             </div>
           </div>
