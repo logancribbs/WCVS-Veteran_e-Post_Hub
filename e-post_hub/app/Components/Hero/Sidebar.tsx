@@ -21,56 +21,6 @@ type SidebarProps = {
 };
 
 function SidebarDecorations({ theme }: { theme: LandingTheme }) {
-  if (theme.sidebarDecoration === "christmas") {
-    return (
-      <>
-        <div className="pointer-events-none absolute left-3 top-14 flex flex-col gap-8 text-white/70">
-          <span>❄</span>
-          <span>❄</span>
-          <span>❄</span>
-          <span>❄</span>
-        </div>
-
-        <div className="pointer-events-none absolute right-3 top-14 flex flex-col gap-8 text-white/70">
-          <span>❄</span>
-          <span>❄</span>
-          <span>❄</span>
-          <span>❄</span>
-        </div>
-      </>
-    );
-  }
-
-  if (theme.sidebarDecoration === "fourthOfJuly") {
-    return (
-      <>
-        <div className="pointer-events-none absolute inset-x-0 top-2 flex justify-center gap-2 text-white/85">
-          <span className="text-sm text-red-300">▼</span>
-          <span>★</span>
-          <span className="text-sm text-white">▼</span>
-          <span>★</span>
-          <span className="text-sm text-red-300">▼</span>
-          <span>★</span>
-          <span className="text-sm text-white">▼</span>
-          <span>★</span>
-          <span className="text-sm text-red-300">▼</span>
-        </div>
-        <div className="pointer-events-none absolute left-2 top-12 flex flex-col gap-8 text-white/75">
-          <span>★</span>
-          <span>★</span>
-          <span>★</span>
-          <span>★</span>
-        </div>
-        <div className="pointer-events-none absolute right-2 top-12 flex flex-col gap-8 text-white/75">
-          <span>★</span>
-          <span>★</span>
-          <span>★</span>
-          <span>★</span>
-        </div>
-      </>
-    );
-  }
-
   return null;
 }
 
@@ -122,6 +72,8 @@ export default function Sidebar({
   const [showImageManager, setShowImageManager] = useState(false);
   const [showResourceManager, setShowResourceManager] = useState(false);
   const [showThemeManager, setShowThemeManager] = useState(false);
+
+  const isExternalLink = (href: string) => /^https?:\/\//i.test(href);
 
   useEffect(() => {
     const readRole = () => {
@@ -280,7 +232,6 @@ export default function Sidebar({
           "
           onMouseEnter={startHoverTimer}
           onMouseLeave={clearHoverTimerAndHide}
-          tabIndex={0}
         >
           <div className="relative w-full aspect-[4/3]">
             <Image
@@ -313,6 +264,7 @@ export default function Sidebar({
           )}
 
           <div
+            aria-hidden={!showAction}
             className={`
               pointer-events-none absolute inset-x-0 bottom-0 flex justify-center
               transition-all duration-300
@@ -322,6 +274,7 @@ export default function Sidebar({
             {isAdmin ? (
               <button
                 onClick={handleLogout}
+                tabIndex={showAction ? 0 : -1}
                 className="pointer-events-auto mb-2 px-4 py-2 rounded-full bg-white text-black font-semibold border border-black/50"
               >
                 Logout
@@ -329,6 +282,7 @@ export default function Sidebar({
             ) : (
               <Link
                 href="/Login"
+                tabIndex={showAction ? 0 : -1}
                 className="pointer-events-auto mb-2 px-4 py-2 rounded-full bg-white text-black font-semibold border border-black/50"
               >
                 Login
@@ -423,12 +377,17 @@ export default function Sidebar({
               );
             }
 
+            const opensInNewTab = !isAdmin && isExternalLink(item.href);
+
             return (
               <Link
                 key={item.label}
                 href={item.href}
-                target={isAdmin ? undefined : "_blank"}
-                rel={isAdmin ? undefined : "noopener noreferrer"}
+                target={opensInNewTab ? "_blank" : undefined}
+                rel={opensInNewTab ? "noopener noreferrer" : undefined}
+                aria-label={
+                  opensInNewTab ? `${item.label} (opens in new tab)` : item.label
+                }
                 className="
                   group flex items-center gap-3 rounded-lg px-3 py-2
                   border border-white/20 bg-white/5
@@ -440,7 +399,12 @@ export default function Sidebar({
                   <span className="absolute inline-flex h-full w-full rounded-full bg-orange-200 opacity-75 group-hover:animate-ping" />
                   <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-200" />
                 </span>
-                <span className="truncate">{item.label}</span>
+                <span className="truncate">
+                  {item.label}
+                  {opensInNewTab && (
+                    <span className="ml-1 text-sm font-normal">(opens in new tab)</span>
+                  )}
+                </span>
               </Link>
             );
           })}
