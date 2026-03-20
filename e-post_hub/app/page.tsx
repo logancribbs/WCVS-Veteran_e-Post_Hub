@@ -304,21 +304,21 @@ export default function HomePage() {
                     flex flex-col overflow-hidden
                     transition-transform hover:scale-[1.025]
                     hover:ring-4 hover:ring-orange-300
-                    duration-300 w-full max-w-[360px] h-[495px]
+                    duration-300 w-full max-w-[350px] h-[485px]
                     after:absolute after:inset-0
-                    after:bg-[linear-gradient(135deg,rgba(255,255,255,0.22),rgba(255,255,255,0.08),transparent)]
+                    after:bg-[linear-gradient(180deg,rgba(255,255,255,0.20),rgba(255,255,255,0.06),transparent)]
                     after:pointer-events-none
                   "
                   style={{
-                    backgroundColor: theme.eventCardBackground,
-                    border: `3px solid ${theme.eventCardBorder}`,
+                    background: "linear-gradient(180deg, #1f5b3a 0%, #184a2f 100%)",
+                    border: "3px solid rgba(217, 236, 224, 0.18)",
                     boxShadow:
-                      "inset 0 1px 0 rgba(255,255,255,0.28), 0 12px 28px rgba(0,0,0,0.42)",
+                      "inset 0 1px 0 rgba(255,255,255,0.22), 0 12px 28px rgba(0,0,0,0.42)",
                   }}
                 >
                   <div
                     className="text-center text-xl font-semibold pt-4 pb-2 px-3"
-                    style={{ color: "#10281b" }}
+                    style={{ color: "#f4fbf7" }}
                   >
                     {event.title}
                   </div>
@@ -334,10 +334,10 @@ export default function HomePage() {
                   >
                     {event.flyer ? (
                       isPdfUrl(event.flyer) ? (
-                        <div className="w-full rounded-xl border bg-white/95 p-2 shadow-sm">
+                        <div className="w-full rounded-xl bg-white/96 p-2 shadow-sm">
                           <PdfViewer
                             fileUrl={event.flyer}
-                            containerHeight={315}
+                            containerHeight={310}
                             altText={buildFlyerAltText(event)}
                           />
                         </div>
@@ -345,12 +345,11 @@ export default function HomePage() {
                         <img
                           src={event.flyer}
                           alt={buildFlyerAltText(event)}
-                          className="w-full h-[320px] object-cover rounded-xl border shadow-sm bg-white/95"
-                          style={{ borderColor: "rgba(0,0,0,0.18)" }}
+                          className="w-full h-[315px] object-cover rounded-xl shadow-sm bg-white/96"
                         />
                       )
                     ) : (
-                      <div className="w-full h-[320px] bg-white/95 flex items-center justify-center text-gray-700 italic border rounded-xl shadow-sm">
+                      <div className="w-full h-[315px] bg-white/96 flex items-center justify-center text-gray-700 italic rounded-xl shadow-sm">
                         No Flyer Available
                       </div>
                     )}
@@ -359,7 +358,7 @@ export default function HomePage() {
                   <CardBody className="flex justify-between items-center p-4 text-center">
                     <div
                       className="text-base font-semibold"
-                      style={{ color: "#173526" }}
+                      style={{ color: "#eef8f2" }}
                     >
                       {formatDateRange(event.startDate, event.endDate)}
                     </div>
@@ -437,24 +436,24 @@ export default function HomePage() {
             className="
               relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-2xl border
               after:absolute after:inset-0
-              after:bg-[linear-gradient(135deg,rgba(255,255,255,0.22),rgba(255,255,255,0.08),transparent)]
+              after:bg-[linear-gradient(180deg,rgba(255,255,255,0.20),rgba(255,255,255,0.06),transparent)]
               after:pointer-events-none
             "
             style={{
-              backgroundColor: theme.eventCardBackground,
-              borderColor: theme.eventCardBorder,
+              background: "linear-gradient(180deg, #1f5b3a 0%, #184a2f 100%)",
+              borderColor: "rgba(217, 236, 224, 0.18)",
               boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.28), 0 20px 48px rgba(0,0,0,0.42)",
+                "inset 0 1px 0 rgba(255,255,255,0.22), 0 20px 48px rgba(0,0,0,0.42)",
             }}
           >
             <div
               className="relative z-10 w-full flex items-center justify-between px-5 py-4 border-b"
-              style={{ borderColor: "rgba(0,0,0,0.14)" }}
+              style={{ borderColor: "rgba(255,255,255,0.14)" }}
             >
               <h2
                 id="event-details-title"
                 className="text-2xl md:text-3xl font-semibold"
-                style={{ color: "#10281b" }}
+                style={{ color: "#f4fbf7" }}
               >
                 {selectedDetailEvent.title}
               </h2>
@@ -469,11 +468,11 @@ export default function HomePage() {
                   }, 0);
                 }}
                 aria-label="Close event details"
-                className="inline-flex items-center rounded-md px-4 py-2 text-base font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5"
+                className="inline-flex items-center rounded-md px-5 py-2.5 text-base font-bold shadow-md transition-all duration-200 hover:-translate-y-0.5"
                 style={{
-                  backgroundColor: theme.eventButtonBackground,
-                  color: theme.eventButtonText,
-                  border: `1px solid ${theme.eventButtonBorder}`,
+                  backgroundColor: "#f59e0b",
+                  color: "#1b1b1b",
+                  border: "2px solid #6b3f00",
                 }}
               >
                 Close
@@ -483,7 +482,7 @@ export default function HomePage() {
             <div className="relative z-10 grid max-h-[calc(90vh-74px)] grid-cols-1 gap-0 overflow-y-auto lg:grid-cols-[1fr_1fr]">
               <div
                 className="p-5 lg:p-6 flex items-center justify-center border-b lg:border-b-0 lg:border-r"
-                style={{ borderColor: "rgba(0,0,0,0.14)" }}
+                style={{ borderColor: "rgba(255,255,255,0.14)" }}
               >
                 {selectedDetailEvent.flyer ? (
                   <button
@@ -493,7 +492,7 @@ export default function HomePage() {
                     aria-label={`Open full flyer preview for ${selectedDetailEvent.title}`}
                   >
                     {isPdfUrl(selectedDetailEvent.flyer) ? (
-                      <div className="w-full rounded-xl border bg-white/94 p-3 shadow-sm">
+                      <div className="w-full rounded-xl bg-white/96 p-3 shadow-sm">
                         <PdfViewer
                           fileUrl={selectedDetailEvent.flyer}
                           containerHeight={430}
@@ -501,7 +500,7 @@ export default function HomePage() {
                         />
                       </div>
                     ) : (
-                      <div className="w-full rounded-xl border bg-white/94 p-3 shadow-sm">
+                      <div className="w-full rounded-xl bg-white/96 p-3 shadow-sm">
                         <img
                           src={selectedDetailEvent.flyer}
                           alt={buildFlyerAltText(selectedDetailEvent)}
@@ -511,7 +510,7 @@ export default function HomePage() {
                     )}
                   </button>
                 ) : (
-                  <div className="w-full h-[430px] rounded-xl border bg-white/94 flex items-center justify-center text-gray-700 italic">
+                  <div className="w-full h-[430px] rounded-xl bg-white/96 flex items-center justify-center text-gray-700 italic">
                     No Flyer Available
                   </div>
                 )}
@@ -519,7 +518,7 @@ export default function HomePage() {
 
               <div className="relative p-5 lg:p-6">
                 <div className="space-y-4">
-                  <div className="rounded-2xl border bg-white/88 p-4 shadow-sm">
+                  <div className="rounded-2xl bg-white/94 p-4 shadow-sm">
                     <div className="flex items-start gap-3">
                       <FileText
                         className="mt-0.5 h-5 w-5 shrink-0"
@@ -543,7 +542,7 @@ export default function HomePage() {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border bg-white/88 p-4 shadow-sm">
+                  <div className="rounded-2xl bg-white/94 p-4 shadow-sm">
                     <div className="space-y-4">
                       <div className="flex items-start gap-3">
                         <CalendarDays
@@ -644,7 +643,7 @@ export default function HomePage() {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border bg-white/88 p-4 shadow-sm">
+                  <div className="rounded-2xl bg-white/94 p-4 shadow-sm">
                     <p
                       className="text-base font-semibold"
                       style={{ color: "#10281b" }}
@@ -667,75 +666,78 @@ export default function HomePage() {
       )}
 
       {selectedPreviewEvent && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center px-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="event-preview-title"
-            className="
-              relative w-full max-w-6xl max-h-[92vh] overflow-hidden rounded-2xl border
-              transition-all duration-200 ease-out opacity-0 scale-95 animate-[fadeInScale_0.2s_ease-out_forwards]
-              after:absolute after:inset-0
-              after:bg-[linear-gradient(135deg,rgba(255,255,255,0.22),rgba(255,255,255,0.08),transparent)]
-              after:pointer-events-none
-            "
-            style={{
-              backgroundColor: theme.eventCardBackground,
-              borderColor: theme.eventCardBorder,
-              boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.28), 0 20px 48px rgba(0,0,0,0.42)",
-            }}
-          >
+        <div className="fixed inset-0 z-[60] bg-black/70 backdrop-blur-md animate-in fade-in duration-200 overflow-y-auto">
+          <div className="min-h-screen flex items-start justify-center px-4 py-6">
             <div
-              className="relative z-10 w-full flex items-center justify-between px-5 py-4 border-b"
-              style={{ borderColor: "rgba(0,0,0,0.14)" }}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="event-preview-title"
+              className="
+                relative w-full max-w-6xl rounded-2xl border
+                transition-all duration-200 ease-out opacity-0 scale-95 animate-[fadeInScale_0.2s_ease-out_forwards]
+                after:absolute after:inset-0
+                after:bg-[linear-gradient(180deg,rgba(255,255,255,0.20),rgba(255,255,255,0.06),transparent)]
+                after:pointer-events-none
+              "
+              style={{
+                background: "linear-gradient(180deg, #1f5b3a 0%, #184a2f 100%)",
+                borderColor: "rgba(217, 236, 224, 0.18)",
+                boxShadow:
+                  "inset 0 1px 0 rgba(255,255,255,0.22), 0 20px 48px rgba(0,0,0,0.42)",
+              }}
             >
-              <h2
-                id="event-preview-title"
-                className="text-2xl md:text-3xl font-semibold"
-                style={{ color: "#10281b" }}
+              <div
+                className="relative z-10 w-full flex items-center justify-between px-5 py-4 border-b"
+                style={{ borderColor: "rgba(255,255,255,0.14)" }}
               >
-                {selectedPreviewEvent.title}
-              </h2>
+                <h2
+                  id="event-preview-title"
+                  className="text-2xl md:text-3xl font-semibold"
+                  style={{ color: "#f4fbf7" }}
+                >
+                  {selectedPreviewEvent.title}
+                </h2>
 
-              <button
-                ref={previewCloseButtonRef}
-                type="button"
-                onClick={() => setSelectedPreviewEvent(null)}
-                aria-label="Close event preview"
-                className="inline-flex items-center rounded-md px-4 py-2 text-base font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5"
-                style={{
-                  backgroundColor: theme.eventButtonBackground,
-                  color: theme.eventButtonText,
-                  border: `1px solid ${theme.eventButtonBorder}`,
-                }}
-              >
-                Close
-              </button>
-            </div>
+                <button
+                  ref={previewCloseButtonRef}
+                  type="button"
+                  onClick={() => setSelectedPreviewEvent(null)}
+                  aria-label="Close event preview"
+                  className="inline-flex items-center rounded-md px-5 py-2.5 text-base font-bold shadow-md transition-all duration-200 hover:-translate-y-0.5"
+                  style={{
+                    backgroundColor: "#f59e0b",
+                    color: "#1b1b1b",
+                    border: "2px solid #6b3f00",
+                  }}
+                >
+                  Close
+                </button>
+              </div>
 
-            <div className="relative z-10 w-full overflow-y-auto p-5 flex items-center justify-center">
-              {selectedPreviewEvent.flyer ? (
-                isPdfUrl(selectedPreviewEvent.flyer) ? (
-                  <div className="w-full rounded-xl border bg-white/94 p-3 shadow-sm">
-                    <PdfViewer
-                      fileUrl={selectedPreviewEvent.flyer}
-                      containerHeight={650}
-                      altText={buildFlyerAltText(selectedPreviewEvent)}
-                    />
-                  </div>
+              <div className="relative z-10 w-full p-5 flex items-start justify-center">
+                {selectedPreviewEvent.flyer ? (
+                  isPdfUrl(selectedPreviewEvent.flyer) ? (
+                    <div className="w-full bg-white/96 p-3 rounded-xl shadow-sm">
+                      <PdfViewer
+                        fileUrl={selectedPreviewEvent.flyer}
+                        containerHeight={900}
+                        altText={buildFlyerAltText(selectedPreviewEvent)}
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-full bg-white/96 p-3 rounded-xl shadow-sm flex items-start justify-center">
+                      <img
+                        src={selectedPreviewEvent.flyer}
+                        alt={buildFlyerAltText(selectedPreviewEvent)}
+                        className="max-w-full h-auto w-auto object-contain rounded-lg"
+                        style={{ maxHeight: "none" }}
+                      />
+                    </div>
+                  )
                 ) : (
-                  <div className="w-full rounded-xl border bg-white/94 p-3 shadow-sm flex items-center justify-center">
-                    <img
-                      src={selectedPreviewEvent.flyer}
-                      alt={buildFlyerAltText(selectedPreviewEvent)}
-                      className="max-w-full max-h-[76vh] h-auto w-auto object-contain rounded-lg"
-                    />
-                  </div>
-                )
-              ) : (
-                <p className="text-gray-700 italic text-lg">No flyer available</p>
-              )}
+                  <p className="text-white text-lg italic">No flyer available</p>
+                )}
+              </div>
             </div>
           </div>
         </div>
