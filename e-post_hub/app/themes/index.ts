@@ -20,12 +20,10 @@ export function resolveAutoTheme(date = new Date()): LandingTheme {
   const month = date.getMonth() + 1;
   const day = date.getDate();
 
-  // Christmas: Dec 1 through Dec 31
   if (month === 12 && day >= 1) {
     return christmasTheme;
   }
 
-  // 4th of July: June 27 through July 7
   if ((month === 6 && day >= 27) || (month === 7 && day <= 7)) {
     return fourthOfJulyTheme;
   }
@@ -43,6 +41,7 @@ export function resolveThemeFromOverride(override: ThemeOverride): LandingTheme 
 
 export function useLandingTheme() {
   const [themeOverride, setThemeOverride] = useState<ThemeOverride>("auto");
+  const [themeExpiresAt, setThemeExpiresAt] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchThemeOverride() {
@@ -55,13 +54,33 @@ export function useLandingTheme() {
         if (typeof data.override === "string" && isValidThemeOverride(data.override)) {
           setThemeOverride(data.override);
         }
+
+        if (typeof data.expiresAt === "string" && data.expiresAt.trim()) {
+          setThemeExpiresAt(data.expiresAt);
+        } else {
+          setThemeExpiresAt(null);
+        }
       } catch {}
     }
 
     fetchThemeOverride();
   }, []);
 
-  const theme = useMemo(() => resolveThemeFromOverride(themeOverride), [themeOverride]);
+  const theme = useMemo(() => {
+    if (
+      (themeOverride === "christmas" || themeOverride === "fourthOfJuly") &&
+      themeExpiresAt
+    ) {
+      const expiresAt = new Date(themeExpiresAt);
+      const now = new Date();
+
+      if (!Number.isNaN(expiresAt.getTime()) && now.getTime() > expiresAt.getTime()) {
+        return resolveAutoTheme();
+      }
+    }
+
+    return resolveThemeFromOverride(themeOverride);
+  }, [themeOverride, themeExpiresAt]);
 
   return {
     theme,

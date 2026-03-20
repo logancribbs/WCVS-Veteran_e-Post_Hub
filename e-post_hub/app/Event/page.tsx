@@ -11,7 +11,7 @@ export default function EventPage() {
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const modalTriggerRef = useRef<HTMLButtonElement | null>(null);
 
-  // ✅ force admin ON for testing
+  // force admin ON for testing
   useEffect(() => {
     setIsAdmin(true);
   }, []);
@@ -66,7 +66,7 @@ export default function EventPage() {
     }, 0);
   }; // when the modal closes, focus should return to the button the user came from.
 
-  // ✅ delete event
+  //  delete event
   const handleDelete = async (eventId: string) => {
     if (!confirm("Delete this event? This cannot be undone.")) return;
 
@@ -137,7 +137,7 @@ export default function EventPage() {
                 {event.title || "Untitled Event"}
               </h2>
 
-              {/* ✅ Admin sees DELETE; user sees VIEW DETAILS */}
+              {/* Admin sees DELETE; user sees VIEW DETAILS */}
               {isAdmin ? (
                 <button
                   onClick={() => handleDelete(event.id)}
