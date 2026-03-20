@@ -3,13 +3,23 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { pdfjs } from "react-pdf";
 
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.mjs",
+  import.meta.url
+).toString();
 pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.js";
 
 interface PdfViewerProps {
   fileUrl: string;
   containerHeight?: number;
+  altText?: string;
 }
 
+export default function PdfPreview({
+  fileUrl,
+  containerHeight,
+  altText,
+}: PdfViewerProps) {
 export default function PdfViewer({ fileUrl, containerHeight }: PdfViewerProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [containerWidth, setContainerWidth] = useState<number>(0);
@@ -21,6 +31,9 @@ export default function PdfViewer({ fileUrl, containerHeight }: PdfViewerProps) 
   useEffect(() => {
     if (!containerRef.current) return;
 
+    const viewport = page.getViewport({ scale: 0.5 }); // scale for image size
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
     const el = containerRef.current;
     const update = () => setContainerWidth(el.getBoundingClientRect().width);
     update();
@@ -28,6 +41,10 @@ export default function PdfViewer({ fileUrl, containerHeight }: PdfViewerProps) 
     const ro = new ResizeObserver(() => update());
     ro.observe(el);
 
+      const imageUrl = canvas.toDataURL();
+      setThumbnail(imageUrl);
+    }
+  };
     return () => ro.disconnect();
   }, []);
 
