@@ -304,7 +304,7 @@ export default function HomePage() {
                     flex flex-col overflow-hidden
                     transition-transform hover:scale-[1.025]
                     hover:ring-4 hover:ring-orange-300
-                    duration-300 w-full max-w-[350px] h-[485px]
+                    duration-300 w-full max-w-[344px] h-[474px]
                     after:absolute after:inset-0
                     after:bg-[linear-gradient(180deg,rgba(255,255,255,0.20),rgba(255,255,255,0.06),transparent)]
                     after:pointer-events-none
@@ -337,7 +337,7 @@ export default function HomePage() {
                         <div className="w-full rounded-xl bg-white/96 p-2 shadow-sm">
                           <PdfViewer
                             fileUrl={event.flyer}
-                            containerHeight={335}
+                            containerHeight={328}
                             altText={buildFlyerAltText(event)}
                           />
                         </div>
@@ -345,19 +345,19 @@ export default function HomePage() {
                         <img
                           src={event.flyer}
                           alt={buildFlyerAltText(event)}
-                          className="w-full h-[340px] object-cover rounded-xl shadow-sm bg-white/96"
+                          className="w-full h-[332px] object-cover rounded-xl shadow-sm bg-white/96"
                         />
                       )
                     ) : (
-                      <div className="w-full h-[340px] bg-white/96 flex items-center justify-center text-gray-700 italic rounded-xl shadow-sm">
+                      <div className="w-full h-[332px] bg-white/96 flex items-center justify-center text-gray-700 italic rounded-xl shadow-sm">
                         No Flyer Available
                       </div>
                     )}
                   </button>
 
-                  <CardBody className="flex justify-between items-center p-4 text-center">
+                  <CardBody className="flex justify-between items-center px-4 pt-3 pb-4 text-center">
                     <div
-                      className="text-base font-semibold"
+                      className="text-[15px] font-semibold"
                       style={{ color: "#eef8f2" }}
                     >
                       {formatDateRange(event.startDate, event.endDate)}
@@ -495,10 +495,10 @@ export default function HomePage() {
                     aria-label={`Open full flyer preview for ${selectedDetailEvent.title}`}
                   >
                     {isPdfUrl(selectedDetailEvent.flyer) ? (
-                      <div className="w-full rounded-xl bg-white/96 p-3 shadow-sm">
+                      <div className="w-full h-[500px] rounded-xl bg-white/96 p-3 shadow-sm flex items-center justify-center">
                         <PdfViewer
                           fileUrl={selectedDetailEvent.flyer}
-                          containerHeight={500}
+                          containerHeight={470}
                           altText={buildFlyerAltText(selectedDetailEvent)}
                         />
                       </div>
