@@ -4,7 +4,7 @@ export const fourthOfJulyTheme: LandingTheme = {
   key: "fourthOfJuly",
   label: "4th of July",
 
-  heroBannerImage: "/july_4th.jpeg",
+  heroBannerImage: "/4th_2.jpeg",
   heroOverlayColor: "rgba(0, 0, 0, 0.12)",
   heroImageFit: "cover",
   heroImagePosition: "center center",
