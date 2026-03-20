@@ -355,7 +355,7 @@ export default function HomePage() {
                     )}
                   </button>
 
-                  <CardBody className="flex justify-between items-center px-4 pt-3 pb-4 text-center">
+                  <CardBody className="flex justify-between items-center px-4 pt-3 pb-4 text-center overflow-hidden">
                     <div
                       className="text-[15px] font-semibold"
                       style={{ color: "#eef8f2" }}
