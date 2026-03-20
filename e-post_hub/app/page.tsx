@@ -310,15 +310,15 @@ export default function HomePage() {
                     after:pointer-events-none
                   "
                   style={{
-                    background: "linear-gradient(180deg, #1f5b3a 0%, #184a2f 100%)",
-                    border: "3px solid rgba(217, 236, 224, 0.18)",
+                    backgroundColor: theme.eventCardBackground,
+                    border: `3px solid ${theme.eventCardBorder}`,
                     boxShadow:
                       "inset 0 1px 0 rgba(255,255,255,0.22), 0 12px 28px rgba(0,0,0,0.42)",
                   }}
                 >
                   <div
                     className="text-center text-xl font-semibold pt-4 pb-2 px-3"
-                    style={{ color: "#f4fbf7" }}
+                    style={{ color: theme.eventTitleColor }}
                   >
                     {event.title}
                   </div>
@@ -358,7 +358,7 @@ export default function HomePage() {
                   <CardBody className="flex justify-between items-center px-4 pt-3 pb-4 text-center overflow-hidden">
                     <div
                       className="text-[15px] font-semibold"
-                      style={{ color: "#eef8f2" }}
+                      style={{ color: theme.eventDateColor }}
                     >
                       {formatDateRange(event.startDate, event.endDate)}
                     </div>
@@ -440,8 +440,8 @@ export default function HomePage() {
               after:pointer-events-none
             "
             style={{
-              background: "linear-gradient(180deg, #1f5b3a 0%, #184a2f 100%)",
-              borderColor: "rgba(217, 236, 224, 0.18)",
+              backgroundColor: theme.eventCardBackground,
+              borderColor: theme.eventCardBorder,
               boxShadow:
                 "inset 0 1px 0 rgba(255,255,255,0.22), 0 20px 48px rgba(0,0,0,0.42)",
             }}
@@ -453,7 +453,7 @@ export default function HomePage() {
               <h2
                 id="event-details-title"
                 className="text-2xl md:text-3xl font-semibold"
-                style={{ color: "#f4fbf7" }}
+                style={{ color: theme.eventTitleColor }}
               >
                 {selectedDetailEvent.title}
               </h2>
@@ -525,18 +525,18 @@ export default function HomePage() {
                     <div className="flex items-start gap-3">
                       <FileText
                         className="mt-0.5 h-5 w-5 shrink-0"
-                        style={{ color: "#eef8f2" }}
+                        style={{ color: theme.eventDateColor }}
                       />
                       <div>
                         <p
                           className="text-lg font-semibold"
-                          style={{ color: "#f4fbf7" }}
+                          style={{ color: theme.eventTitleColor }}
                         >
                           Description
                         </p>
                         <p
                           className="mt-1 text-base leading-7"
-                          style={{ color: "#eef8f2" }}
+                          style={{ color: theme.eventDateColor }}
                         >
                           {selectedDetailEvent.description?.trim() ||
                             "No event description was provided."}
@@ -550,18 +550,18 @@ export default function HomePage() {
                       <div className="flex items-start gap-3">
                         <CalendarDays
                           className="mt-0.5 h-5 w-5 shrink-0"
-                          style={{ color: "#eef8f2" }}
+                          style={{ color: theme.eventDateColor }}
                         />
                         <div>
                           <p
                             className="text-base font-semibold"
-                            style={{ color: "#f4fbf7" }}
+                            style={{ color: theme.eventTitleColor }}
                           >
                             Date
                           </p>
                           <p
                             className="text-base leading-7"
-                            style={{ color: "#eef8f2" }}
+                            style={{ color: theme.eventDateColor }}
                           >
                             {formatDateRange(
                               selectedDetailEvent.startDate,
@@ -574,18 +574,18 @@ export default function HomePage() {
                       <div className="flex items-start gap-3">
                         <Clock
                           className="mt-0.5 h-5 w-5 shrink-0"
-                          style={{ color: "#eef8f2" }}
+                          style={{ color: theme.eventDateColor }}
                         />
                         <div>
                           <p
                             className="text-base font-semibold"
-                            style={{ color: "#f4fbf7" }}
+                            style={{ color: theme.eventTitleColor }}
                           >
                             Time
                           </p>
                           <p
                             className="text-base leading-7"
-                            style={{ color: "#eef8f2" }}
+                            style={{ color: theme.eventDateColor }}
                           >
                             {formatTimeRange(
                               selectedDetailEvent.startTime,
@@ -599,18 +599,18 @@ export default function HomePage() {
                         <div className="flex items-start gap-3">
                           <MapPin
                             className="mt-0.5 h-5 w-5 shrink-0"
-                            style={{ color: "#eef8f2" }}
+                            style={{ color: theme.eventDateColor }}
                           />
                           <div>
                             <p
                               className="text-base font-semibold"
-                              style={{ color: "#f4fbf7" }}
+                              style={{ color: theme.eventTitleColor }}
                             >
                               Location
                             </p>
                             <p
                               className="text-base leading-7"
-                              style={{ color: "#eef8f2" }}
+                              style={{ color: theme.eventDateColor }}
                             >
                               {selectedDetailEvent.address}
                             </p>
@@ -622,12 +622,12 @@ export default function HomePage() {
                         <div className="flex items-start gap-3">
                           <ExternalLink
                             className="mt-0.5 h-5 w-5 shrink-0"
-                            style={{ color: "#eef8f2" }}
+                            style={{ color: theme.eventDateColor }}
                           />
                           <div>
                             <p
                               className="text-base font-semibold"
-                              style={{ color: "#f4fbf7" }}
+                              style={{ color: theme.eventTitleColor }}
                             >
                               Website
                             </p>
@@ -636,7 +636,7 @@ export default function HomePage() {
                               target="_blank"
                               rel="noopener noreferrer"
                               className="text-base underline underline-offset-4"
-                              style={{ color: "#eef8f2" }}
+                              style={{ color: theme.eventDateColor }}
                             >
                               Visit event website
                             </a>
@@ -649,13 +649,13 @@ export default function HomePage() {
                   <div className="rounded-2xl bg-white/12 p-4 shadow-sm">
                     <p
                       className="text-base font-semibold"
-                      style={{ color: "#f4fbf7" }}
+                      style={{ color: theme.eventTitleColor }}
                     >
                       Organizer
                     </p>
                     <p
                       className="mt-1 text-base leading-7"
-                      style={{ color: "#eef8f2" }}
+                      style={{ color: theme.eventDateColor }}
                     >
                       {selectedDetailEvent.createdBy?.name ||
                         "Whitman County Veteran Services"}
@@ -683,8 +683,8 @@ export default function HomePage() {
                 after:pointer-events-none
               "
               style={{
-                background: "linear-gradient(180deg, #1f5b3a 0%, #184a2f 100%)",
-                borderColor: "rgba(217, 236, 224, 0.18)",
+                backgroundColor: theme.eventCardBackground,
+                borderColor: theme.eventCardBorder,
                 boxShadow:
                   "inset 0 1px 0 rgba(255,255,255,0.22), 0 20px 48px rgba(0,0,0,0.42)",
               }}
@@ -696,7 +696,7 @@ export default function HomePage() {
                 <h2
                   id="event-preview-title"
                   className="text-2xl md:text-3xl font-semibold"
-                  style={{ color: "#f4fbf7" }}
+                  style={{ color: theme.eventTitleColor }}
                 >
                   {selectedPreviewEvent.title}
                 </h2>
