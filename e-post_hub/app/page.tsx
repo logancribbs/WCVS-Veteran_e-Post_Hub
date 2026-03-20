@@ -292,32 +292,33 @@ export default function HomePage() {
           {filteredEvents.length === 0 ? (
             <p className="text-center text-lg">No events available.</p>
           ) : (
-            <div className="grid gap-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+            <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
               {filteredEvents.map((event) => (
                 <Card
                   key={event.id}
                   className="
                     relative
                     rounded-2xl
-                    shadow-[0_12px_28px_rgba(0,0,0,0.32)]
-                    hover:shadow-[0_16px_36px_rgba(0,0,0,0.38)]
+                    shadow-[0_12px_28px_rgba(0,0,0,0.42)]
+                    hover:shadow-[0_16px_36px_rgba(0,0,0,0.48)]
                     flex flex-col overflow-hidden
-                    transition-transform hover:scale-[1.03]
-                    hover:ring-4 hover:ring-emerald-200/70
-                    duration-300 w-full max-w-[380px] h-[520px]
+                    transition-transform hover:scale-[1.025]
+                    hover:ring-4 hover:ring-orange-300
+                    duration-300 w-full max-w-[360px] h-[495px]
                     after:absolute after:inset-0
                     after:bg-[linear-gradient(135deg,rgba(255,255,255,0.22),rgba(255,255,255,0.08),transparent)]
                     after:pointer-events-none
                   "
                   style={{
-                    background:
-                      "linear-gradient(180deg, rgba(241,252,246,0.98) 0%, rgba(220,243,230,0.97) 52%, rgba(204,233,216,0.97) 100%)",
-                    border: "2px solid rgba(67, 120, 89, 0.55)",
+                    backgroundColor: theme.eventCardBackground,
+                    border: `3px solid ${theme.eventCardBorder}`,
+                    boxShadow:
+                      "inset 0 1px 0 rgba(255,255,255,0.28), 0 12px 28px rgba(0,0,0,0.42)",
                   }}
                 >
                   <div
                     className="text-center text-xl font-semibold pt-4 pb-2 px-3"
-                    style={{ color: "#133222" }}
+                    style={{ color: "#10281b" }}
                   >
                     {event.title}
                   </div>
@@ -333,10 +334,10 @@ export default function HomePage() {
                   >
                     {event.flyer ? (
                       isPdfUrl(event.flyer) ? (
-                        <div className="w-full rounded-xl border bg-white p-2 shadow-sm">
+                        <div className="w-full rounded-xl border bg-white/95 p-2 shadow-sm">
                           <PdfViewer
                             fileUrl={event.flyer}
-                            containerHeight={340}
+                            containerHeight={315}
                             altText={buildFlyerAltText(event)}
                           />
                         </div>
@@ -344,15 +345,12 @@ export default function HomePage() {
                         <img
                           src={event.flyer}
                           alt={buildFlyerAltText(event)}
-                          className="w-full h-[350px] object-cover rounded-xl border shadow-sm bg-white"
-                          style={{ borderColor: "rgba(67, 120, 89, 0.3)" }}
+                          className="w-full h-[320px] object-cover rounded-xl border shadow-sm bg-white/95"
+                          style={{ borderColor: "rgba(0,0,0,0.18)" }}
                         />
                       )
                     ) : (
-                      <div
-                        className="w-full h-[350px] bg-white flex items-center justify-center text-gray-700 italic border rounded-xl shadow-sm"
-                        style={{ borderColor: "rgba(67, 120, 89, 0.3)" }}
-                      >
+                      <div className="w-full h-[320px] bg-white/95 flex items-center justify-center text-gray-700 italic border rounded-xl shadow-sm">
                         No Flyer Available
                       </div>
                     )}
@@ -360,8 +358,8 @@ export default function HomePage() {
 
                   <CardBody className="flex justify-between items-center p-4 text-center">
                     <div
-                      className="text-lg font-medium"
-                      style={{ color: "#1d4630" }}
+                      className="text-base font-semibold"
+                      style={{ color: "#173526" }}
                     >
                       {formatDateRange(event.startDate, event.endDate)}
                     </div>
@@ -383,7 +381,7 @@ export default function HomePage() {
                       }
                       className={`
                         group inline-flex items-center justify-center gap-2
-                        px-16 py-2.5 rounded-xl
+                        px-14 py-2.5 rounded-xl
                         text-sm font-semibold tracking-wide
                         transition-all duration-200
                         shadow-sm hover:shadow-md
@@ -399,8 +397,8 @@ export default function HomePage() {
                               focus-visible:ring-red-600
                             `
                             : `
-                              hover:brightness-95
-                              focus-visible:ring-emerald-700
+                              hover:bg-white
+                              focus-visible:ring-orange-300
                             `
                         }
                       `}
@@ -408,9 +406,9 @@ export default function HomePage() {
                         isAdmin
                           ? undefined
                           : {
-                              backgroundColor: "#1f5b3a",
-                              color: "#ffffff",
-                              border: "1px solid #18472d",
+                              backgroundColor: theme.eventButtonBackground,
+                              color: theme.eventButtonText,
+                              border: `1px solid ${theme.eventButtonBorder}`,
                             }
                       }
                     >
@@ -418,7 +416,7 @@ export default function HomePage() {
                       {!isAdmin && (
                         <ArrowRight
                           className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
-                          style={{ color: "#ffffff" }}
+                          style={{ color: theme.eventButtonText }}
                         />
                       )}
                     </Button>
@@ -436,27 +434,27 @@ export default function HomePage() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="event-details-title"
-            className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-2xl shadow-2xl border"
+            className="
+              relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-2xl border
+              after:absolute after:inset-0
+              after:bg-[linear-gradient(135deg,rgba(255,255,255,0.22),rgba(255,255,255,0.08),transparent)]
+              after:pointer-events-none
+            "
             style={{
-              backgroundColor: "rgba(255,255,255,0.94)",
-              backgroundImage: theme.pageBackgroundImage,
-              backgroundRepeat: theme.pageBackgroundRepeat,
-              backgroundSize: theme.pageBackgroundSize,
-              backgroundPosition: theme.pageBackgroundPosition,
-              borderColor: "rgba(20, 51, 34, 0.18)",
+              backgroundColor: theme.eventCardBackground,
+              borderColor: theme.eventCardBorder,
+              boxShadow:
+                "inset 0 1px 0 rgba(255,255,255,0.28), 0 20px 48px rgba(0,0,0,0.42)",
             }}
           >
             <div
-              className="w-full flex items-center justify-between px-5 py-4 border-b backdrop-blur-sm"
-              style={{
-                borderColor: "rgba(20, 51, 34, 0.18)",
-                backgroundColor: "rgba(255,255,255,0.78)",
-              }}
+              className="relative z-10 w-full flex items-center justify-between px-5 py-4 border-b"
+              style={{ borderColor: "rgba(0,0,0,0.14)" }}
             >
               <h2
                 id="event-details-title"
-                className="text-xl md:text-2xl font-semibold"
-                style={{ color: "#163624" }}
+                className="text-2xl md:text-3xl font-semibold"
+                style={{ color: "#10281b" }}
               >
                 {selectedDetailEvent.title}
               </h2>
@@ -471,21 +469,21 @@ export default function HomePage() {
                   }, 0);
                 }}
                 aria-label="Close event details"
-                className="inline-flex items-center rounded-md px-4 py-2 text-sm font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5"
+                className="inline-flex items-center rounded-md px-4 py-2 text-base font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5"
                 style={{
-                  backgroundColor: "#1f5b3a",
-                  color: "#ffffff",
-                  border: "1px solid #18472d",
+                  backgroundColor: theme.eventButtonBackground,
+                  color: theme.eventButtonText,
+                  border: `1px solid ${theme.eventButtonBorder}`,
                 }}
               >
                 Close
               </button>
             </div>
 
-            <div className="grid max-h-[calc(90vh-74px)] grid-cols-1 gap-0 overflow-y-auto lg:grid-cols-[1.02fr_1fr]">
+            <div className="relative z-10 grid max-h-[calc(90vh-74px)] grid-cols-1 gap-0 overflow-y-auto lg:grid-cols-[1fr_1fr]">
               <div
                 className="p-5 lg:p-6 flex items-center justify-center border-b lg:border-b-0 lg:border-r"
-                style={{ borderColor: "rgba(20, 51, 34, 0.18)" }}
+                style={{ borderColor: "rgba(0,0,0,0.14)" }}
               >
                 {selectedDetailEvent.flyer ? (
                   <button
@@ -495,12 +493,7 @@ export default function HomePage() {
                     aria-label={`Open full flyer preview for ${selectedDetailEvent.title}`}
                   >
                     {isPdfUrl(selectedDetailEvent.flyer) ? (
-                      <div
-                        className="w-full rounded-xl bg-white/96 p-3 shadow-sm"
-                        style={{
-                          border: "1px solid rgba(20, 51, 34, 0.16)",
-                        }}
-                      >
+                      <div className="w-full rounded-xl border bg-white/94 p-3 shadow-sm">
                         <PdfViewer
                           fileUrl={selectedDetailEvent.flyer}
                           containerHeight={430}
@@ -508,56 +501,40 @@ export default function HomePage() {
                         />
                       </div>
                     ) : (
-                      <div
-                        className="w-full rounded-xl bg-white/96 p-3 shadow-sm"
-                        style={{
-                          border: "1px solid rgba(20, 51, 34, 0.16)",
-                        }}
-                      >
+                      <div className="w-full rounded-xl border bg-white/94 p-3 shadow-sm">
                         <img
                           src={selectedDetailEvent.flyer}
                           alt={buildFlyerAltText(selectedDetailEvent)}
-                          className="w-full h-[430px] object-contain rounded-lg"
+                          className="w-full max-h-[430px] h-auto object-contain rounded-lg"
                         />
                       </div>
                     )}
                   </button>
                 ) : (
-                  <div
-                    className="w-full h-[430px] rounded-xl bg-white/96 flex items-center justify-center text-gray-700 italic"
-                    style={{
-                      border: "1px solid rgba(20, 51, 34, 0.16)",
-                    }}
-                  >
+                  <div className="w-full h-[430px] rounded-xl border bg-white/94 flex items-center justify-center text-gray-700 italic">
                     No Flyer Available
                   </div>
                 )}
               </div>
 
-              <div className="p-5 lg:p-6">
+              <div className="relative p-5 lg:p-6">
                 <div className="space-y-4">
-                  <div
-                    className="rounded-2xl p-4 backdrop-blur-sm"
-                    style={{
-                      backgroundColor: "rgba(255,255,255,0.82)",
-                      border: "1px solid rgba(20, 51, 34, 0.14)",
-                    }}
-                  >
+                  <div className="rounded-2xl border bg-white/88 p-4 shadow-sm">
                     <div className="flex items-start gap-3">
                       <FileText
                         className="mt-0.5 h-5 w-5 shrink-0"
-                        style={{ color: "#1f5b3a" }}
+                        style={{ color: "#173526" }}
                       />
                       <div>
                         <p
-                          className="text-base font-semibold"
-                          style={{ color: "#163624" }}
+                          className="text-lg font-semibold"
+                          style={{ color: "#10281b" }}
                         >
                           Description
                         </p>
                         <p
-                          className="mt-1 text-sm leading-6"
-                          style={{ color: "#254333" }}
+                          className="mt-1 text-base leading-7"
+                          style={{ color: "#173526" }}
                         >
                           {selectedDetailEvent.description?.trim() ||
                             "No event description was provided."}
@@ -566,29 +543,23 @@ export default function HomePage() {
                     </div>
                   </div>
 
-                  <div
-                    className="rounded-2xl p-4 backdrop-blur-sm"
-                    style={{
-                      backgroundColor: "rgba(255,255,255,0.82)",
-                      border: "1px solid rgba(20, 51, 34, 0.14)",
-                    }}
-                  >
+                  <div className="rounded-2xl border bg-white/88 p-4 shadow-sm">
                     <div className="space-y-4">
                       <div className="flex items-start gap-3">
                         <CalendarDays
                           className="mt-0.5 h-5 w-5 shrink-0"
-                          style={{ color: "#1f5b3a" }}
+                          style={{ color: "#173526" }}
                         />
                         <div>
                           <p
-                            className="text-sm font-semibold"
-                            style={{ color: "#163624" }}
+                            className="text-base font-semibold"
+                            style={{ color: "#10281b" }}
                           >
                             Date
                           </p>
                           <p
-                            className="text-sm leading-6"
-                            style={{ color: "#254333" }}
+                            className="text-base leading-7"
+                            style={{ color: "#173526" }}
                           >
                             {formatDateRange(
                               selectedDetailEvent.startDate,
@@ -601,18 +572,18 @@ export default function HomePage() {
                       <div className="flex items-start gap-3">
                         <Clock
                           className="mt-0.5 h-5 w-5 shrink-0"
-                          style={{ color: "#1f5b3a" }}
+                          style={{ color: "#173526" }}
                         />
                         <div>
                           <p
-                            className="text-sm font-semibold"
-                            style={{ color: "#163624" }}
+                            className="text-base font-semibold"
+                            style={{ color: "#10281b" }}
                           >
                             Time
                           </p>
                           <p
-                            className="text-sm leading-6"
-                            style={{ color: "#254333" }}
+                            className="text-base leading-7"
+                            style={{ color: "#173526" }}
                           >
                             {formatTimeRange(
                               selectedDetailEvent.startTime,
@@ -626,18 +597,18 @@ export default function HomePage() {
                         <div className="flex items-start gap-3">
                           <MapPin
                             className="mt-0.5 h-5 w-5 shrink-0"
-                            style={{ color: "#1f5b3a" }}
+                            style={{ color: "#173526" }}
                           />
                           <div>
                             <p
-                              className="text-sm font-semibold"
-                              style={{ color: "#163624" }}
+                              className="text-base font-semibold"
+                              style={{ color: "#10281b" }}
                             >
                               Location
                             </p>
                             <p
-                              className="text-sm leading-6"
-                              style={{ color: "#254333" }}
+                              className="text-base leading-7"
+                              style={{ color: "#173526" }}
                             >
                               {selectedDetailEvent.address}
                             </p>
@@ -649,12 +620,12 @@ export default function HomePage() {
                         <div className="flex items-start gap-3">
                           <ExternalLink
                             className="mt-0.5 h-5 w-5 shrink-0"
-                            style={{ color: "#1f5b3a" }}
+                            style={{ color: "#173526" }}
                           />
                           <div>
                             <p
-                              className="text-sm font-semibold"
-                              style={{ color: "#163624" }}
+                              className="text-base font-semibold"
+                              style={{ color: "#10281b" }}
                             >
                               Website
                             </p>
@@ -662,8 +633,8 @@ export default function HomePage() {
                               href={selectedDetailEvent.website}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-sm underline underline-offset-4"
-                              style={{ color: "#1f5b3a" }}
+                              className="text-base underline underline-offset-4"
+                              style={{ color: "#173526" }}
                             >
                               Visit event website
                             </a>
@@ -673,22 +644,16 @@ export default function HomePage() {
                     </div>
                   </div>
 
-                  <div
-                    className="rounded-2xl p-4 backdrop-blur-sm"
-                    style={{
-                      backgroundColor: "rgba(255,255,255,0.82)",
-                      border: "1px solid rgba(20, 51, 34, 0.14)",
-                    }}
-                  >
+                  <div className="rounded-2xl border bg-white/88 p-4 shadow-sm">
                     <p
-                      className="text-sm font-semibold"
-                      style={{ color: "#163624" }}
+                      className="text-base font-semibold"
+                      style={{ color: "#10281b" }}
                     >
                       Organizer
                     </p>
                     <p
-                      className="mt-1 text-sm leading-6"
-                      style={{ color: "#254333" }}
+                      className="mt-1 text-base leading-7"
+                      style={{ color: "#173526" }}
                     >
                       {selectedDetailEvent.createdBy?.name ||
                         "Whitman County Veteran Services"}
@@ -707,27 +672,28 @@ export default function HomePage() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="event-preview-title"
-            className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-2xl shadow-2xl border transition-all duration-200 ease-out opacity-0 scale-95 animate-[fadeInScale_0.2s_ease-out_forwards]"
+            className="
+              relative w-full max-w-6xl max-h-[92vh] overflow-hidden rounded-2xl border
+              transition-all duration-200 ease-out opacity-0 scale-95 animate-[fadeInScale_0.2s_ease-out_forwards]
+              after:absolute after:inset-0
+              after:bg-[linear-gradient(135deg,rgba(255,255,255,0.22),rgba(255,255,255,0.08),transparent)]
+              after:pointer-events-none
+            "
             style={{
-              backgroundColor: "rgba(255,255,255,0.94)",
-              backgroundImage: theme.pageBackgroundImage,
-              backgroundRepeat: theme.pageBackgroundRepeat,
-              backgroundSize: theme.pageBackgroundSize,
-              backgroundPosition: theme.pageBackgroundPosition,
-              borderColor: "rgba(20, 51, 34, 0.18)",
+              backgroundColor: theme.eventCardBackground,
+              borderColor: theme.eventCardBorder,
+              boxShadow:
+                "inset 0 1px 0 rgba(255,255,255,0.28), 0 20px 48px rgba(0,0,0,0.42)",
             }}
           >
             <div
-              className="w-full flex items-center justify-between px-5 py-4 border-b backdrop-blur-sm"
-              style={{
-                borderColor: "rgba(20, 51, 34, 0.18)",
-                backgroundColor: "rgba(255,255,255,0.78)",
-              }}
+              className="relative z-10 w-full flex items-center justify-between px-5 py-4 border-b"
+              style={{ borderColor: "rgba(0,0,0,0.14)" }}
             >
               <h2
                 id="event-preview-title"
-                className="text-xl md:text-2xl font-semibold"
-                style={{ color: "#163624" }}
+                className="text-2xl md:text-3xl font-semibold"
+                style={{ color: "#10281b" }}
               >
                 {selectedPreviewEvent.title}
               </h2>
@@ -737,42 +703,33 @@ export default function HomePage() {
                 type="button"
                 onClick={() => setSelectedPreviewEvent(null)}
                 aria-label="Close event preview"
-                className="inline-flex items-center rounded-md px-4 py-2 text-sm font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5"
+                className="inline-flex items-center rounded-md px-4 py-2 text-base font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5"
                 style={{
-                  backgroundColor: "#1f5b3a",
-                  color: "#ffffff",
-                  border: "1px solid #18472d",
+                  backgroundColor: theme.eventButtonBackground,
+                  color: theme.eventButtonText,
+                  border: `1px solid ${theme.eventButtonBorder}`,
                 }}
               >
                 Close
               </button>
             </div>
-            <div className="w-full overflow-y-auto p-5 flex justify-center">
+
+            <div className="relative z-10 w-full overflow-y-auto p-5 flex items-center justify-center">
               {selectedPreviewEvent.flyer ? (
                 isPdfUrl(selectedPreviewEvent.flyer) ? (
-                  <div
-                    className="w-full rounded-xl bg-white/96 p-3 shadow-sm"
-                    style={{
-                      border: "1px solid rgba(20, 51, 34, 0.16)",
-                    }}
-                  >
+                  <div className="w-full rounded-xl border bg-white/94 p-3 shadow-sm">
                     <PdfViewer
                       fileUrl={selectedPreviewEvent.flyer}
-                      containerHeight={700}
+                      containerHeight={650}
                       altText={buildFlyerAltText(selectedPreviewEvent)}
                     />
                   </div>
                 ) : (
-                  <div
-                    className="w-full rounded-xl bg-white/96 p-3 shadow-sm"
-                    style={{
-                      border: "1px solid rgba(20, 51, 34, 0.16)",
-                    }}
-                  >
+                  <div className="w-full rounded-xl border bg-white/94 p-3 shadow-sm flex items-center justify-center">
                     <img
                       src={selectedPreviewEvent.flyer}
                       alt={buildFlyerAltText(selectedPreviewEvent)}
-                      className="w-full h-[700px] object-contain rounded-lg"
+                      className="max-w-full max-h-[76vh] h-auto w-auto object-contain rounded-lg"
                     />
                   </div>
                 )
