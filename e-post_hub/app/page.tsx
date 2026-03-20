@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react"; // useRef - remembers which button opened the modal
+import { useEffect, useRef, useState } from "react";
 import { Button, Card, CardBody } from "@nextui-org/react";
 import jwt from "jsonwebtoken";
 import BottomBar from "./Components/BottomBar/BottomBar";
@@ -43,6 +43,8 @@ type Event = {
 
 export default function HomePage() {
   const { theme, themeOverride, setThemeOverride } = useLandingTheme();
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+  const modalTriggerRef = useRef<HTMLButtonElement | null>(null);
 
   function isPdfUrl(url?: string | null) {
     if (!url) return false;
@@ -171,13 +173,12 @@ export default function HomePage() {
     fetchApprovedEvents();
   }, []);
 
-  const handleCloseModal = () => 
-  {
+  const handleCloseModal = () => {
     setSelectedEvent(null);
     setTimeout(() => {
-      modalTriggerRef.current?.focus()
+      modalTriggerRef.current?.focus();
     }, 0);
-  } // When the model closes, the keyboard user should land back on the button they originally used.
+  };
 
   useEffect(() => {
     setFilteredEvents(
@@ -185,10 +186,23 @@ export default function HomePage() {
     );
   }, [searchQuery, events]);
 
+  useEffect(() => {
+    if (!selectedEvent) return;
+
+    closeButtonRef.current?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        handleCloseModal();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [selectedEvent]); // Does two things: 1. moves focus into the modal when it opens 2. allow user to press escape to close it.
+  }, [selectedEvent]);
 
   const formatDateRange = (startDate?: string, endDate?: string) => {
     if (!startDate) return "";
@@ -269,9 +283,15 @@ export default function HomePage() {
                     {event.title}
                   </div>
 
-                  <div
-                    className="flex justify-center items-center cursor-pointer px-3"
-                    onClick={() => setSelectedEvent(event)}
+                  <button
+                    type="button"
+                    className="flex justify-center items-center cursor-pointer px-3 bg-transparent border-0"
+                    onClick={() => {
+                      modalTriggerRef.current =
+                        document.activeElement as HTMLButtonElement | null;
+                      setSelectedEvent(event);
+                    }}
+                    aria-label={`Open flyer preview for ${event.title}`}
                   >
                     {event.flyer ? (
                       isPdfUrl(event.flyer) ? (
@@ -279,6 +299,7 @@ export default function HomePage() {
                           <PdfViewer
                             fileUrl={event.flyer}
                             containerHeight={340}
+                            altText={`${event.title} flyer preview`}
                           />
                         </div>
                       ) : (
@@ -364,61 +385,58 @@ export default function HomePage() {
       </div>
 
       {selectedEvent && (
-      <div className="fixed inset-0 z-50 flex items-center justify-center px-4
-                bg-black/60 backdrop-blur-md
-                animate-in fade-in duration-200">
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="event-preview-title"
-          className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-2xl
-           transition-all duration-200 ease-out
-           opacity-0 scale-95 animate-[fadeInScale_0.2s_ease-out_forwards]"
-        >
-          <div className="w-full flex items-center justify-between px-5 py-4 border-b border-slate-200">
-            <h2
-              id="event-preview-title"
-              className="text-xl md:text-2xl font-semibold text-gray-900"
-            >
-              {selectedEvent.title}
-            </h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-200">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="event-preview-title"
+            className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-2xl transition-all duration-200 ease-out opacity-0 scale-95 animate-[fadeInScale_0.2s_ease-out_forwards]"
+          >
+            <div className="w-full flex items-center justify-between px-5 py-4 border-b border-slate-200">
+              <h2
+                id="event-preview-title"
+                className="text-xl md:text-2xl font-semibold text-gray-900"
+              >
+                {selectedEvent.title}
+              </h2>
 
-            <button
-              ref={closeButtonRef}
-              type="button"
-              onClick={handleCloseModal}
-              aria-label="Close event preview"
-              className="inline-flex items-center rounded-md bg-[#243560] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#1d2b4d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-700 focus-visible:outline-offset-2"
-            >
-              Close
-            </button>
-          </div>
-          <div className="w-full overflow-y-auto bg-slate-50 p-5 flex justify-center">
-            {selectedEvent.flyer ? (
-              isPdfUrl(selectedEvent.flyer) ? (
-                <PdfViewer
-                  fileUrl={selectedEvent.flyer}
-                  containerHeight={700}
-                  altText={`${selectedEvent.title} flyer preview`}
-                />
-              ) : (
-                <div className="w-full rounded-xl border-2 border-black/10 bg-white p-2 shadow-sm">
-                  <img
-                    src={selectedEvent.flyer}
-                    alt="Flyer"
-                    className="w-full h-[700px] object-contain rounded-lg"
+              <button
+                ref={closeButtonRef}
+                type="button"
+                onClick={handleCloseModal}
+                aria-label="Close event preview"
+                className="inline-flex items-center rounded-md bg-[#243560] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#1d2b4d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-700 focus-visible:outline-offset-2"
+              >
+                Close
+              </button>
+            </div>
+            <div className="w-full overflow-y-auto bg-slate-50 p-5 flex justify-center">
+              {selectedEvent.flyer ? (
+                isPdfUrl(selectedEvent.flyer) ? (
+                  <PdfViewer
+                    fileUrl={selectedEvent.flyer}
+                    containerHeight={700}
+                    altText={`${selectedEvent.title} flyer preview`}
                   />
-                </div>
-              )
-            ) : (
-              <p className="text-gray-600 italic text-lg">No flyer available</p>
-            )}
+                ) : (
+                  <div className="w-full rounded-xl border-2 border-black/10 bg-white p-2 shadow-sm">
+                    <img
+                      src={selectedEvent.flyer}
+                      alt="Flyer"
+                      className="w-full h-[700px] object-contain rounded-lg"
+                    />
+                  </div>
+                )
+              ) : (
+                <p className="text-gray-600 italic text-lg">No flyer available</p>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    )}
+      )}
 
       <BottomBar />
     </div>
   );
 }
+

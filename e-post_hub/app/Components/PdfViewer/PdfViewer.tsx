@@ -3,10 +3,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { pdfjs } from "react-pdf";
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url
-).toString();
 pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.js";
 
 interface PdfViewerProps {
@@ -15,12 +11,11 @@ interface PdfViewerProps {
   altText?: string;
 }
 
-export default function PdfPreview({
+export default function PdfViewer({
   fileUrl,
   containerHeight,
   altText,
 }: PdfViewerProps) {
-export default function PdfViewer({ fileUrl, containerHeight }: PdfViewerProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [containerWidth, setContainerWidth] = useState<number>(0);
   const [thumbnail, setThumbnail] = useState<string | null>(null);
@@ -31,20 +26,14 @@ export default function PdfViewer({ fileUrl, containerHeight }: PdfViewerProps) 
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const viewport = page.getViewport({ scale: 0.5 }); // scale for image size
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d");
     const el = containerRef.current;
     const update = () => setContainerWidth(el.getBoundingClientRect().width);
+
     update();
 
     const ro = new ResizeObserver(() => update());
     ro.observe(el);
 
-      const imageUrl = canvas.toDataURL();
-      setThumbnail(imageUrl);
-    }
-  };
     return () => ro.disconnect();
   }, []);
 
@@ -63,12 +52,9 @@ export default function PdfViewer({ fileUrl, containerHeight }: PdfViewerProps) 
         const page = await pdf.getPage(1);
 
         const vp1 = page.getViewport({ scale: 1 });
-
         const containScale = Math.min(boxW / vp1.width, boxH / vp1.height);
-
         const dpr =
           typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
-
         const renderScale = containScale * dpr;
         const viewport = page.getViewport({ scale: renderScale });
 
@@ -114,14 +100,13 @@ export default function PdfViewer({ fileUrl, containerHeight }: PdfViewerProps) 
       {thumbnail ? (
         <img
           src={thumbnail}
-          alt="PDF Preview"
+          alt={altText || "PDF Preview"}
           style={{
             maxWidth: "100%",
             maxHeight: "100%",
             width: "auto",
             height: "auto",
             display: "block",
-
             border: "2px solid rgba(0, 0, 0, 0.65)",
             borderRadius: "6px",
           }}
