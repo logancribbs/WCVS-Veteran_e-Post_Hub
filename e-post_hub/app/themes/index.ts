@@ -34,12 +34,10 @@ export function resolveAutoTheme(date = new Date()): LandingTheme {
   const month = date.getMonth() + 1;
   const day = date.getDate();
 
-  // Veterans Day FIRST (specific window)
   if (month === 11 && day >= 8 && day <= 14) {
     return veteransDayTheme;
   }
 
-  // Thanksgiving AFTER (rest of November)
   if (month === 11) {
     return thanksgivingTheme;
   }
@@ -64,7 +62,9 @@ export function resolveThemeFromOverride(override: ThemeOverride): LandingTheme 
     return resolveAutoTheme();
   }
 
-  return landingThemes[override];
+  const theme = landingThemes[override];
+
+  return theme ? theme : defaultTheme;
 }
 
 export function useLandingTheme() {
