@@ -36,34 +36,43 @@ export async function POST(req: NextRequest) {
       latitude,
       longitude,
       eventOccurrences,
-      time,
-      organizer,
     } = await req.json();
 
+    // Geocode if needed
     let resolvedLatitude = latitude;
     let resolvedLongitude = longitude;
 
     if (address && (!latitude || !longitude)) {
       try {
         const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-        if (apiKey) {
+        if (!apiKey) {
+          console.warn("Warning: GOOGLE_MAPS_API_KEY is missing. Proceeding without geolocation.");
+        } else {
           const geoUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
           const response = await fetch(geoUrl);
           const geoData = await response.json();
           if (geoData.status === "OK" && geoData.results.length > 0) {
             resolvedLatitude = geoData.results[0].geometry.location.lat;
             resolvedLongitude = geoData.results[0].geometry.location.lng;
+          } else {
+            console.warn("Warning: Geolocation lookup failed. Proceeding without coordinates.");
           }
         }
       } catch (error) {
         console.error("Error fetching geolocation:", error);
+        console.warn("Proceeding without coordinates due to geolocation failure.");
       }
     }
 
+    // Require title or flyer
     if (!title && !flyer) {
       return NextResponse.json({ message: 'Either title or flyer is required' }, { status: 400 });
     }
 
+    // Force APPROVED so it appears in /api/Event/approved immediately
+    const eventStatus = 'APPROVED';
+
+    // Create the event
     const newEvent = await prisma.event.create({
       data: {
         createdById: userId || undefined,
@@ -75,12 +84,11 @@ export async function POST(req: NextRequest) {
         address: address || null,
         latitude: resolvedLatitude ?? null,
         longitude: resolvedLongitude ?? null,
-        status: 'APPROVED',
-        time: time || null,
-        organizer: organizer || null,
+        status: eventStatus,
       },
     });
 
+    // Create occurrences (if provided)
     if (Array.isArray(eventOccurrences)) {
       for (const occ of eventOccurrences) {
         const dateObj = new Date(occ.date);
