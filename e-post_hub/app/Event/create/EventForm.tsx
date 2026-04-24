@@ -69,7 +69,9 @@ export default function EventForm() {
   const [showRangeForm, setShowRangeForm] = useState(false);
   
 
-  const [occurrences, setOccurrences] = useState<Occurrence[]>([]);
+  const [occurrences, setOccurrences] = useState<Occurrence[]>([
+    { date: "", startTime: "", endTime: "" },
+  ]);
   const [showAllDays, setShowAllDays] = useState(false);
 
   const [urls, setUrls] = useState<{
@@ -90,10 +92,10 @@ export default function EventForm() {
   // Check form validity: Title, Start/End Date, Type, and EITHER Description OR Flyer
   const hasAtLeastOneDate = occurrences.some((occ) => occ.date.trim() !== "");
   const isFormValid =
-    watchTitle &&
-    selectedType.trim() &&
+    !!watchTitle?.trim() &&
+    selectedType.trim().length > 0 &&
     hasAtLeastOneDate &&
-    (watchDescription || file);
+    (!!watchDescription?.trim() || !!file);
 
     function addSingleDay() {
       setOccurrences((prev) => [...prev, { date: "", startTime: "", endTime: "" }]);
