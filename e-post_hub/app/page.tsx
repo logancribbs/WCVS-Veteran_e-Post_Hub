@@ -47,6 +47,8 @@ type Event = {
   occurrences?: EventOccurrence[];
   _nextDate?: string;
   _isUpcoming?: boolean;
+  time?: string;
+  organizer?: string;
 };
 
 export default function HomePage() {
@@ -652,10 +654,12 @@ export default function HomePage() {
                             className="text-base leading-7"
                             style={{ color: theme.eventDateColor }}
                           >
-                            {formatTimeRange(
-                              selectedDetailEvent.startTime,
-                              selectedDetailEvent.endTime
-                            )}
+                            {selectedDetailEvent.time
+                              ? selectedDetailEvent.time
+                              : formatTimeRange(
+                                  selectedDetailEvent.startTime,
+                                  selectedDetailEvent.endTime
+                                ) || "N/A"}
                           </p>
                         </div>
                       </div>
@@ -741,8 +745,7 @@ export default function HomePage() {
                       className="mt-1 text-base leading-7"
                       style={{ color: theme.eventDateColor }}
                     >
-                      {selectedDetailEvent.createdBy?.name ||
-                        "Whitman County Veteran Services"}
+                      {selectedDetailEvent.organizer || "N/A"}
                     </p>
                   </div>
                 </div>

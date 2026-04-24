@@ -38,6 +38,8 @@ interface CreateEventForm {
   type: string;
   website?: string;
   address?: string;
+  time?: string;
+  organizer?: string;
 }
 
 interface Occurrence {
@@ -89,7 +91,7 @@ export default function EventForm() {
   const hasAtLeastOneDate = occurrences.some((occ) => occ.date.trim() !== "");
   const isFormValid =
     watchTitle &&
-    watchType &&
+    selectedType.trim() &&
     hasAtLeastOneDate &&
     (watchDescription || file);
 
@@ -205,7 +207,10 @@ export default function EventForm() {
       // If there is an image file upload it to get its URL
       let flyerUrl: string | null = null;
       if (file) {
-        const uploadResponse = await edgestore.myPublicImages.upload({ file });
+        const uploadResponse = await edgestore.myPublicImages.upload({
+          file,
+          input: {},
+        });
         flyerUrl = uploadResponse.url; // Store uploaded image URL
       }
 
@@ -234,7 +239,9 @@ export default function EventForm() {
           description: data.description,
           type: selectedType.toLowerCase(),
           website: data.website,
-          address: data.address, 
+          address: data.address,
+          time: data.time,
+          organizer: data.organizer,
           flyer: flyerUrl,
           eventOccurrences,
         };
@@ -530,6 +537,24 @@ export default function EventForm() {
                 {...register("website")}
                 errorMessage={errors.website?.message}
                 placeholder="For the use of external webpages"
+              />
+
+              <Input
+                label="Event Time"
+                aria-label="Event Time"
+                variant="bordered"
+                {...register("time")}
+                errorMessage={errors.time?.message}
+                placeholder="Optional"
+              />
+
+              <Input
+                label="Organizer"
+                aria-label="Organizer"
+                variant="bordered"
+                {...register("organizer")}
+                errorMessage={errors.organizer?.message}
+                placeholder="Optional"
               />
 
               <Button
