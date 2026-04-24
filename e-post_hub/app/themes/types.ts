@@ -1,4 +1,11 @@
-export type ThemeName = "default" | "fourthOfJuly" | "christmas";
+export type ThemeName =
+  | "default"
+  | "fourthOfJuly"
+  | "christmas"
+  | "thanksgiving"
+  | "newYears"
+  | "veteransDay";
+
 export type ThemeOverride = "auto" | ThemeName;
 
 export type BannerDecorationType = "none" | "snowLights" | "patrioticBunting";

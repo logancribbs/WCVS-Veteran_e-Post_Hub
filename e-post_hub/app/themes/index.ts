@@ -4,21 +4,47 @@ import { useEffect, useMemo, useState } from "react";
 import { christmasTheme } from "./christmasTheme";
 import { defaultTheme } from "./defaultTheme";
 import { fourthOfJulyTheme } from "./fourthOfJulyTheme";
+import { thanksgivingTheme } from "./thanksgivingTheme";
+import { newYearsTheme } from "./newYearsTheme";
+import { veteransDayTheme } from "./veteransDayTheme";
 import { LandingTheme, ThemeName, ThemeOverride } from "./types";
 
 export const landingThemes: Record<ThemeName, LandingTheme> = {
   default: defaultTheme,
   fourthOfJuly: fourthOfJulyTheme,
   christmas: christmasTheme,
+  thanksgiving: thanksgivingTheme,
+  newYears: newYearsTheme,
+  veteransDay: veteransDayTheme,
 };
 
 export function isValidThemeOverride(value: string): value is ThemeOverride {
-  return value === "auto" || value === "default" || value === "fourthOfJuly" || value === "christmas";
+  return (
+    value === "auto" ||
+    value === "default" ||
+    value === "fourthOfJuly" ||
+    value === "christmas" ||
+    value === "thanksgiving" ||
+    value === "newYears" ||
+    value === "veteransDay"
+  );
 }
 
 export function resolveAutoTheme(date = new Date()): LandingTheme {
   const month = date.getMonth() + 1;
   const day = date.getDate();
+
+  if (month === 11) {
+    return thanksgivingTheme;
+  }
+
+  if ((month === 12 && day >= 31) || (month === 1 && day <= 7)) {
+    return newYearsTheme;
+  }
+
+  if ((month === 11 && day >= 8) && (month === 11 && day <= 14)) {
+    return veteransDayTheme;
+  }
 
   if (month === 12 && day >= 1) {
     return christmasTheme;
@@ -68,7 +94,11 @@ export function useLandingTheme() {
 
   const theme = useMemo(() => {
     if (
-      (themeOverride === "christmas" || themeOverride === "fourthOfJuly") &&
+      (themeOverride === "christmas" ||
+        themeOverride === "fourthOfJuly" ||
+        themeOverride === "thanksgiving" ||
+        themeOverride === "newYears" ||
+        themeOverride === "veteransDay") &&
       themeExpiresAt
     ) {
       const expiresAt = new Date(themeExpiresAt);
