@@ -4,7 +4,7 @@ export const thanksgivingTheme: LandingTheme = {
   key: "thanksgiving",
   label: "Thanksgiving",
 
-  heroBannerImage: "/newyears.jpeg",
+  heroBannerImage: "/thanksgiving.jpeg",
   heroOverlayColor: "rgba(92, 51, 23, 0.15)",
   heroImageFit: "cover",
   heroImagePosition: "center center",
