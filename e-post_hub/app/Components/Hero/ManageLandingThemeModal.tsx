@@ -15,42 +15,13 @@ const themeOptions: {
   title: string;
   description: string;
 }[] = [
-  {
-    value: "auto",
-    title: "Auto",
-    description: "Themes will automatically apply based on the date.",
-  },
-  {
-    value: "default",
-    title: "Default",
-    description:
-      "Turns all holiday styling off and uses the standard landing page colors.",
-  },
-  {
-    value: "fourthOfJuly",
-    title: "4th of July",
-    description: "Turn on 4th of July Theme.",
-  },
-  {
-    value: "christmas",
-    title: "Christmas",
-    description: "Turn on Christmas Theme.",
-  },
-  {
-    value: "thanksgiving",
-    title: "Thanksgiving",
-    description: "Turn on Thanksgiving Theme.",
-  },
-  {
-    value: "newYears",
-    title: "New Years",
-    description: "Turn on New Years Theme.",
-  },
-  {
-    value: "veteransDay",
-    title: "Veterans Day",
-    description: "Turn on Veterans Day Theme.",
-  },
+  { value: "auto", title: "Auto", description: "Themes will automatically apply based on the date." },
+  { value: "default", title: "Default", description: "Turns all holiday styling off and uses the standard landing page colors." },
+  { value: "fourthOfJuly", title: "4th of July", description: "Turn on 4th of July Theme." },
+  { value: "christmas", title: "Christmas", description: "Turn on Christmas Theme." },
+  { value: "thanksgiving", title: "Thanksgiving", description: "Turn on Thanksgiving Theme." },
+  { value: "newYears", title: "New Years", description: "Turn on New Years Theme." },
+  { value: "veteransDay", title: "Veterans Day", description: "Turn on Veterans Day Theme." },
 ];
 
 export default function ManageLandingThemeModal({
@@ -59,8 +30,7 @@ export default function ManageLandingThemeModal({
   currentOverride,
   onSaved,
 }: ManageLandingThemeModalProps) {
-  const [selectedOverride, setSelectedOverride] =
-    useState<ThemeOverride>("auto");
+  const [selectedOverride, setSelectedOverride] = useState<ThemeOverride>("auto");
   const [durationMap, setDurationMap] = useState<Record<string, number>>({});
   const [editingTheme, setEditingTheme] = useState<ThemeOverride | null>(null);
   const [input, setInput] = useState("");
@@ -128,7 +98,9 @@ export default function ManageLandingThemeModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-      <div className="w-full max-w-4xl rounded-2xl border-2 border-black/70 bg-[#f7f1e8] shadow-[0_6px_16px_rgba(0,0,0,0.35)]">
+      
+      {/* 🔧 ONLY CHANGE: added h-[80vh] flex flex-col */}
+      <div className="w-full max-w-4xl h-[80vh] flex flex-col rounded-2xl border-2 border-black/70 bg-[#f7f1e8] shadow-[0_6px_16px_rgba(0,0,0,0.35)]">
 
         {/* Header */}
         <div className="border-b border-black/20 px-6 py-4">
@@ -137,103 +109,105 @@ export default function ManageLandingThemeModal({
           </h2>
         </div>
 
-        {/* Scrollable Content */}
-        <div className="max-h-[65vh] overflow-y-auto p-6 space-y-4">
-          {themeOptions.map((option) => {
-            const isSelected = selectedOverride === option.value;
-            const hasDuration = durationMap[option.value];
+        {/* 🔧 ONLY CHANGE: flex-1 + overflow-y-auto */}
+        <div className="flex-1 overflow-y-auto p-6">
+          <div className="space-y-4">
+            {themeOptions.map((option) => {
+              const isSelected = selectedOverride === option.value;
+              const hasDuration = durationMap[option.value];
 
-            return (
-              <div
-                key={option.value}
-                className={`relative rounded-xl border p-4 ${
-                  isSelected
-                    ? "border-black bg-[#FFF7E6]"
-                    : "border-black/20 bg-white hover:bg-black/[0.03]"
-                }`}
-              >
-                <button
-                  onClick={() => setSelectedOverride(option.value)}
-                  disabled={isSaving}
-                  className="w-full text-left"
+              return (
+                <div
+                  key={option.value}
+                  className={`relative rounded-xl border p-4 ${
+                    isSelected
+                      ? "border-black bg-[#FFF7E6]"
+                      : "border-black/20 bg-white hover:bg-black/[0.03]"
+                  }`}
                 >
-                  <div className="text-base font-semibold text-black">
-                    {option.title}
-                  </div>
-                  <div className="mt-1 text-sm text-black/70">
-                    {option.description}
-                  </div>
-                </button>
+                  <button
+                    onClick={() => setSelectedOverride(option.value)}
+                    disabled={isSaving}
+                    className="w-full text-left"
+                  >
+                    <div className="text-base font-semibold text-black">
+                      {option.title}
+                    </div>
+                    <div className="mt-1 text-sm text-black/70">
+                      {option.description}
+                    </div>
+                  </button>
 
-                {option.value !== "auto" && option.value !== "default" && (
-                  <div className="absolute bottom-2 right-2 text-xs">
-                    {!hasDuration && editingTheme !== option.value && (
-                      <button
-                        onClick={() => {
-                          setEditingTheme(option.value);
-                          setInput("");
-                        }}
-                        className="underline"
-                      >
-                        Set Duration
-                      </button>
-                    )}
-
-                    {editingTheme === option.value && (
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="number"
-                          min={1}
-                          value={input}
-                          onChange={(e) => setInput(e.target.value)}
-                          className="w-14 rounded border border-black/20 px-1 py-[2px]"
-                        />
+                  {option.value !== "auto" && option.value !== "default" && (
+                    <div className="absolute bottom-2 right-2 text-xs">
+                      {!hasDuration && editingTheme !== option.value && (
                         <button
                           onClick={() => {
-                            const val = parseInt(input);
-                            if (!isNaN(val) && val > 0) {
-                              setDurationMap({
-                                ...durationMap,
-                                [option.value]: val,
-                              });
-                              setEditingTheme(null);
-                              setInput("");
-                            }
+                            setEditingTheme(option.value);
+                            setInput("");
                           }}
+                          className="underline"
                         >
-                          ✓
+                          Set Duration
                         </button>
-                      </div>
-                    )}
+                      )}
 
-                    {hasDuration && editingTheme !== option.value && (
-                      <div className="flex items-center gap-2">
-                        <span>
-                          {selectedOverride === option.value && remainingDays
-                            ? `${remainingDays}d left`
-                            : `${hasDuration}d`}
-                        </span>
+                      {editingTheme === option.value && (
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            min={1}
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            className="w-14 rounded border border-black/20 px-1 py-[2px]"
+                          />
+                          <button
+                            onClick={() => {
+                              const val = parseInt(input);
+                              if (!isNaN(val) && val > 0) {
+                                setDurationMap({
+                                  ...durationMap,
+                                  [option.value]: val,
+                                });
+                                setEditingTheme(null);
+                                setInput("");
+                              }
+                            }}
+                          >
+                            ✓
+                          </button>
+                        </div>
+                      )}
 
-                        <button onClick={() => setEditingTheme(option.value)}>
-                          ✏️
-                        </button>
+                      {hasDuration && editingTheme !== option.value && (
+                        <div className="flex items-center gap-2">
+                          <span>
+                            {selectedOverride === option.value && remainingDays
+                              ? `${remainingDays}d left`
+                              : `${hasDuration}d`}
+                          </span>
 
-                        <button
-                          onClick={() => {
-                            const copy = { ...durationMap };
-                            delete copy[option.value];
-                            setDurationMap(copy);
-                          }}
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            );
-          })}
+                          <button onClick={() => setEditingTheme(option.value)}>
+                            ✏️
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              const copy = { ...durationMap };
+                              delete copy[option.value];
+                              setDurationMap(copy);
+                            }}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* Footer */}
