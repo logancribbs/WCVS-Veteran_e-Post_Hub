@@ -55,7 +55,8 @@ export function resolveAutoTheme(date = new Date()): LandingTheme {
 
 export function resolveThemeFromOverride(override: ThemeOverride): LandingTheme {
   if (override === "auto") return resolveAutoTheme();
-  return landingThemes[override];
+
+  return landingThemes[override] || defaultTheme;
 }
 
 export function useLandingTheme() {
@@ -104,11 +105,7 @@ export function useLandingTheme() {
       const diff = end.getTime() - now.getTime();
       const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
 
-      if (days <= 0) {
-        setRemainingDays(null);
-      } else {
-        setRemainingDays(days);
-      }
+      setRemainingDays(days > 0 ? days : null);
     };
 
     update();
