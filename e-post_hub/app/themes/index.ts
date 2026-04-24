@@ -34,17 +34,23 @@ export function resolveAutoTheme(date = new Date()): LandingTheme {
   const month = date.getMonth() + 1;
   const day = date.getDate();
 
-  if (month === 11) return thanksgivingTheme;
+  // Veterans Day FIRST (specific window)
+  if (month === 11 && day >= 8 && day <= 14) {
+    return veteransDayTheme;
+  }
+
+  // Thanksgiving AFTER (rest of November)
+  if (month === 11) {
+    return thanksgivingTheme;
+  }
 
   if ((month === 12 && day >= 31) || (month === 1 && day <= 7)) {
     return newYearsTheme;
   }
 
-  if (month === 11 && day >= 8 && day <= 14) {
-    return veteransDayTheme;
+  if (month === 12 && day >= 1) {
+    return christmasTheme;
   }
-
-  if (month === 12 && day >= 1) return christmasTheme;
 
   if ((month === 6 && day >= 27) || (month === 7 && day <= 7)) {
     return fourthOfJulyTheme;
@@ -54,9 +60,11 @@ export function resolveAutoTheme(date = new Date()): LandingTheme {
 }
 
 export function resolveThemeFromOverride(override: ThemeOverride): LandingTheme {
-  if (override === "auto") return resolveAutoTheme();
+  if (override === "auto") {
+    return resolveAutoTheme();
+  }
 
-  return landingThemes[override] || defaultTheme;
+  return landingThemes[override];
 }
 
 export function useLandingTheme() {
@@ -123,7 +131,7 @@ export function useLandingTheme() {
       const expiresAt = new Date(themeExpiresAt);
       const now = new Date();
 
-      if (!Number.isNaN(expiresAt.getTime()) && now > expiresAt) {
+      if (!Number.isNaN(expiresAt.getTime()) && now.getTime() > expiresAt.getTime()) {
         return resolveAutoTheme();
       }
     }

@@ -4,27 +4,27 @@ export const newYearsTheme: LandingTheme = {
   key: "newYears",
   label: "New Years",
 
-  heroBannerImage: "/newyear.jpeg",
-  heroOverlayColor: "rgba(0, 0, 0, 0.2)",
+  heroBannerImage: "/newyears.jpeg",
+  heroOverlayColor: "rgba(0, 0, 0, 0.15)",
   heroImageFit: "cover",
   heroImagePosition: "center center",
-  heroBannerBackgroundColor: "#111827",
+  heroBannerBackgroundColor: "#1F2937",
 
   bannerDecoration: "none",
   sidebarDecoration: "none",
 
-  pageBackgroundColor: "#000000",
+  pageBackgroundColor: "#374151",
   pageBackgroundImage:
-    "radial-gradient(circle, rgba(255,255,255,0.08) 2px, transparent 2px)",
+    "radial-gradient(circle, rgba(255,255,255,0.06) 2px, transparent 2px)",
   pageBackgroundRepeat: "repeat",
   pageBackgroundSize: "60px 60px",
   pageBackgroundPosition: "top left",
 
-  sidebarBackgroundColor: "#1F2937",
+  sidebarBackgroundColor: "#4B5563",
   sidebarBackgroundImage:
-    "linear-gradient(to bottom, #1F2937 0%, #000000 100%)",
+    "linear-gradient(to bottom, #4B5563 0%, #1F2937 100%)",
 
-  eventCardBackground: "#111827",
+  eventCardBackground: "#1F2937",
   eventCardBorder: "#FACC15",
   eventTitleColor: "#FFFFFF",
   eventDateColor: "#F9FAFB",
