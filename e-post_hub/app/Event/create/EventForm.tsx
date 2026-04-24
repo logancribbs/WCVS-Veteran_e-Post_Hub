@@ -236,7 +236,7 @@ export default function EventForm() {
         const fullData = {
           title: data.title,
           description: data.description,
-          type: selectedType.trim() ? selectedType.toLowerCase() : "event",
+          type: selectedType.toLowerCase(),
           website: data.website,
           address: data.address,
           time: data.time,
