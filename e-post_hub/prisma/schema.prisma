@@ -82,6 +82,8 @@ model Event {
   latitude      Float?
   status        String   @default("PENDING")
   interested    Int      @default(0)
+  time          String?
+  organizer     String?
 
   occurrences   EventOccurrence[]
   comments      Comment[]
