@@ -69,9 +69,7 @@ export default function EventForm() {
   const [showRangeForm, setShowRangeForm] = useState(false);
   
 
-  const [occurrences, setOccurrences] = useState<Occurrence[]>([
-    { date: "", startTime: "", endTime: "" },
-  ]);
+  const [occurrences, setOccurrences] = useState<Occurrence[]>([]);
   const [showAllDays, setShowAllDays] = useState(false);
 
   const [urls, setUrls] = useState<{
@@ -93,7 +91,6 @@ export default function EventForm() {
   const hasAtLeastOneDate = occurrences.some((occ) => occ.date.trim() !== "");
   const isFormValid =
     !!watchTitle?.trim() &&
-    selectedType.trim().length > 0 &&
     hasAtLeastOneDate &&
     (!!watchDescription?.trim() || !!file);
 
@@ -239,7 +236,7 @@ export default function EventForm() {
         const fullData = {
           title: data.title,
           description: data.description,
-          type: selectedType.toLowerCase(),
+          type: selectedType.trim() ? selectedType.toLowerCase() : "event",
           website: data.website,
           address: data.address,
           time: data.time,
