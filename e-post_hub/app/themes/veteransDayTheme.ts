@@ -8,27 +8,26 @@ export const veteransDayTheme: LandingTheme = {
   heroOverlayColor: "rgba(0, 0, 0, 0.15)",
   heroImageFit: "cover",
   heroImagePosition: "center center",
-  heroBannerBackgroundColor: "#1E3A8A",
+  heroBannerBackgroundColor: "#1F3A5F",
 
   bannerDecoration: "none",
   sidebarDecoration: "none",
 
-  pageBackgroundColor: "#1E3A8A",
-  pageBackgroundImage:
-    "linear-gradient(rgba(30,58,138,0.85), rgba(30,58,138,0.85))",
-  pageBackgroundRepeat: "repeat",
-  pageBackgroundSize: "auto",
-  pageBackgroundPosition: "top left",
+  pageBackgroundColor: "#2C3E50",
+  pageBackgroundImage: "none",
+  pageBackgroundRepeat: "no-repeat",
+  pageBackgroundSize: "cover",
+  pageBackgroundPosition: "center",
 
-  sidebarBackgroundColor: "#111827",
+  sidebarBackgroundColor: "#1F3A5F",
   sidebarBackgroundImage:
-    "linear-gradient(to bottom, #111827 0%, #1E3A8A 100%)",
+    "linear-gradient(to bottom, #1F3A5F 0%, #2C3E50 100%)",
 
-  eventCardBackground: "#1E3A8A",
-  eventCardBorder: "#FFFFFF",
-  eventTitleColor: "#FFFFFF",
-  eventDateColor: "#F9FAFB",
-  eventButtonBackground: "#FFFFFF",
-  eventButtonText: "#1E3A8A",
-  eventButtonBorder: "#D1D5DB",
+  eventCardBackground: "linear-gradient(145deg, #ffffff, #eaeaea)",
+  eventCardBorder: "#D1D5DB",
+  eventTitleColor: "#111827",
+  eventDateColor: "#374151",
+  eventButtonBackground: "#EF4444",
+  eventButtonText: "#ffffff",
+  eventButtonBorder: "#DC2626",
 };
