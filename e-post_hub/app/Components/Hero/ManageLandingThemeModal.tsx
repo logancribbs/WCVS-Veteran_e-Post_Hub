@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ThemeOverride } from "@/app/themes/types";
+import { useLandingTheme } from "@/app/themes";
 
 type ManageLandingThemeModalProps = {
   isOpen: boolean;
@@ -35,6 +36,21 @@ const themeOptions: {
     title: "Christmas",
     description: "Turn on Christmas Theme.",
   },
+  {
+    value: "thanksgiving",
+    title: "Thanksgiving",
+    description: "Turn on Thanksgiving Theme.",
+  },
+  {
+    value: "newYears",
+    title: "New Years",
+    description: "Turn on New Years Theme.",
+  },
+  {
+    value: "veteransDay",
+    title: "Veterans Day",
+    description: "Turn on Veterans Day Theme.",
+  },
 ];
 
 export default function ManageLandingThemeModal({
@@ -44,76 +60,26 @@ export default function ManageLandingThemeModal({
   onSaved,
 }: ManageLandingThemeModalProps) {
   const [selectedOverride, setSelectedOverride] = useState<ThemeOverride>("auto");
-  const [customDurationDays, setCustomDurationDays] = useState("");
+  const [durationMap, setDurationMap] = useState<Record<string, number>>({});
+  const [activeTheme, setActiveTheme] = useState<string | null>(null);
+  const [input, setInput] = useState("");
   const [message, setMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
 
+  const { remainingDays } = useLandingTheme();
+
   useEffect(() => {
-    async function loadThemeSettings() {
-      try {
-        const response = await fetch("/api/theme", { cache: "no-store" });
-        if (!response.ok) {
-          setSelectedOverride(currentOverride);
-          setCustomDurationDays("");
-          setMessage("");
-          return;
-        }
-
-        const data = await response.json();
-        setSelectedOverride(currentOverride);
-
-        if (
-          typeof data.expiresAt === "string" &&
-          data.expiresAt.trim() &&
-          (currentOverride === "christmas" || currentOverride === "fourthOfJuly")
-        ) {
-          const expiresAt = new Date(data.expiresAt);
-          const now = new Date();
-
-          if (!Number.isNaN(expiresAt.getTime()) && expiresAt.getTime() > now.getTime()) {
-            const msRemaining = expiresAt.getTime() - now.getTime();
-            const daysRemaining = Math.ceil(msRemaining / (1000 * 60 * 60 * 24));
-            setCustomDurationDays(String(daysRemaining));
-          } else {
-            setCustomDurationDays("");
-          }
-        } else {
-          setCustomDurationDays("");
-        }
-
-        setMessage("");
-      } catch {
-        setSelectedOverride(currentOverride);
-        setCustomDurationDays("");
-        setMessage("");
-      }
-    }
-
-    if (isOpen) {
-      loadThemeSettings();
-    }
+    setSelectedOverride(currentOverride);
   }, [isOpen, currentOverride]);
 
   if (!isOpen) return null;
-
-  const showDurationInput =
-    selectedOverride === "christmas" || selectedOverride === "fourthOfJuly";
 
   const handleSave = async () => {
     setIsSaving(true);
     setMessage("Saving theme...");
 
     try {
-      const trimmedDuration = customDurationDays.trim();
-      const parsedDuration =
-        trimmedDuration === "" ? null : Number.parseInt(trimmedDuration, 10);
-
-      if (
-        trimmedDuration !== "" &&
-        (!Number.isFinite(parsedDuration) || parsedDuration === null || parsedDuration < 1)
-      ) {
-        throw new Error("Enter a valid duration in days.");
-      }
+      const days = durationMap[selectedOverride];
 
       const response = await fetch("/api/theme", {
         method: "POST",
@@ -122,8 +88,7 @@ export default function ManageLandingThemeModal({
         },
         body: JSON.stringify({
           override: selectedOverride,
-          customDurationDays:
-            showDurationInput && parsedDuration !== null ? parsedDuration : null,
+          customDurationDays: days ?? null,
         }),
       });
 
@@ -169,48 +134,90 @@ export default function ManageLandingThemeModal({
               const isSelected = selectedOverride === option.value;
 
               return (
-                <button
+                <div
                   key={option.value}
-                  type="button"
-                  onClick={() => setSelectedOverride(option.value)}
-                  disabled={isSaving}
-                  className={`w-full rounded-xl border p-4 text-left shadow-sm transition-all ${
+                  className={`relative rounded-xl border p-4 shadow-sm transition-all ${
                     isSelected
                       ? "border-black bg-[#FFF7E6]"
                       : "border-black/20 bg-white hover:bg-black/[0.03]"
                   }`}
                 >
-                  <div className="text-base font-semibold text-black">{option.title}</div>
-                  <div className="mt-1 text-sm text-black/70">{option.description}</div>
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedOverride(option.value)}
+                    disabled={isSaving}
+                    className="w-full text-left"
+                  >
+                    <div className="text-base font-semibold text-black">
+                      {option.title}
+                    </div>
+                    <div className="mt-1 text-sm text-black/70">
+                      {option.description}
+                    </div>
+                  </button>
+
+                  {option.value !== "auto" && option.value !== "default" && (
+                    <div className="absolute bottom-2 right-2 text-xs">
+                      {!durationMap[option.value] ? (
+                        <button
+                          onClick={() => setActiveTheme(option.value)}
+                          className="underline"
+                        >
+                          set duration
+                        </button>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <span>
+                            {selectedOverride === option.value && remainingDays
+                              ? `${remainingDays}d left`
+                              : `${durationMap[option.value]}d`}
+                          </span>
+
+                          <button onClick={() => setActiveTheme(option.value)}>
+                            ✏️
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              const copy = { ...durationMap };
+                              delete copy[option.value];
+                              setDurationMap(copy);
+                            }}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
 
-          {showDurationInput && (
+          {activeTheme && (
             <div className="mt-6 rounded-xl border border-black/20 bg-white p-4">
-              <label
-                htmlFor="custom-theme-duration"
-                className="block text-sm font-semibold text-black"
-              >
-                Custom Theme Duration (Days)
-              </label>
-              <p className="mt-1 text-sm text-black/70">
-                Optional. If set, this theme stays active for the number of days you choose.
-                If left blank, the current default behavior is used.
-              </p>
               <input
-                id="custom-theme-duration"
                 type="number"
                 min={1}
-                step={1}
-                inputMode="numeric"
-                value={customDurationDays}
-                onChange={(e) => setCustomDurationDays(e.target.value)}
-                disabled={isSaving}
-                placeholder="Example: 30"
-                className="mt-3 w-full rounded-lg border border-black/20 bg-[#fdfbf7] px-3 py-2 text-black outline-none focus:border-black"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="days"
+                className="w-full rounded-lg border border-black/20 px-3 py-2"
               />
+              <button
+                onClick={() => {
+                  const val = parseInt(input);
+                  if (!isNaN(val) && val > 0) {
+                    setDurationMap({ ...durationMap, [activeTheme]: val });
+                    setActiveTheme(null);
+                    setInput("");
+                  }
+                }}
+                className="mt-3"
+              >
+                save
+              </button>
             </div>
           )}
         </div>

@@ -3,7 +3,15 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const validOverrides = new Set(["auto", "default", "fourthOfJuly", "christmas"]);
+const validOverrides = new Set([
+  "auto",
+  "default",
+  "fourthOfJuly",
+  "christmas",
+  "thanksgiving",
+  "newYears",
+  "veteransDay",
+]);
 
 export async function GET() {
   try {
@@ -59,7 +67,8 @@ export async function POST(req: Request) {
     });
 
     if (
-      (override === "christmas" || override === "fourthOfJuly") &&
+      override !== "auto" &&
+      override !== "default" &&
       Number.isInteger(customDurationDays) &&
       customDurationDays > 0
     ) {

@@ -34,21 +34,17 @@ export function resolveAutoTheme(date = new Date()): LandingTheme {
   const month = date.getMonth() + 1;
   const day = date.getDate();
 
-  if (month === 11) {
-    return thanksgivingTheme;
-  }
+  if (month === 11) return thanksgivingTheme;
 
   if ((month === 12 && day >= 31) || (month === 1 && day <= 7)) {
     return newYearsTheme;
   }
 
-  if ((month === 11 && day >= 8) && (month === 11 && day <= 14)) {
+  if (month === 11 && day >= 8 && day <= 14) {
     return veteransDayTheme;
   }
 
-  if (month === 12 && day >= 1) {
-    return christmasTheme;
-  }
+  if (month === 12 && day >= 1) return christmasTheme;
 
   if ((month === 6 && day >= 27) || (month === 7 && day <= 7)) {
     return fourthOfJulyTheme;
@@ -58,16 +54,14 @@ export function resolveAutoTheme(date = new Date()): LandingTheme {
 }
 
 export function resolveThemeFromOverride(override: ThemeOverride): LandingTheme {
-  if (override === "auto") {
-    return resolveAutoTheme();
-  }
-
+  if (override === "auto") return resolveAutoTheme();
   return landingThemes[override];
 }
 
 export function useLandingTheme() {
   const [themeOverride, setThemeOverride] = useState<ThemeOverride>("auto");
   const [themeExpiresAt, setThemeExpiresAt] = useState<string | null>(null);
+  const [remainingDays, setRemainingDays] = useState<number | null>(null);
 
   useEffect(() => {
     async function fetchThemeOverride() {
@@ -92,19 +86,47 @@ export function useLandingTheme() {
     fetchThemeOverride();
   }, []);
 
+  useEffect(() => {
+    if (!themeExpiresAt) {
+      setRemainingDays(null);
+      return;
+    }
+
+    const update = () => {
+      const now = new Date();
+      const end = new Date(themeExpiresAt);
+
+      if (Number.isNaN(end.getTime())) {
+        setRemainingDays(null);
+        return;
+      }
+
+      const diff = end.getTime() - now.getTime();
+      const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+
+      if (days <= 0) {
+        setRemainingDays(null);
+      } else {
+        setRemainingDays(days);
+      }
+    };
+
+    update();
+    const interval = setInterval(update, 1000 * 60 * 60);
+
+    return () => clearInterval(interval);
+  }, [themeExpiresAt]);
+
   const theme = useMemo(() => {
     if (
-      (themeOverride === "christmas" ||
-        themeOverride === "fourthOfJuly" ||
-        themeOverride === "thanksgiving" ||
-        themeOverride === "newYears" ||
-        themeOverride === "veteransDay") &&
+      themeOverride !== "auto" &&
+      themeOverride !== "default" &&
       themeExpiresAt
     ) {
       const expiresAt = new Date(themeExpiresAt);
       const now = new Date();
 
-      if (!Number.isNaN(expiresAt.getTime()) && now.getTime() > expiresAt.getTime()) {
+      if (!Number.isNaN(expiresAt.getTime()) && now > expiresAt) {
         return resolveAutoTheme();
       }
     }
@@ -115,6 +137,7 @@ export function useLandingTheme() {
   return {
     theme,
     themeOverride,
+    remainingDays,
     setThemeOverride,
   };
 }
