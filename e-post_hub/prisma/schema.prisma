@@ -83,7 +83,7 @@ model Event {
   status        String   @default("PENDING")
   interested    Int      @default(0)
   time          String?
-  organizer     String?
+  organizer   String?
 
   occurrences   EventOccurrence[]
   comments      Comment[]
