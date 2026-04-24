@@ -4,7 +4,7 @@ export const newYearsTheme: LandingTheme = {
   key: "newYears",
   label: "New Years",
 
-  heroBannerImage: "/newyear.jpeg",
+  heroBannerImage: "/newyears.jpeg",
   heroOverlayColor: "rgba(0, 0, 0, 0.15)",
   heroImageFit: "cover",
   heroImagePosition: "center center",
@@ -24,7 +24,7 @@ export const newYearsTheme: LandingTheme = {
   sidebarBackgroundImage:
     "linear-gradient(to bottom, #4B5563 0%, #1F2937 100%)",
 
-  eventCardBackground: "#6D28D9",
+  eventCardBackground: "#991B1B",
   eventCardBorder: "#FACC15",
   eventTitleColor: "#FFFFFF",
   eventDateColor: "#F9FAFB",

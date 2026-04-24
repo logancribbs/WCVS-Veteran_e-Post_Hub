@@ -24,7 +24,7 @@ export const thanksgivingTheme: LandingTheme = {
   sidebarBackgroundImage:
     "linear-gradient(to bottom, #5C3317 0%, #8B4513 100%)",
 
-  eventCardBackground: "#3F6212",
+  eventCardBackground: "linear-gradient(145deg, #C2410C, #7C2D12)",
   eventCardBorder: "#D4A373",
   eventTitleColor: "#FFFFFF",
   eventDateColor: "#F9FAFB",

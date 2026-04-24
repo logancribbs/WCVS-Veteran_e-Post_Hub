@@ -23,7 +23,7 @@ export const veteransDayTheme: LandingTheme = {
   sidebarBackgroundImage:
     "linear-gradient(to bottom, #1F3A5F 0%, #2C3E50 100%)",
 
-  eventCardBackground: "linear-gradient(145deg, #ffffff, #eaeaea)",
+  eventCardBackground: "#F9FAFB",
   eventCardBorder: "#D1D5DB",
   eventTitleColor: "#111827",
   eventDateColor: "#374151",
