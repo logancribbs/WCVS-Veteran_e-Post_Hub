@@ -62,7 +62,7 @@ export default function ManageLandingThemeModal({
   const [selectedOverride, setSelectedOverride] =
     useState<ThemeOverride>("auto");
   const [durationMap, setDurationMap] = useState<Record<string, number>>({});
-  const [editingTheme, setEditingTheme] = useState<string | null>(null);
+  const [editingTheme, setEditingTheme] = useState<ThemeOverride | null>(null);
   const [input, setInput] = useState("");
   const [remainingDays, setRemainingDays] = useState<number | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -128,7 +128,8 @@ export default function ManageLandingThemeModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-      <div className="w-full max-w-4xl max-h-[80vh] overflow-hidden rounded-2xl border-2 border-black/70 bg-[#f7f1e8] shadow-[0_6px_16px_rgba(0,0,0,0.35)]">
+      <div className="w-full max-w-4xl rounded-2xl border-2 border-black/70 bg-[#f7f1e8] shadow-[0_6px_16px_rgba(0,0,0,0.35)]">
+
         {/* Header */}
         <div className="border-b border-black/20 px-6 py-4">
           <h2 className="text-2xl font-semibold text-black">
@@ -137,7 +138,7 @@ export default function ManageLandingThemeModal({
         </div>
 
         {/* Scrollable Content */}
-        <div className="overflow-y-auto p-6 space-y-4">
+        <div className="max-h-[65vh] overflow-y-auto p-6 space-y-4">
           {themeOptions.map((option) => {
             const isSelected = selectedOverride === option.value;
             const hasDuration = durationMap[option.value];
@@ -164,7 +165,6 @@ export default function ManageLandingThemeModal({
                   </div>
                 </button>
 
-                {/* Duration UI */}
                 {option.value !== "auto" && option.value !== "default" && (
                   <div className="absolute bottom-2 right-2 text-xs">
                     {!hasDuration && editingTheme !== option.value && (
@@ -239,7 +239,6 @@ export default function ManageLandingThemeModal({
         {/* Footer */}
         <div className="flex justify-end gap-3 border-t border-black/20 px-6 py-4">
           <button
-            type="button"
             onClick={onClose}
             disabled={isSaving}
             className="rounded-lg border border-black/20 bg-white px-4 py-2 font-semibold text-black hover:bg-black/5"
@@ -248,7 +247,6 @@ export default function ManageLandingThemeModal({
           </button>
 
           <button
-            type="button"
             onClick={handleSave}
             disabled={isSaving}
             className="rounded-lg border border-black/30 bg-[#A32626] px-4 py-2 font-semibold text-white hover:bg-[#8C1F1F]"
