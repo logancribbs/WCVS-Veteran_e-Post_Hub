@@ -436,62 +436,85 @@ export default function HomePage() {
                       {formatDateRange(event.startDate, event.endDate)}
                     </div>
 
-                    <Button
-                      onClick={(e) =>
-                        isAdmin
-                          ? deleteEventById(event.id)
-                          : (() => {
-                              modalTriggerRef.current =
-                                e.currentTarget as HTMLElement;
-                              setSelectedDetailEvent(event);
-                            })()
-                      }
-                      aria-label={
-                        isAdmin
-                          ? `Delete ${event.title}`
-                          : `View details for ${event.title}`
-                      }
-                      className={`
-                        group inline-flex items-center justify-center gap-2
-                        px-14 py-2.5 rounded-xl
-                        text-sm font-semibold tracking-wide
-                        transition-all duration-200
-                        shadow-sm hover:shadow-md
-                        focus-visible:outline-none
-                        focus-visible:ring-2
-                        focus-visible:ring-offset-2
-                        ${
-                          isAdmin
-                            ? `
-                              bg-red-600 text-white
-                              border border-red-700
-                              hover:bg-red-700
-                              focus-visible:ring-red-600
-                            `
-                            : `
-                              hover:bg-white
-                              focus-visible:ring-orange-300
-                            `
-                        }
-                      `}
-                      style={
-                        isAdmin
-                          ? undefined
-                          : {
-                              backgroundColor: theme.eventButtonBackground,
-                              color: theme.eventButtonText,
-                              border: `1px solid ${theme.eventButtonBorder}`,
-                            }
-                      }
-                    >
-                      <span>{isAdmin ? "Delete" : "View Details"}</span>
-                      {!isAdmin && (
+                    {isAdmin ? (
+                      <div className="flex flex-col gap-2">
+                        <Button
+                          onClick={() =>
+                            (window.location.href = `/Event/${event.id}/edit`)
+                          }
+                          aria-label={`Edit ${event.title}`}
+                          className={`
+                            group inline-flex items-center justify-center gap-2
+                            px-14 py-2.5 rounded-xl
+                            text-sm font-semibold tracking-wide
+                            transition-all duration-200
+                            shadow-sm hover:shadow-md
+                            focus-visible:outline-none
+                            focus-visible:ring-2
+                            focus-visible:ring-offset-2
+                            bg-blue-600 text-white
+                            border border-blue-700
+                            hover:bg-blue-700
+                            focus-visible:ring-blue-600
+                          `}
+                        >
+                          <span>Edit</span>
+                        </Button>
+
+                        <Button
+                          onClick={() => deleteEventById(event.id)}
+                          aria-label={`Delete ${event.title}`}
+                          className={`
+                            group inline-flex items-center justify-center gap-2
+                            px-14 py-2.5 rounded-xl
+                            text-sm font-semibold tracking-wide
+                            transition-all duration-200
+                            shadow-sm hover:shadow-md
+                            focus-visible:outline-none
+                            focus-visible:ring-2
+                            focus-visible:ring-offset-2
+                            bg-red-600 text-white
+                            border border-red-700
+                            hover:bg-red-700
+                            focus-visible:ring-red-600
+                          `}
+                        >
+                          <span>Delete</span>
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button
+                        onClick={(e) => {
+                          modalTriggerRef.current =
+                            e.currentTarget as HTMLElement;
+                          setSelectedDetailEvent(event);
+                        }}
+                        aria-label={`View details for ${event.title}`}
+                        className={`
+                          group inline-flex items-center justify-center gap-2
+                          px-14 py-2.5 rounded-xl
+                          text-sm font-semibold tracking-wide
+                          transition-all duration-200
+                          shadow-sm hover:shadow-md
+                          focus-visible:outline-none
+                          focus-visible:ring-2
+                          focus-visible:ring-offset-2
+                          hover:bg-white
+                          focus-visible:ring-orange-300
+                        `}
+                        style={{
+                          backgroundColor: theme.eventButtonBackground,
+                          color: theme.eventButtonText,
+                          border: `1px solid ${theme.eventButtonBorder}`,
+                        }}
+                      >
+                        <span>View Details</span>
                         <ArrowRight
                           className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
                           style={{ color: theme.eventButtonText }}
                         />
-                      )}
-                    </Button>
+                      </Button>
+                    )}
                   </CardBody>
                 </Card>
               ))}
