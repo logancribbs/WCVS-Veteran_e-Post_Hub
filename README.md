@@ -87,4 +87,5 @@ Note: Sensitive environment variable values are not stored in the repository and
 5. Submit a pull request :D
 
 ## Additional Documents
-
+- [Technical Report](./WCVS-Docs/WCVS-ProjectReport.pdf)
+- [ADA Compliance Statement](./WCVS-Docs/WCVS-ADAStatement.pdf)
