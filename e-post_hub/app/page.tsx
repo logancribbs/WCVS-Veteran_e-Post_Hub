@@ -383,17 +383,18 @@ export default function HomePage() {
                       "inset 0 1px 0 rgba(255,255,255,0.22), 0 12px 28px rgba(0,0,0,0.42)",
                   }}
                 >
-                 <div className="text-center font-semibold pt-4 pb-2 px-3 leading-tight overflow-hidden"
+                 <div
+                  className="text-center font-semibold pt-4 pb-2 px-3 leading-tight flex items-center justify-center text-center"
                   style={{
-                    color: theme.eventTitleColor,
-                    fontSize: "clamp(0.9rem, 1.2vw, 1.25rem)",
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    }}
+                  color: theme.eventTitleColor,
+                  height: "56px",
+                  fontSize: "clamp(0.8rem, 1vw, 1.2rem)",
+              }}
                 >
-                    {event.title}
-                  </div>
+                <span className="line-clamp-2 w-full">
+                {event.title}
+                </span>
+                </div>
 
                   <button
                     type="button"
